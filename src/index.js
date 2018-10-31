@@ -6,8 +6,6 @@ var Dom = {
 
   get:  function(id)                     { return ((id instanceof HTMLElement) || (id === document)) ? id : document.getElementById(id); },
   on:   function(ele, type, fn, capture) { Dom.get(ele).addEventListener(type, fn, capture);    },
-  show: function(ele, type)              { Dom.get(ele).style.display = (type || 'block');      },
-  blur: function(ev)                     { ev.target.blur();                                    },
 
   storage: window.localStorage || {}
 };
@@ -58,7 +56,7 @@ var Util = {
     var max2 = x2 + (w2*half);
     return ! ((max1 < min2) || (min1 > max2));
   }
-}
+};
 
 //=========================================================================
 // POLYFILL for requestAnimationFrame
@@ -69,7 +67,7 @@ if (!window.requestAnimationFrame) { // http://paulirish.com/2011/requestanimati
                                  window.mozRequestAnimationFrame    || 
                                  window.oRequestAnimationFrame      || 
                                  window.msRequestAnimationFrame     || 
-                                 function(callback, element) {
+                                 function(callback) {
                                    window.setTimeout(callback, 1000 / 60);
                                  }
 }
@@ -88,14 +86,14 @@ var Game = {  // a modified version of the game loop from my previous boulderdas
 
       Game.setKeyListener(options.keys);
 
-      var canvas = options.canvas,    // canvas render target is provided by caller
-          update = options.update,    // method to update game logic is provided by caller
-          render = options.render,    // method to render the game is provided by caller
-          step   = options.step,      // fixed frame step (1/fps) is specified by caller
-          now    = null,
-          last   = Util.timestamp(),
-          dt     = 0,
-          gdt    = 0;
+      // var canvas = options.canvas,    // canvas render target is provided by caller
+          var update = options.update;    // method to update game logic is provided by caller
+          var render = options.render;    // method to render the game is provided by caller
+          var step   = options.step;      // fixed frame step (1/fps) is specified by caller
+          var now    = null;
+          var last   = Util.timestamp();
+          var dt     = 0;
+          var gdt    = 0;
 
       function frame() {
         now = Util.timestamp();
@@ -107,7 +105,7 @@ var Game = {  // a modified version of the game loop from my previous boulderdas
         }
         render();
         last = now;
-        requestAnimationFrame(frame, canvas);
+        requestAnimationFrame( frame );
       }
       frame(); // lets get this party started
     });
@@ -209,7 +207,7 @@ var Render = {
     var imageH = layer.h;
 
     var sourceX = layer.x + Math.floor(layer.w * rotation);
-    var sourceY = layer.y
+    var sourceY = layer.y;
     var sourceW = Math.min(imageW, layer.x+layer.w-sourceX);
     var sourceH = imageH;
     
@@ -260,7 +258,7 @@ var Render = {
 
   fog: function(ctx, x, y, width, height, fog) {
     if (fog < 1) {
-      ctx.globalAlpha = (1-fog)
+      ctx.globalAlpha = (1-fog);
       ctx.fillStyle = COLORS.FOG;
       ctx.fillRect(x, y, width, height);
       ctx.globalAlpha = 1;
@@ -340,7 +338,7 @@ var SPRITES = {
   PLAYER_RIGHT:           { x:  995, y:  531, w:   80, h:   41 }
 };
 
-SPRITES.SCALE = 0.3 * (1/SPRITES.PLAYER_STRAIGHT.w) // the reference sprite width should be 1/3rd the (half-)roadWidth
+SPRITES.SCALE = 0.3 * (1/SPRITES.PLAYER_STRAIGHT.w); // the reference sprite width should be 1/3rd the (half-)roadWidth
 
 SPRITES.BILLBOARDS = [SPRITES.BILLBOARD01, SPRITES.BILLBOARD02, SPRITES.BILLBOARD03, SPRITES.BILLBOARD04, SPRITES.BILLBOARD05, SPRITES.BILLBOARD06, SPRITES.BILLBOARD07, SPRITES.BILLBOARD08, SPRITES.BILLBOARD09];
 SPRITES.PLANTS     = [SPRITES.TREE1, SPRITES.TREE2, SPRITES.DEAD_TREE1, SPRITES.DEAD_TREE2, SPRITES.PALM_TREE, SPRITES.BUSH1, SPRITES.BUSH2, SPRITES.CACTUS, SPRITES.STUMP, SPRITES.BOULDER1, SPRITES.BOULDER2, SPRITES.BOULDER3];
@@ -353,7 +351,6 @@ var step           = 1/fps;                   // how long is each frame (in seco
 var width          = 1024;                    // logical canvas width
 var height         = 768;                     // logical canvas height
 var centrifugal    = 0.3;                     // centrifugal force multiplier when going around curves
-var offRoadDecel   = 0.99;                    // speed multiplier when off road (e.g. you lose 2% speed each update frame)
 var skySpeed       = 0.001;                   // background sky layer scroll speed when going around curve (or up hill)
 var hillSpeed      = 0.002;                   // background hill layer scroll speed when going around curve (or up hill)
 var treeSpeed      = 0.003;                   // background tree layer scroll speed when going around curve (or up hill)
@@ -362,7 +359,7 @@ var hillOffset     = 0;                       // current hill scroll offset
 var treeOffset     = 0;                       // current tree scroll offset
 var segments       = [];                      // array of road segments
 var cars           = [];                      // array of cars on the road
-var canvas         = Dom.get('canvas');       // our canvas...
+var canvas         = document.getElementById('canvas');     // our canvas...
 var ctx            = canvas.getContext('2d'); // ...and its drawing context
 var background     = null;                    // our background image (loaded below)
 var sprites        = null;                    // our spritesheet (loaded below)
@@ -385,7 +382,7 @@ var maxSpeed       = segmentLength/step;      // top speed (ensure we can't move
 var accel          =  maxSpeed/5;             // acceleration rate - tuned until it 'felt' right
 var breaking       = -maxSpeed;               // deceleration rate when braking
 var decel          = -maxSpeed/5;             // 'natural' deceleration rate when neither accelerating, nor braking
-var offRoadDecel   = -maxSpeed/2;             // off road deceleration is somewhere in between
+var offRoadDecel   = -maxSpeed/2;             // speed multiploier for off road - off road deceleration is somewhere in between
 var offRoadLimit   =  maxSpeed/4;             // limit when off road deceleration no longer applies (e.g. you can always go at least this speed even when off road)
 var totalCars      = 200;                     // total number of cars on the road
 var currentLapTime = 0;                       // current lap time
@@ -470,9 +467,6 @@ function update(dt) {
       if (lastLapTime <= Util.toFloat(Dom.storage.fast_lap_time)) {
         Dom.storage.fast_lap_time = lastLapTime;
       }
-      else {
-      }
-      Dom.show('last_lap_time');
     }
     else {
       currentLapTime += dt;
@@ -492,7 +486,7 @@ function updateCars(dt, playerSegment, playerW) {
     car.percent = Util.percentRemaining(car.z, segmentLength); // useful for interpolation during rendering phase
     newSegment  = findSegment(car.z);
     if (oldSegment !== newSegment) {
-      index = oldSegment.cars.indexOf(car);
+      var index = oldSegment.cars.indexOf(car);
       oldSegment.cars.splice(index, 1);
       newSegment.cars.push(car);
     }
@@ -638,7 +632,7 @@ function findSegment(z) {
 // BUILD ROAD GEOMETRY
 //=========================================================================
 
-function lastY() { return (segments.length == 0) ? 0 : segments[segments.length-1].p2.world.y; }
+function lastY() { return (segments.length === 0) ? 0 : segments[segments.length-1].p2.world.y; }
 
 function addSegment(curve, y) {
   var n = segments.length;
@@ -810,12 +804,12 @@ function resetSprites() {
 
 function resetCars() {
   cars = [];
-  var n, car, segment, offset, z, sprite, speed;
+  var car, segment, offset, z, sprite, speed;
   for (var n = 0 ; n < totalCars ; n++) {
     offset = Math.random() * Util.randomChoice([-0.8, 0.8]);
     z      = Math.floor(Math.random() * segments.length) * segmentLength;
     sprite = Util.randomChoice(SPRITES.CARS);
-    speed  = maxSpeed/4 + Math.random() * maxSpeed/(sprite == SPRITES.SEMI ? 4 : 2);
+    speed  = maxSpeed/4 + Math.random() * maxSpeed/(sprite === SPRITES.SEMI ? 4 : 2);
     car = { offset: offset, z: z, sprite: sprite, speed: speed };
     segment = findSegment(car.z);
     segment.cars.push(car);
