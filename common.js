@@ -130,7 +130,6 @@ var Game = {  // a modified version of the game loop from my previous boulderdas
         requestAnimationFrame(frame, canvas);
       }
       frame(); // lets get this party started
-      Game.playMusic();
     });
   },
 
@@ -199,22 +198,6 @@ var Game = {  // a modified version of the game loop from my previous boulderdas
     }, 5000);
     return result;
   },
-
-  //---------------------------------------------------------------------------
-
-  playMusic: function() {
-    var music = Dom.get('music');
-    music.loop = true;
-    music.volume = 0.05; // shhhh! annoying music!
-    music.muted = (Dom.storage.muted === "true");
-    music.play();
-    Dom.toggleClassName('mute', 'on', music.muted);
-    Dom.on('mute', 'click', function() {
-      Dom.storage.muted = music.muted = !music.muted;
-      Dom.toggleClassName('mute', 'on', music.muted);
-    });
-  }
-
 }
 
 //=========================================================================
