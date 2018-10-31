@@ -936,9 +936,9 @@ SPRITES.CARS       = [SPRITES.CAR01, SPRITES.CAR02, SPRITES.CAR03, SPRITES.CAR04
           options       = options || {};
           canvas.width  = width  = Util.toInt(options.width,          width);
           canvas.height = height = Util.toInt(options.height,         height);
-          lanes                  = Util.toInt(options.lanes,          lanes);
-          roadWidth              = Util.toInt(options.roadWidth,      roadWidth);
-          cameraHeight           = Util.toInt(options.cameraHeight,   cameraHeight);
+        //  lanes                  = Util.toInt(options.lanes,          lanes);
+        //  roadWidth              = Util.toInt(options.roadWidth,      roadWidth);
+        //  cameraHeight           = Util.toInt(options.cameraHeight,   cameraHeight);
           drawDistance           = Util.toInt(options.drawDistance,   drawDistance);
           fogDensity             = Util.toInt(options.fogDensity,     fogDensity);
           fieldOfView            = Util.toInt(options.fieldOfView,    fieldOfView);
@@ -969,15 +969,15 @@ SPRITES.CARS       = [SPRITES.CAR01, SPRITES.CAR02, SPRITES.CAR03, SPRITES.CAR04
           Dom.blur(ev);
         });
 
-        Dom.on('roadWidth',      'change', function(ev) { Dom.blur(ev); reset({ roadWidth:     Util.limit(Util.toInt(ev.target.value), Util.toInt(ev.target.getAttribute('min')), Util.toInt(ev.target.getAttribute('max'))) }); });
-        Dom.on('cameraHeight',   'change', function(ev) { Dom.blur(ev); reset({ cameraHeight:  Util.limit(Util.toInt(ev.target.value), Util.toInt(ev.target.getAttribute('min')), Util.toInt(ev.target.getAttribute('max'))) }); });
+        // Dom.on('roadWidth',      'change', function(ev) { Dom.blur(ev); reset({ roadWidth:     Util.limit(Util.toInt(ev.target.value), Util.toInt(ev.target.getAttribute('min')), Util.toInt(ev.target.getAttribute('max'))) }); });
+        // Dom.on('cameraHeight',   'change', function(ev) { Dom.blur(ev); reset({ cameraHeight:  Util.limit(Util.toInt(ev.target.value), Util.toInt(ev.target.getAttribute('min')), Util.toInt(ev.target.getAttribute('max'))) }); });
         Dom.on('drawDistance',   'change', function(ev) { Dom.blur(ev); reset({ drawDistance:  Util.limit(Util.toInt(ev.target.value), Util.toInt(ev.target.getAttribute('min')), Util.toInt(ev.target.getAttribute('max'))) }); });
         Dom.on('fieldOfView',    'change', function(ev) { Dom.blur(ev); reset({ fieldOfView:   Util.limit(Util.toInt(ev.target.value), Util.toInt(ev.target.getAttribute('min')), Util.toInt(ev.target.getAttribute('max'))) }); });
         Dom.on('fogDensity',     'change', function(ev) { Dom.blur(ev); reset({ fogDensity:    Util.limit(Util.toInt(ev.target.value), Util.toInt(ev.target.getAttribute('min')), Util.toInt(ev.target.getAttribute('max'))) }); });
 
         function refreshTweakUI() {
-          Dom.get('currentRoadWidth').innerHTML      = Dom.get('roadWidth').value      = roadWidth;
-          Dom.get('currentCameraHeight').innerHTML   = Dom.get('cameraHeight').value   = cameraHeight;
+          // Dom.get('currentRoadWidth').innerHTML      = Dom.get('roadWidth').value      = roadWidth;
+          // Dom.get('currentCameraHeight').innerHTML   = Dom.get('cameraHeight').value   = cameraHeight;
           Dom.get('currentDrawDistance').innerHTML   = Dom.get('drawDistance').value   = drawDistance;
           Dom.get('currentFieldOfView').innerHTML    = Dom.get('fieldOfView').value    = fieldOfView;
           Dom.get('currentFogDensity').innerHTML     = Dom.get('fogDensity').value     = fogDensity;
