@@ -5,9 +5,7 @@
 var Dom = {
 
   get:  function(id)                     { return ((id instanceof HTMLElement) || (id === document)) ? id : document.getElementById(id); },
-  set:  function(id, html)               { Dom.get(id).innerHTML = html;                        },
   on:   function(ele, type, fn, capture) { Dom.get(ele).addEventListener(type, fn, capture);    },
-  un:   function(ele, type, fn, capture) { Dom.get(ele).removeEventListener(type, fn, capture); },
   show: function(ele, type)              { Dom.get(ele).style.display = (type || 'block');      },
   blur: function(ev)                     { ev.target.blur();                                    },
 
@@ -30,7 +28,6 @@ var Util = {
   accelerate:       function(v, accel, dt)      { return v + (accel * dt);                                        },
   interpolate:      function(a,b,percent)       { return a + (b-a)*percent                                        },
   easeIn:           function(a,b,percent)       { return a + (b-a)*Math.pow(percent,2);                           },
-  easeOut:          function(a,b,percent)       { return a + (b-a)*(1-Math.pow(1-percent,2));                     },
   easeInOut:        function(a,b,percent)       { return a + (b-a)*((-Math.cos(percent*Math.PI)/2) + 0.5);        },
   exponentialFog:   function(distance, density) { return 1 / (Math.pow(Math.E, (distance * distance * density))); },
 
@@ -95,7 +92,6 @@ var Game = {  // a modified version of the game loop from my previous boulderdas
           update = options.update,    // method to update game logic is provided by caller
           render = options.render,    // method to render the game is provided by caller
           step   = options.step,      // fixed frame step (1/fps) is specified by caller
-          stats  = options.stats,     // stats instance is provided by caller
           now    = null,
           last   = Util.timestamp(),
           dt     = 0,
@@ -124,7 +120,7 @@ var Game = {  // a modified version of the game loop from my previous boulderdas
     var count  = names.length;
 
     var onload = function() {
-      if (--count == 0)
+      if (--count === 0)
         callback(result);
     };
 
@@ -144,8 +140,8 @@ var Game = {  // a modified version of the game loop from my previous boulderdas
       for(n = 0 ; n < keys.length ; n++) {
         k = keys[n];
         k.mode = k.mode || 'up';
-        if ((k.key == keyCode) || (k.keys && (k.keys.indexOf(keyCode) >= 0))) {
-          if (k.mode == mode) {
+        if ((k.key === keyCode) || (k.keys && (k.keys.indexOf(keyCode) >= 0))) {
+          if (k.mode === mode) {
             k.action.call();
           }
         }
@@ -153,36 +149,8 @@ var Game = {  // a modified version of the game loop from my previous boulderdas
     };
     Dom.on(document, 'keydown', function(ev) { onkey(ev.keyCode, 'down'); } );
     Dom.on(document, 'keyup',   function(ev) { onkey(ev.keyCode, 'up');   } );
-  },
-
-  //---------------------------------------------------------------------------
-
-  stats: function(parentId, id) { // construct mr.doobs FPS counter - along with friendly good/bad/ok message box
-
-    var result = new Stats();
-    result.domElement.id = id || 'stats';
-    Dom.get(parentId).appendChild(result.domElement);
-
-    var msg = document.createElement('div');
-    msg.style.cssText = "border: 2px solid gray; padding: 5px; margin-top: 5px; text-align: left; font-size: 1.15em; text-align: right;";
-    msg.innerHTML = "Your canvas performance is ";
-    Dom.get(parentId).appendChild(msg);
-
-    var value = document.createElement('span');
-    value.innerHTML = "...";
-    msg.appendChild(value);
-
-    setInterval(function() {
-      var fps   = result.current();
-      var ok    = (fps > 50) ? 'good'  : (fps < 30) ? 'bad' : 'ok';
-      var color = (fps > 50) ? 'green' : (fps < 30) ? 'red' : 'gray';
-      value.innerHTML       = ok;
-      value.style.color     = color;
-      msg.style.borderColor = color;
-    }, 5000);
-    return result;
-  },
-}
+  }
+};
 
 //=========================================================================
 // canvas rendering helpers
@@ -302,7 +270,7 @@ var Render = {
   rumbleWidth:     function(projectedRoadWidth, lanes) { return projectedRoadWidth/Math.max(6,  2*lanes); },
   laneMarkerWidth: function(projectedRoadWidth, lanes) { return projectedRoadWidth/Math.max(32, 8*lanes); }
 
-}
+};
 
 //=============================================================================
 // RACING GAME CONSTANTS
@@ -523,7 +491,7 @@ function updateCars(dt, playerSegment, playerW) {
     car.z       = Util.increase(car.z, dt * car.speed, trackLength);
     car.percent = Util.percentRemaining(car.z, segmentLength); // useful for interpolation during rendering phase
     newSegment  = findSegment(car.z);
-    if (oldSegment != newSegment) {
+    if (oldSegment !== newSegment) {
       index = oldSegment.cars.indexOf(car);
       oldSegment.cars.splice(index, 1);
       newSegment.cars.push(car);
@@ -574,18 +542,6 @@ function updateCarOffset(car, carSegment, playerSegment, playerW) {
     return -0.1;
   else
     return 0;
-}
-
-//-------------------------------------------------------------------------
-
-function formatTime(dt) {
-  var minutes = Math.floor(dt/60);
-  var seconds = Math.floor(dt - (minutes * 60));
-  var tenths  = Math.floor(10 * (dt - Math.floor(dt)));
-  if (minutes > 0)
-    return minutes + "." + (seconds < 10 ? "0" : "") + seconds + "." + tenths;
-  else
-    return seconds + "." + tenths;
 }
 
 //=========================================================================
@@ -663,7 +619,7 @@ function render() {
       Render.sprite(ctx, width, height, resolution, roadWidth, sprites, sprite.source, spriteScale, spriteX, spriteY, (sprite.offset < 0 ? -1 : 0), -1, segment.clip);
     }
 
-    if (segment == playerSegment) {
+    if (segment === playerSegment) {
       Render.player(ctx, width, height, resolution, roadWidth, sprites, speed/maxSpeed,
                     cameraDepth/playerZ,
                     width/2,
@@ -896,18 +852,10 @@ function reset(options) {
   options       = options || {};
   canvas.width  = width  = Util.toInt(options.width,          width);
   canvas.height = height = Util.toInt(options.height,         height);
-//  lanes                  = Util.toInt(options.lanes,          lanes);
-//  roadWidth              = Util.toInt(options.roadWidth,      roadWidth);
-//  cameraHeight           = Util.toInt(options.cameraHeight,   cameraHeight);
-//  drawDistance           = Util.toInt(options.drawDistance,   drawDistance);
-//  fogDensity             = Util.toInt(options.fogDensity,     fogDensity);
-//  fieldOfView            = Util.toInt(options.fieldOfView,    fieldOfView);
-//  segmentLength          = Util.toInt(options.segmentLength,  segmentLength);
-//  rumbleLength           = Util.toInt(options.rumbleLength,   rumbleLength);
   cameraDepth            = 1 / Math.tan((fieldOfView/2) * Math.PI/180);
   playerZ                = (cameraHeight * cameraDepth);
   resolution             = height/480;
 
-  if ((segments.length==0) || (options.segmentLength) || (options.rumbleLength))
+  if ((segments.length === 0))
     resetRoad(); // only rebuild road when necessary
 }
