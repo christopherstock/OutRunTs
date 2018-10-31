@@ -444,13 +444,6 @@ SPRITES.CARS       = [SPRITES.CAR01, SPRITES.CAR02, SPRITES.CAR03, SPRITES.CAR04
         var keyFaster      = false;
         var keySlower      = false;
 
-        var hud = {
-          speed:            { value: null, dom: Dom.get('speed_value')            },
-          current_lap_time: { value: null, dom: Dom.get('current_lap_time_value') },
-          last_lap_time:    { value: null, dom: Dom.get('last_lap_time_value')    },
-          fast_lap_time:    { value: null, dom: Dom.get('fast_lap_time_value')    }
-        }
-
         //=========================================================================
         // UPDATE THE GAME WORLD
         //=========================================================================
@@ -524,7 +517,6 @@ SPRITES.CARS       = [SPRITES.CAR01, SPRITES.CAR02, SPRITES.CAR03, SPRITES.CAR04
               currentLapTime = 0;
               if (lastLapTime <= Util.toFloat(Dom.storage.fast_lap_time)) {
                 Dom.storage.fast_lap_time = lastLapTime;
-                updateHud('fast_lap_time', formatTime(lastLapTime));
                 Dom.addClassName('fast_lap_time', 'fastest');
                 Dom.addClassName('last_lap_time', 'fastest');
               }
@@ -532,16 +524,12 @@ SPRITES.CARS       = [SPRITES.CAR01, SPRITES.CAR02, SPRITES.CAR03, SPRITES.CAR04
                 Dom.removeClassName('fast_lap_time', 'fastest');
                 Dom.removeClassName('last_lap_time', 'fastest');
               }
-              updateHud('last_lap_time', formatTime(lastLapTime));
               Dom.show('last_lap_time');
             }
             else {
               currentLapTime += dt;
             }
           }
-
-          updateHud('speed',            5 * Math.round(speed/500));
-          updateHud('current_lap_time', formatTime(currentLapTime));
         }
 
         //-------------------------------------------------------------------------
@@ -609,13 +597,6 @@ SPRITES.CARS       = [SPRITES.CAR01, SPRITES.CAR02, SPRITES.CAR03, SPRITES.CAR04
         }
 
         //-------------------------------------------------------------------------
-
-        function updateHud(key, value) { // accessing DOM can be slow, so only do it if value has changed
-          if (hud[key].value !== value) {
-            hud[key].value = value;
-            Dom.set(hud[key].dom, value);
-          }
-        }
 
         function formatTime(dt) {
           var minutes = Math.floor(dt/60);
@@ -928,7 +909,6 @@ SPRITES.CARS       = [SPRITES.CAR01, SPRITES.CAR02, SPRITES.CAR03, SPRITES.CAR04
             sprites    = images[1];
             reset();
             Dom.storage.fast_lap_time = Dom.storage.fast_lap_time || 180;
-            updateHud('fast_lap_time', formatTime(Util.toFloat(Dom.storage.fast_lap_time)));
           }
         });
 
