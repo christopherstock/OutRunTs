@@ -939,11 +939,11 @@ SPRITES.CARS       = [SPRITES.CAR01, SPRITES.CAR02, SPRITES.CAR03, SPRITES.CAR04
         //  lanes                  = Util.toInt(options.lanes,          lanes);
         //  roadWidth              = Util.toInt(options.roadWidth,      roadWidth);
         //  cameraHeight           = Util.toInt(options.cameraHeight,   cameraHeight);
-          drawDistance           = Util.toInt(options.drawDistance,   drawDistance);
-          fogDensity             = Util.toInt(options.fogDensity,     fogDensity);
-          fieldOfView            = Util.toInt(options.fieldOfView,    fieldOfView);
-          segmentLength          = Util.toInt(options.segmentLength,  segmentLength);
-          rumbleLength           = Util.toInt(options.rumbleLength,   rumbleLength);
+        //  drawDistance           = Util.toInt(options.drawDistance,   drawDistance);
+        //  fogDensity             = Util.toInt(options.fogDensity,     fogDensity);
+        //  fieldOfView            = Util.toInt(options.fieldOfView,    fieldOfView);
+        //  segmentLength          = Util.toInt(options.segmentLength,  segmentLength);
+        //  rumbleLength           = Util.toInt(options.rumbleLength,   rumbleLength);
           cameraDepth            = 1 / Math.tan((fieldOfView/2) * Math.PI/180);
           playerZ                = (cameraHeight * cameraDepth);
           resolution             = height/480;
@@ -971,14 +971,14 @@ SPRITES.CARS       = [SPRITES.CAR01, SPRITES.CAR02, SPRITES.CAR03, SPRITES.CAR04
 
         // Dom.on('roadWidth',      'change', function(ev) { Dom.blur(ev); reset({ roadWidth:     Util.limit(Util.toInt(ev.target.value), Util.toInt(ev.target.getAttribute('min')), Util.toInt(ev.target.getAttribute('max'))) }); });
         // Dom.on('cameraHeight',   'change', function(ev) { Dom.blur(ev); reset({ cameraHeight:  Util.limit(Util.toInt(ev.target.value), Util.toInt(ev.target.getAttribute('min')), Util.toInt(ev.target.getAttribute('max'))) }); });
-        Dom.on('drawDistance',   'change', function(ev) { Dom.blur(ev); reset({ drawDistance:  Util.limit(Util.toInt(ev.target.value), Util.toInt(ev.target.getAttribute('min')), Util.toInt(ev.target.getAttribute('max'))) }); });
-        Dom.on('fieldOfView',    'change', function(ev) { Dom.blur(ev); reset({ fieldOfView:   Util.limit(Util.toInt(ev.target.value), Util.toInt(ev.target.getAttribute('min')), Util.toInt(ev.target.getAttribute('max'))) }); });
-        Dom.on('fogDensity',     'change', function(ev) { Dom.blur(ev); reset({ fogDensity:    Util.limit(Util.toInt(ev.target.value), Util.toInt(ev.target.getAttribute('min')), Util.toInt(ev.target.getAttribute('max'))) }); });
+        // Dom.on('drawDistance',   'change', function(ev) { Dom.blur(ev); reset({ drawDistance:  Util.limit(Util.toInt(ev.target.value), Util.toInt(ev.target.getAttribute('min')), Util.toInt(ev.target.getAttribute('max'))) }); });
+        // Dom.on('fieldOfView',    'change', function(ev) { Dom.blur(ev); reset({ fieldOfView:   Util.limit(Util.toInt(ev.target.value), Util.toInt(ev.target.getAttribute('min')), Util.toInt(ev.target.getAttribute('max'))) }); });
+        // Dom.on('fogDensity',     'change', function(ev) { Dom.blur(ev); reset({ fogDensity:    Util.limit(Util.toInt(ev.target.value), Util.toInt(ev.target.getAttribute('min')), Util.toInt(ev.target.getAttribute('max'))) }); });
 
         function refreshTweakUI() {
           // Dom.get('currentRoadWidth').innerHTML      = Dom.get('roadWidth').value      = roadWidth;
           // Dom.get('currentCameraHeight').innerHTML   = Dom.get('cameraHeight').value   = cameraHeight;
-          Dom.get('currentDrawDistance').innerHTML   = Dom.get('drawDistance').value   = drawDistance;
-          Dom.get('currentFieldOfView').innerHTML    = Dom.get('fieldOfView').value    = fieldOfView;
-          Dom.get('currentFogDensity').innerHTML     = Dom.get('fogDensity').value     = fogDensity;
+          // Dom.get('currentDrawDistance').innerHTML   = Dom.get('drawDistance').value   = drawDistance;
+          // Dom.get('currentFieldOfView').innerHTML    = Dom.get('fieldOfView').value    = fieldOfView;
+          // Dom.get('currentFogDensity').innerHTML     = Dom.get('fogDensity').value     = fogDensity;
         }
