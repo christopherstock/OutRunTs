@@ -1,22 +1,21 @@
-![babylon-zero](https://github.com/christopherstock/babylon-zero/raw/master/_ASSETS/promo/promoBadge7_1920x1037.jpg)
-#### ROCK AND ROLL - Exploring babylon.JS - WebGL made simple and powerful!
+![babylon-zero](https://github.com/christopherstock/OutRunTs/raw/master/res/image/promo/screen0.png)
+# Out Run TS
 
-Join this advanced workshop on Friday the 27th in our slacktime at Mayflower GmbH! 
-Contact me for a personal invitation!
+- Node.js, TypeScript &amp; the Webpack Dev Server
+- Minimum code
+- Pseudo 3D 
 
-Christopher
-
-## 1. Install all Node.js packages
+## 1. Install Node.js packages
 ```
 npm install
 ```
 
-## 2. Start Webpack Dev-Server
+## 2. Start the Webpack Dev-Server
 ```
 npm run build:devserver
 ```
 
-## 3. Open the app on the Webpack Dev-Server
+## 3. Open the app in your browser
 ```
 http://localhost:1234
 ```
