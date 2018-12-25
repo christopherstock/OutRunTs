@@ -1,17 +1,5 @@
 
 //=========================================================================
-// minimalist DOM helpers
-//=========================================================================
-
-var Dom = {
-
-  get:  function(id)                     { return ((id instanceof HTMLElement) || (id === document)) ? id : document.getElementById(id); },
-  on:   function(ele, type, fn, capture) { Dom.get(ele).addEventListener(type, fn, capture);    },
-
-  storage: window.localStorage || {}
-};
-
-//=========================================================================
 // general purpose helpers (mostly math)
 //=========================================================================
 
@@ -126,7 +114,10 @@ var Game = {  // a modified version of the game loop from my previous boulderdas
     for(var n = 0 ; n < names.length ; n++) {
       var name = names[n];
       result[n] = document.createElement('img');
-      Dom.on(result[n], 'load', onload);
+
+//      Dom.on(result[n], 'load', onload);
+      result[n].addEventListener( 'load', onload );
+
       result[n].src = "res/image/legacy/" + name + ".png";
     }
   },
@@ -146,8 +137,9 @@ var Game = {  // a modified version of the game loop from my previous boulderdas
         }
       }
     };
-    Dom.on(document, 'keydown', function(ev) { onkey(ev.keyCode, 'down'); } );
-    Dom.on(document, 'keyup',   function(ev) { onkey(ev.keyCode, 'up');   } );
+
+    document.addEventListener( 'keydown', function(ev) { onkey(ev.keyCode, 'down'); } );
+    document.addEventListener( 'keyup',   function(ev) { onkey(ev.keyCode, 'up'); } );
   }
 };
 
@@ -465,9 +457,11 @@ function update(dt) {
     if (currentLapTime && (startPosition < playerZ)) {
       lastLapTime    = currentLapTime;
       currentLapTime = 0;
+/*
       if (lastLapTime <= Util.toFloat(Dom.storage.fast_lap_time)) {
         Dom.storage.fast_lap_time = lastLapTime;
       }
+*/
     }
     else {
       currentLapTime += dt;
@@ -839,7 +833,9 @@ Game.run({
     background = images[0];
     sprites    = images[1];
     reset();
+/*
     Dom.storage.fast_lap_time = Dom.storage.fast_lap_time || 180;
+*/
   }
 });
 
