@@ -10,4 +10,10 @@
     export * from './util/MathUtil';
     export * from './util/String';
 
+    export * from './legacy/Background';
+    export * from './legacy/Color';
+    export * from './legacy/Game';
+    export * from './legacy/Key';
+    export * from './legacy/Render';
+    export * from './legacy/Sprite';
     export * from './legacy/Util';
