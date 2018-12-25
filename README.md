@@ -1,10 +1,10 @@
 # Out Run TS
 
-![Out Run TS](https://github.com/christopherstock/OutRunTs/raw/master/res/image/promo/title.png)
+![Out Run TS](https://github.com/christopherstock/OutRunTs/raw/master/dist/res/image/promo/title.png)
 
 A TypeScript port of the famous Out Run from SEGA.
 
-![Out Run TS](https://github.com/christopherstock/OutRunTs/raw/master/res/image/promo/screen0.png)
+![Out Run TS](https://github.com/christopherstock/OutRunTs/raw/master/dist/res/image/promo/screen0.png)
 
 - TypeScript, Node.js &amp; the Webpack Dev Server
 - Minimum code
