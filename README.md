@@ -1,11 +1,11 @@
 ![babylon-zero](https://github.com/christopherstock/OutRunTs/raw/master/res/image/promo/screen0.png)
 # Out Run TS
 
-- Node.js, TypeScript &amp; the Webpack Dev Server
+- TypeScript, Node.js &amp; the Webpack Dev Server
 - Minimum code
 - Pseudo 3D 
 
-## 1. Install Node.js packages
+## 1. Install all Node.js packages
 ```
 npm install
 ```
