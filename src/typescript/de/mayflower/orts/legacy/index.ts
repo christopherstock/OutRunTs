@@ -14,7 +14,7 @@ var hillOffset     = 0;                       // current hill scroll offset
 var treeOffset     = 0;                       // current tree scroll offset
 var segments       = [];                      // array of road segments
 var cars           = [];                      // array of cars on the road
-var canvas         = document.getElementById('canvas');     // our canvas...
+var canvas :HTMLCanvasElement = document.getElementById('canvas') as HTMLCanvasElement;     // our canvas...
 var ctx            = canvas.getContext('2d'); // ...and its drawing context
 var background     = null;                    // our background image (loaded below)
 var sprites        = null;                    // our spritesheet (loaded below)
@@ -88,7 +88,7 @@ function update(dt) {
     for(n = 0 ; n < playerSegment.sprites.length ; n++) {
       sprite  = playerSegment.sprites[n];
       spriteW = sprite.source.w * orts.SPRITES.SCALE;
-      if (orts.Util.overlap(playerX, playerW, sprite.offset + spriteW/2 * (sprite.offset > 0 ? 1 : -1), spriteW)) {
+      if (orts.Util.overlap(playerX, playerW, sprite.offset + spriteW/2 * (sprite.offset > 0 ? 1 : -1), spriteW, 0)) {
         speed = maxSpeed/5;
         position = orts.Util.increase(playerSegment.p1.world.z, -playerZ, trackLength); // stop in front of sprite (at front of segment)
         break;
@@ -383,13 +383,13 @@ function resetRoad() {
   segments = [];
 
   addStraight(ROAD.LENGTH.SHORT);
-  addLowRollingHills();
+  addLowRollingHills(0, 0);
   addSCurves();
   addCurve(ROAD.LENGTH.MEDIUM, ROAD.CURVE.MEDIUM, ROAD.HILL.LOW);
   addBumps();
-  addLowRollingHills();
+  addLowRollingHills(0, 0);
   addCurve(ROAD.LENGTH.LONG*2, ROAD.CURVE.MEDIUM, ROAD.HILL.MEDIUM);
-  addStraight();
+  addStraight(0);
   addHill(ROAD.LENGTH.MEDIUM, ROAD.HILL.HIGH);
   addSCurves();
   addCurve(ROAD.LENGTH.LONG, -ROAD.CURVE.MEDIUM, ROAD.HILL.NONE);
@@ -397,9 +397,9 @@ function resetRoad() {
   addCurve(ROAD.LENGTH.LONG, ROAD.CURVE.MEDIUM, -ROAD.HILL.LOW);
   addBumps();
   addHill(ROAD.LENGTH.LONG, -ROAD.HILL.MEDIUM);
-  addStraight();
+  addStraight(0);
   addSCurves();
-  addDownhillToEnd();
+  addDownhillToEnd(0);
 
   resetSprites();
   resetCars();
@@ -506,6 +506,6 @@ orts.Game.run({
     ready: function(images) {
         background = images[0];
         sprites    = images[1];
-        reset();
+        reset({});
     }
 });

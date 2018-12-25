@@ -32,7 +32,7 @@
             Main.game.init();
 */
 
-            require( '../legacy/index.js' );
+            require( '../legacy/index.ts' );
 
 
 
