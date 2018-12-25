@@ -1,71 +1,11 @@
 
-//=========================================================================
-// general purpose helpers (mostly math)
-//=========================================================================
-
-var Util = {
-
-  timestamp:        function()                  { return new Date().getTime();                                    },
-  toInt:            function(obj, def)          { if (obj !== null) { var x = parseInt(obj, 10); if (!isNaN(x)) return x; } return Util.toInt(def, 0); },
-  toFloat:          function(obj, def)          { if (obj !== null) { var x = parseFloat(obj);   if (!isNaN(x)) return x; } return Util.toFloat(def, 0.0); },
-  limit:            function(value, min, max)   { return Math.max(min, Math.min(value, max));                     },
-  randomInt:        function(min, max)          { return Math.round(Util.interpolate(min, max, Math.random()));   },
-  randomChoice:     function(options)           { return options[Util.randomInt(0, options.length-1)];            },
-  percentRemaining: function(n, total)          { return (n%total)/total;                                         },
-  accelerate:       function(v, accel, dt)      { return v + (accel * dt);                                        },
-  interpolate:      function(a,b,percent)       { return a + (b-a)*percent                                        },
-  easeIn:           function(a,b,percent)       { return a + (b-a)*Math.pow(percent,2);                           },
-  easeInOut:        function(a,b,percent)       { return a + (b-a)*((-Math.cos(percent*Math.PI)/2) + 0.5);        },
-  exponentialFog:   function(distance, density) { return 1 / (Math.pow(Math.E, (distance * distance * density))); },
-
-  increase:  function(start, increment, max) { // with looping
-    var result = start + increment;
-    while (result >= max)
-      result -= max;
-    while (result < 0)
-      result += max;
-    return result;
-  },
-
-  project: function(p, cameraX, cameraY, cameraZ, cameraDepth, width, height, roadWidth) {
-    p.camera.x     = (p.world.x || 0) - cameraX;
-    p.camera.y     = (p.world.y || 0) - cameraY;
-    p.camera.z     = (p.world.z || 0) - cameraZ;
-    p.screen.scale = cameraDepth/p.camera.z;
-    p.screen.x     = Math.round((width/2)  + (p.screen.scale * p.camera.x  * width/2));
-    p.screen.y     = Math.round((height/2) - (p.screen.scale * p.camera.y  * height/2));
-    p.screen.w     = Math.round(             (p.screen.scale * roadWidth   * width/2));
-  },
-
-  overlap: function(x1, w1, x2, w2, percent) {
-    var half = (percent || 1)/2;
-    var min1 = x1 - (w1*half);
-    var max1 = x1 + (w1*half);
-    var min2 = x2 - (w2*half);
-    var max2 = x2 + (w2*half);
-    return ! ((max1 < min2) || (min1 > max2));
-  }
-};
-
-//=========================================================================
-// POLYFILL for requestAnimationFrame
-//=========================================================================
-
-if (!window.requestAnimationFrame) { // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-  window.requestAnimationFrame = window.webkitRequestAnimationFrame || 
-                                 window.mozRequestAnimationFrame    || 
-                                 window.oRequestAnimationFrame      || 
-                                 window.msRequestAnimationFrame     || 
-                                 function(callback) {
-                                   window.setTimeout(callback, 1000 / 60);
-                                 }
-}
+import * as orts from '..'
 
 //=========================================================================
 // GAME LOOP helpers
 //=========================================================================
 
-var Game = {  // a modified version of the game loop from my previous boulderdash game - see http://codeincomplete.com/posts/2011/10/25/javascript_boulderdash/#gameloop
+var Game = {
 
   run: function(options) {
 
@@ -80,12 +20,12 @@ var Game = {  // a modified version of the game loop from my previous boulderdas
           var render = options.render;    // method to render the game is provided by caller
           var step   = options.step;      // fixed frame step (1/fps) is specified by caller
           var now    = null;
-          var last   = Util.timestamp();
+          var last   = orts.Util.timestamp();
           var dt     = 0;
           var gdt    = 0;
 
       function frame() {
-        now = Util.timestamp();
+        now = orts.Util.timestamp();
         dt  = Math.min(1, (now - last) / 1000); // using requestAnimationFrame have to be able to handle large delta's caused when it 'hibernates' in a background or non-visible tab
         gdt = gdt + dt;
         while (gdt > step) {
@@ -235,7 +175,7 @@ var Render = {
 
   player: function(ctx, width, height, resolution, roadWidth, sprites, speedPercent, scale, destX, destY, steer, updown) {
 
-    var bounce = (1.5 * Math.random() * speedPercent * resolution) * Util.randomChoice([-1,1]);
+    var bounce = (1.5 * Math.random() * speedPercent * resolution) * orts.Util.randomChoice([-1,1]);
     var sprite;
     if (steer < 0)
       sprite = (updown > 0) ? SPRITES.PLAYER_UPHILL_LEFT : SPRITES.PLAYER_LEFT;
@@ -339,6 +279,8 @@ SPRITES.CARS       = [SPRITES.CAR01, SPRITES.CAR02, SPRITES.CAR03, SPRITES.CAR04
 
 
 
+
+
 var fps            = 60;                      // how many 'update' frames per second
 var step           = 1/fps;                   // how long is each frame (in seconds)
 var width          = 1024;                    // logical canvas width
@@ -401,7 +343,7 @@ function update(dt) {
 
   updateCars(dt, playerSegment, playerW);
 
-  position = Util.increase(position, dt * speed, trackLength);
+  position = orts.Util.increase(position, dt * speed, trackLength);
 
   if (keyLeft)
     playerX = playerX - dx;
@@ -411,24 +353,24 @@ function update(dt) {
   playerX = playerX - (dx * speedPercent * playerSegment.curve * centrifugal);
 
   if (keyFaster)
-    speed = Util.accelerate(speed, accel, dt);
+    speed = orts.Util.accelerate(speed, accel, dt);
   else if (keySlower)
-    speed = Util.accelerate(speed, breaking, dt);
+    speed = orts.Util.accelerate(speed, breaking, dt);
   else
-    speed = Util.accelerate(speed, decel, dt);
+    speed = orts.Util.accelerate(speed, decel, dt);
 
 
   if ((playerX < -1) || (playerX > 1)) {
 
     if (speed > offRoadLimit)
-      speed = Util.accelerate(speed, offRoadDecel, dt);
+      speed = orts.Util.accelerate(speed, offRoadDecel, dt);
 
     for(n = 0 ; n < playerSegment.sprites.length ; n++) {
       sprite  = playerSegment.sprites[n];
       spriteW = sprite.source.w * SPRITES.SCALE;
-      if (Util.overlap(playerX, playerW, sprite.offset + spriteW/2 * (sprite.offset > 0 ? 1 : -1), spriteW)) {
+      if (orts.Util.overlap(playerX, playerW, sprite.offset + spriteW/2 * (sprite.offset > 0 ? 1 : -1), spriteW)) {
         speed = maxSpeed/5;
-        position = Util.increase(playerSegment.p1.world.z, -playerZ, trackLength); // stop in front of sprite (at front of segment)
+        position = orts.Util.increase(playerSegment.p1.world.z, -playerZ, trackLength); // stop in front of sprite (at front of segment)
         break;
       }
     }
@@ -438,27 +380,27 @@ function update(dt) {
     car  = playerSegment.cars[n];
     carW = car.sprite.w * SPRITES.SCALE;
     if (speed > car.speed) {
-      if (Util.overlap(playerX, playerW, car.offset, carW, 0.8)) {
+      if (orts.Util.overlap(playerX, playerW, car.offset, carW, 0.8)) {
         speed    = car.speed * (car.speed/speed);
-        position = Util.increase(car.z, -playerZ, trackLength);
+        position = orts.Util.increase(car.z, -playerZ, trackLength);
         break;
       }
     }
   }
 
-  playerX = Util.limit(playerX, -3, 3);     // dont ever let it go too far out of bounds
-  speed   = Util.limit(speed, 0, maxSpeed); // or exceed maxSpeed
+  playerX = orts.Util.limit(playerX, -3, 3);     // dont ever let it go too far out of bounds
+  speed   = orts.Util.limit(speed, 0, maxSpeed); // or exceed maxSpeed
 
-  skyOffset  = Util.increase(skyOffset,  skySpeed  * playerSegment.curve * (position-startPosition)/segmentLength, 1);
-  hillOffset = Util.increase(hillOffset, hillSpeed * playerSegment.curve * (position-startPosition)/segmentLength, 1);
-  treeOffset = Util.increase(treeOffset, treeSpeed * playerSegment.curve * (position-startPosition)/segmentLength, 1);
+  skyOffset  = orts.Util.increase(skyOffset,  skySpeed  * playerSegment.curve * (position-startPosition)/segmentLength, 1);
+  hillOffset = orts.Util.increase(hillOffset, hillSpeed * playerSegment.curve * (position-startPosition)/segmentLength, 1);
+  treeOffset = orts.Util.increase(treeOffset, treeSpeed * playerSegment.curve * (position-startPosition)/segmentLength, 1);
 
   if (position > playerZ) {
     if (currentLapTime && (startPosition < playerZ)) {
       lastLapTime    = currentLapTime;
       currentLapTime = 0;
 /*
-      if (lastLapTime <= Util.toFloat(Dom.storage.fast_lap_time)) {
+      if (lastLapTime <= orts.Util.toFloat(Dom.storage.fast_lap_time)) {
         Dom.storage.fast_lap_time = lastLapTime;
       }
 */
@@ -477,8 +419,8 @@ function updateCars(dt, playerSegment, playerW) {
     car         = cars[n];
     oldSegment  = findSegment(car.z);
     car.offset  = car.offset + updateCarOffset(car, oldSegment, playerSegment, playerW);
-    car.z       = Util.increase(car.z, dt * car.speed, trackLength);
-    car.percent = Util.percentRemaining(car.z, segmentLength); // useful for interpolation during rendering phase
+    car.z       = orts.Util.increase(car.z, dt * car.speed, trackLength);
+    car.percent = orts.Util.percentRemaining(car.z, segmentLength); // useful for interpolation during rendering phase
     newSegment  = findSegment(car.z);
     if (oldSegment !== newSegment) {
       var index = oldSegment.cars.indexOf(car);
@@ -499,7 +441,7 @@ function updateCarOffset(car, carSegment, playerSegment, playerW) {
   for(i = 1 ; i < lookahead ; i++) {
     segment = segments[(carSegment.index+i)%segments.length];
 
-    if ((segment === playerSegment) && (car.speed > speed) && (Util.overlap(playerX, playerW, car.offset, carW, 1.2))) {
+    if ((segment === playerSegment) && (car.speed > speed) && (orts.Util.overlap(playerX, playerW, car.offset, carW, 1.2))) {
       if (playerX > 0.5)
         dir = -1;
       else if (playerX < -0.5)
@@ -512,7 +454,7 @@ function updateCarOffset(car, carSegment, playerSegment, playerW) {
     for(j = 0 ; j < segment.cars.length ; j++) {
       otherCar  = segment.cars[j];
       otherCarW = otherCar.sprite.w * SPRITES.SCALE;
-      if ((car.speed > otherCar.speed) && Util.overlap(car.offset, carW, otherCar.offset, otherCarW, 1.2)) {
+      if ((car.speed > otherCar.speed) && orts.Util.overlap(car.offset, carW, otherCar.offset, otherCarW, 1.2)) {
         if (otherCar.offset > 0.5)
           dir = -1;
         else if (otherCar.offset < -0.5)
@@ -540,10 +482,10 @@ function updateCarOffset(car, carSegment, playerSegment, playerW) {
 function render() {
 
   var baseSegment   = findSegment(position);
-  var basePercent   = Util.percentRemaining(position, segmentLength);
+  var basePercent   = orts.Util.percentRemaining(position, segmentLength);
   var playerSegment = findSegment(position+playerZ);
-  var playerPercent = Util.percentRemaining(position+playerZ, segmentLength);
-  var playerY       = Util.interpolate(playerSegment.p1.world.y, playerSegment.p2.world.y, playerPercent);
+  var playerPercent = orts.Util.percentRemaining(position+playerZ, segmentLength);
+  var playerY       = orts.Util.interpolate(playerSegment.p1.world.y, playerSegment.p2.world.y, playerPercent);
   var maxy          = height;
 
   var x  = 0;
@@ -561,11 +503,11 @@ function render() {
 
     segment        = segments[(baseSegment.index + n) % segments.length];
     segment.looped = segment.index < baseSegment.index;
-    segment.fog    = Util.exponentialFog(n/drawDistance, fogDensity);
+    segment.fog    = orts.Util.exponentialFog(n/drawDistance, fogDensity);
     segment.clip   = maxy;
 
-    Util.project(segment.p1, (playerX * roadWidth) - x,      playerY + cameraHeight, position - (segment.looped ? trackLength : 0), cameraDepth, width, height, roadWidth);
-    Util.project(segment.p2, (playerX * roadWidth) - x - dx, playerY + cameraHeight, position - (segment.looped ? trackLength : 0), cameraDepth, width, height, roadWidth);
+    orts.Util.project(segment.p1, (playerX * roadWidth) - x,      playerY + cameraHeight, position - (segment.looped ? trackLength : 0), cameraDepth, width, height, roadWidth);
+    orts.Util.project(segment.p2, (playerX * roadWidth) - x - dx, playerY + cameraHeight, position - (segment.looped ? trackLength : 0), cameraDepth, width, height, roadWidth);
 
     x  = x + dx;
     dx = dx + segment.curve;
@@ -594,9 +536,9 @@ function render() {
     for(i = 0 ; i < segment.cars.length ; i++) {
       car         = segment.cars[i];
       sprite      = car.sprite;
-      spriteScale = Util.interpolate(segment.p1.screen.scale, segment.p2.screen.scale, car.percent);
-      spriteX     = Util.interpolate(segment.p1.screen.x,     segment.p2.screen.x,     car.percent) + (spriteScale * car.offset * roadWidth * width/2);
-      spriteY     = Util.interpolate(segment.p1.screen.y,     segment.p2.screen.y,     car.percent);
+      spriteScale = orts.Util.interpolate(segment.p1.screen.scale, segment.p2.screen.scale, car.percent);
+      spriteX     = orts.Util.interpolate(segment.p1.screen.x,     segment.p2.screen.x,     car.percent) + (spriteScale * car.offset * roadWidth * width/2);
+      spriteY     = orts.Util.interpolate(segment.p1.screen.y,     segment.p2.screen.y,     car.percent);
       Render.sprite(ctx, width, height, resolution, roadWidth, sprites, car.sprite, spriteScale, spriteX, spriteY, -0.5, -1, segment.clip);
     }
 
@@ -612,7 +554,7 @@ function render() {
       Render.player(ctx, width, height, resolution, roadWidth, sprites, speed/maxSpeed,
                     cameraDepth/playerZ,
                     width/2,
-                    (height/2) - (cameraDepth/playerZ * Util.interpolate(playerSegment.p1.camera.y, playerSegment.p2.camera.y, playerPercent) * height/2),
+                    (height/2) - (cameraDepth/playerZ * orts.Util.interpolate(playerSegment.p1.camera.y, playerSegment.p2.camera.y, playerPercent) * height/2),
                     speed * (keyLeft ? -1 : keyRight ? 1 : 0),
                     playerSegment.p2.world.y - playerSegment.p1.world.y);
     }
@@ -648,14 +590,14 @@ function addSprite(n, sprite, offset) {
 
 function addRoad(enter, hold, leave, curve, y) {
   var startY   = lastY();
-  var endY     = startY + (Util.toInt(y, 0) * segmentLength);
+  var endY     = startY + (orts.Util.toInt(y, 0) * segmentLength);
   var n, total = enter + hold + leave;
   for(n = 0 ; n < enter ; n++)
-    addSegment(Util.easeIn(0, curve, n/enter), Util.easeInOut(startY, endY, n/total));
+    addSegment(orts.Util.easeIn(0, curve, n/enter), orts.Util.easeInOut(startY, endY, n/total));
   for(n = 0 ; n < hold  ; n++)
-    addSegment(curve, Util.easeInOut(startY, endY, (enter+n)/total));
+    addSegment(curve, orts.Util.easeInOut(startY, endY, (enter+n)/total));
   for(n = 0 ; n < leave ; n++)
-    addSegment(Util.easeInOut(curve, 0, n/leave), Util.easeInOut(startY, endY, (enter+hold+n)/total));
+    addSegment(orts.Util.easeInOut(curve, 0, n/leave), orts.Util.easeInOut(startY, endY, (enter+hold+n)/total));
 }
 
 var ROAD = {
@@ -775,22 +717,22 @@ function resetSprites() {
 
   for(n = 250 ; n < 1000 ; n += 5) {
     addSprite(n,     SPRITES.COLUMN, 1.1);
-    addSprite(n + Util.randomInt(0,5), SPRITES.TREE1, -1 - (Math.random() * 2));
-    addSprite(n + Util.randomInt(0,5), SPRITES.TREE2, -1 - (Math.random() * 2));
+    addSprite(n + orts.Util.randomInt(0,5), SPRITES.TREE1, -1 - (Math.random() * 2));
+    addSprite(n + orts.Util.randomInt(0,5), SPRITES.TREE2, -1 - (Math.random() * 2));
   }
 
   for(n = 200 ; n < segments.length ; n += 3) {
-    addSprite(n, Util.randomChoice(SPRITES.PLANTS), Util.randomChoice([1,-1]) * (2 + Math.random() * 5));
+    addSprite(n, orts.Util.randomChoice(SPRITES.PLANTS), orts.Util.randomChoice([1,-1]) * (2 + Math.random() * 5));
   }
 
   var side, sprite, offset;
   for(n = 1000 ; n < (segments.length-50) ; n += 100) {
-    side      = Util.randomChoice([1, -1]);
-    addSprite(n + Util.randomInt(0, 50), Util.randomChoice(SPRITES.BILLBOARDS), -side);
+    side      = orts.Util.randomChoice([1, -1]);
+    addSprite(n + orts.Util.randomInt(0, 50), orts.Util.randomChoice(SPRITES.BILLBOARDS), -side);
     for(i = 0 ; i < 20 ; i++) {
-      sprite = Util.randomChoice(SPRITES.PLANTS);
+      sprite = orts.Util.randomChoice(SPRITES.PLANTS);
       offset = side * (1.5 + Math.random());
-      addSprite(n + Util.randomInt(0, 50), sprite, offset);
+      addSprite(n + orts.Util.randomInt(0, 50), sprite, offset);
     }
 
   }
@@ -801,9 +743,9 @@ function resetCars() {
   cars = [];
   var car, segment, offset, z, sprite, speed;
   for (var n = 0 ; n < totalCars ; n++) {
-    offset = Math.random() * Util.randomChoice([-0.8, 0.8]);
+    offset = Math.random() * orts.Util.randomChoice([-0.8, 0.8]);
     z      = Math.floor(Math.random() * segments.length) * segmentLength;
-    sprite = Util.randomChoice(SPRITES.CARS);
+    sprite = orts.Util.randomChoice(SPRITES.CARS);
     speed  = maxSpeed/4 + Math.random() * maxSpeed/(sprite === SPRITES.SEMI ? 4 : 2);
     car = { offset: offset, z: z, sprite: sprite, speed: speed };
     segment = findSegment(car.z);
@@ -812,37 +754,10 @@ function resetCars() {
   }
 }
 
-//=========================================================================
-// THE GAME LOOP
-//=========================================================================
-
-Game.run({
-  canvas: canvas, render: render, update: update, step: step,
-  images: ["background", "sprites"],
-  keys: [
-    { keys: [KEY.LEFT,  KEY.A], mode: 'down', action: function() { keyLeft   = true;  } },
-    { keys: [KEY.RIGHT, KEY.D], mode: 'down', action: function() { keyRight  = true;  } },
-    { keys: [KEY.UP,    KEY.W], mode: 'down', action: function() { keyFaster = true;  } },
-    { keys: [KEY.DOWN,  KEY.S], mode: 'down', action: function() { keySlower = true;  } },
-    { keys: [KEY.LEFT,  KEY.A], mode: 'up',   action: function() { keyLeft   = false; } },
-    { keys: [KEY.RIGHT, KEY.D], mode: 'up',   action: function() { keyRight  = false; } },
-    { keys: [KEY.UP,    KEY.W], mode: 'up',   action: function() { keyFaster = false; } },
-    { keys: [KEY.DOWN,  KEY.S], mode: 'up',   action: function() { keySlower = false; } }
-  ],
-  ready: function(images) {
-    background = images[0];
-    sprites    = images[1];
-    reset();
-/*
-    Dom.storage.fast_lap_time = Dom.storage.fast_lap_time || 180;
-*/
-  }
-});
-
 function reset(options) {
   options       = options || {};
-  canvas.width  = width  = Util.toInt(options.width,          width);
-  canvas.height = height = Util.toInt(options.height,         height);
+  canvas.width  = width  = orts.Util.toInt(options.width,          width);
+  canvas.height = height = orts.Util.toInt(options.height,         height);
   cameraDepth            = 1 / Math.tan((fieldOfView/2) * Math.PI/180);
   playerZ                = (cameraHeight * cameraDepth);
   resolution             = height/480;
@@ -850,3 +765,27 @@ function reset(options) {
   if ((segments.length === 0))
     resetRoad(); // only rebuild road when necessary
 }
+
+//=========================================================================
+// THE GAME LOOP
+//=========================================================================
+
+Game.run({
+    canvas: canvas, render: render, update: update, step: step,
+    images: ["background", "sprites"],
+    keys: [
+        { keys: [KEY.LEFT,  KEY.A], mode: 'down', action: function() { keyLeft   = true;  } },
+        { keys: [KEY.RIGHT, KEY.D], mode: 'down', action: function() { keyRight  = true;  } },
+        { keys: [KEY.UP,    KEY.W], mode: 'down', action: function() { keyFaster = true;  } },
+        { keys: [KEY.DOWN,  KEY.S], mode: 'down', action: function() { keySlower = true;  } },
+        { keys: [KEY.LEFT,  KEY.A], mode: 'up',   action: function() { keyLeft   = false; } },
+        { keys: [KEY.RIGHT, KEY.D], mode: 'up',   action: function() { keyRight  = false; } },
+        { keys: [KEY.UP,    KEY.W], mode: 'up',   action: function() { keyFaster = false; } },
+        { keys: [KEY.DOWN,  KEY.S], mode: 'up',   action: function() { keySlower = false; } }
+    ],
+    ready: function(images) {
+        background = images[0];
+        sprites    = images[1];
+        reset();
+    }
+});
