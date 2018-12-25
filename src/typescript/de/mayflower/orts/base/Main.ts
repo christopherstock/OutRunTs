@@ -10,7 +10,10 @@
     *   TODO Primal
     *   =====================
     *
-    *
+     *  TODO Remove single sprite sheet.
+     *  TODO Move to TS.
+     *  TODO Move to Node.js framework and package.json.
+     *  TODO Move to classes.    *
     *
     *******************************************************************************************************************/
     export class Main

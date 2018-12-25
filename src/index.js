@@ -1,11 +1,3 @@
-/**
- *  Out Run TS - A TypeScript port of the famous Out Run from SEGA.
- *
- *  TODO Remove single sprite sheet.
- *  TODO Move to TS.
- *  TODO Move to Node.js framework and package.json.
- *  TODO Move to classes.
- */
 
 //=========================================================================
 // minimalist DOM helpers
