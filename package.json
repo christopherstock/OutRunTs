@@ -1,0 +1,44 @@
+{
+    "name": "OutRunTS",
+    "version": "0.0.1",
+    "description": "A TypeScript Joyride",
+    "author": "Christopher Stock <email@christopherstock.de>",
+    "license": "MIT",
+    "main": "dist/index.html",
+    "homepage": "http://www.christopherstock.de",
+    "repository": "https://github.com/christopherstock/OutRunTs",
+    "bugs": "https://github.com/christopherstock/OutRunTs/issues",
+    "scripts": {
+        "build:dev": "webpack --mode=development --watch",
+        "build:production": "webpack --mode=production --watch",
+        "build:devserver": "webpack-dev-server --mode=development",
+        "test": "mocha --require ts-node/register --require ignore-styles --require src/test/index.ts src/test/**/*.ts",
+        "tslint:check": "tslint --project ./tsconfig.json --config ./tslint.json \"src/**/*.{ts,tsx}\"",
+        "typedoc:generate": "typedoc --out doc\\ --listInvalidSymbolLinks --name \"babylon-zero, (c) 2018 Mayflower GmbH\" src/typescript"
+    },
+    "devDependencies": {
+        "@types/chai": "^4.1.4",
+        "@types/mocha": "^5.2.5",
+        "@types/node": "^9.6.5",
+        "@types/webpack": "^4.4.0",
+        "awesome-typescript-loader": "^5.0.0-1",
+        "chai": "^4.1.2",
+        "css-loader": "^0.28.11",
+        "ignore-styles": "^5.0.1",
+        "less": "^3.0.1",
+        "less-loader": "^4.1.0",
+        "mocha": "^5.2.0",
+        "source-map-loader": "^0.2.3",
+        "style-loader": "^0.20.3",
+        "ts-node": "^7.0.0",
+        "tslint": "^5.11.0",
+        "typedoc": "^0.11.1",
+        "typescript": "^3.0.1",
+        "webpack": "^4.16.4",
+        "webpack-cli": "^3.1.0",
+        "webpack-dev-server": "^3.1.5"
+    },
+    "dependencies": {
+        "moment": "^2.22.1"
+    }
+}
