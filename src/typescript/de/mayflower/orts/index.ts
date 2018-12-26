@@ -1,10 +1,14 @@
 
     export * from './base/Debug';
-    export * from './base/Version';
+    export * from './base/GameEngine';
     export * from './base/Main';
+    export * from './base/Version';
 
     export * from './base/setting/SettingDebug';
     export * from './base/setting/SettingGame';
+
+    export * from './hid/KeyCodes';
+    export * from './hid/KeySystem';
 
     export * from './util/HTML';
     export * from './util/MathUtil';

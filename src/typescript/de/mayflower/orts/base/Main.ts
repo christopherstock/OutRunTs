@@ -17,7 +17,7 @@
     export class Main
     {
         /** The singleton instance of the game. */
-//        public      static          game                    :bz.Game                    = null;
+        public      static          game                    :orts.GameEngine                = null;
 
         /** ************************************************************************************************************
         *   This method is invoked when the application starts.
@@ -28,10 +28,11 @@
             orts.HTML.setFavicon( 'favicon.ico' );
 
             Main.acclaim();
-/*
-            Main.game = new bz.Game();
+
+            Main.game = new orts.GameEngine();
             Main.game.init();
-*/
+
+
             // start legacy game loop
             Main.startLegacyLoop();
         }
@@ -55,6 +56,7 @@
                 {
                     canvas: outRun.canvas, render: outRun.render, update: outRun.update, step: outRun.step,
                     images: ['background', 'sprites'],
+
                     keys: [
                         { keys: [orts.KEY.LEFT,  orts.KEY.A], mode: 'down', action: () :void => { outRun.keyLeft   = true;  } },
                         { keys: [orts.KEY.RIGHT, orts.KEY.D], mode: 'down', action: () :void => { outRun.keyRight  = true;  } },
@@ -65,6 +67,7 @@
                         { keys: [orts.KEY.UP,    orts.KEY.W], mode: 'up',   action: () :void => { outRun.keyFaster = false; } },
                         { keys: [orts.KEY.DOWN,  orts.KEY.S], mode: 'up',   action: () :void => { outRun.keySlower = false; } }
                     ],
+
                     ready: (images:string[]) :void => {
                         outRun.background = images[0];
                         outRun.sprites    = images[1];
