@@ -14,6 +14,7 @@
     export * from './legacy/Color';
     export * from './legacy/Game';
     export * from './legacy/Key';
+    export * from './legacy/OutRun';
     export * from './legacy/Render';
     export * from './legacy/Sprite';
     export * from './legacy/Util';
