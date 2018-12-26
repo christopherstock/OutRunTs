@@ -7,7 +7,18 @@ import * as orts from '..'
 
 export var Game = {
 
-    run: function(options) {
+    run: function() {
+
+        const outRun :orts.OutRun = new orts.OutRun();
+        const options :any = {
+            canvas: outRun.canvas, render: outRun.render, update: outRun.update, step: outRun.step,
+            images: ['background', 'sprites'],
+            ready: (images:string[]) :void => {
+                outRun.background = images[0];
+                outRun.sprites    = images[1];
+                outRun.reset({});
+            }
+        };
 
         Game.loadImages(options.images, function(images) {
 
@@ -54,7 +65,7 @@ export var Game = {
 //      Dom.on(result[n], 'load', onload);
             result[n].addEventListener( 'load', onload );
 
-            result[n].src = "res/image/legacy/" + name + ".png";
+            result[n].src = 'res/image/legacy/' + name + '.png';
         }
     },
 };

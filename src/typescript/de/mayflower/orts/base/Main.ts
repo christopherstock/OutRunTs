@@ -34,7 +34,7 @@
 
 
             // start legacy game loop
-            Main.startLegacyLoop();
+            orts.Game.run();
         }
 
         /** ************************************************************************************************************
@@ -46,22 +46,5 @@
 
             orts.Debug.acclaim.log( orts.Version.getCurrent() );
             orts.Debug.acclaim.log();
-        }
-
-        private static startLegacyLoop() : void
-        {
-            const outRun :orts.OutRun = new orts.OutRun();
-
-            orts.Game.run(
-                {
-                    canvas: outRun.canvas, render: outRun.render, update: outRun.update, step: outRun.step,
-                    images: ['background', 'sprites'],
-                    ready: (images:string[]) :void => {
-                        outRun.background = images[0];
-                        outRun.sprites    = images[1];
-                        outRun.reset({});
-                    }
-                }
-            );
         }
     }
