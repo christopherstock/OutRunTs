@@ -13,8 +13,6 @@ export var Game = {
 
             options.ready(images); // tell caller to initialize itself because images are loaded and we're ready to rumble
 
-            Game.setKeyListener(options.keys);
-
             // var canvas = options.canvas,    // canvas render target is provided by caller
             var update = options.update;    // method to update game logic is provided by caller
             var render = options.render;    // method to render the game is provided by caller
@@ -59,22 +57,4 @@ export var Game = {
             result[n].src = "res/image/legacy/" + name + ".png";
         }
     },
-
-    setKeyListener: function(keys) {
-        var onkey = function(keyCode, mode) {
-            var n, k;
-            for(n = 0 ; n < keys.length ; n++) {
-                k = keys[n];
-                k.mode = k.mode || 'up';
-                if ((k.key === keyCode) || (k.keys && (k.keys.indexOf(keyCode) >= 0))) {
-                    if (k.mode === mode) {
-                        k.action.call();
-                    }
-                }
-            }
-        };
-
-        document.addEventListener( 'keydown', function(ev) { onkey(ev.keyCode, 'down'); } );
-        document.addEventListener( 'keyup',   function(ev) { onkey(ev.keyCode, 'up'); } );
-    }
 };

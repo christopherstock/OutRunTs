@@ -56,18 +56,6 @@
                 {
                     canvas: outRun.canvas, render: outRun.render, update: outRun.update, step: outRun.step,
                     images: ['background', 'sprites'],
-
-                    keys: [
-                        { keys: [orts.KEY.LEFT,  orts.KEY.A], mode: 'down', action: () :void => { outRun.keyLeft   = true;  } },
-                        { keys: [orts.KEY.RIGHT, orts.KEY.D], mode: 'down', action: () :void => { outRun.keyRight  = true;  } },
-                        { keys: [orts.KEY.UP,    orts.KEY.W], mode: 'down', action: () :void => { outRun.keyFaster = true;  } },
-                        { keys: [orts.KEY.DOWN,  orts.KEY.S], mode: 'down', action: () :void => { outRun.keySlower = true;  } },
-                        { keys: [orts.KEY.LEFT,  orts.KEY.A], mode: 'up',   action: () :void => { outRun.keyLeft   = false; } },
-                        { keys: [orts.KEY.RIGHT, orts.KEY.D], mode: 'up',   action: () :void => { outRun.keyRight  = false; } },
-                        { keys: [orts.KEY.UP,    orts.KEY.W], mode: 'up',   action: () :void => { outRun.keyFaster = false; } },
-                        { keys: [orts.KEY.DOWN,  orts.KEY.S], mode: 'up',   action: () :void => { outRun.keySlower = false; } }
-                    ],
-
                     ready: (images:string[]) :void => {
                         outRun.background = images[0];
                         outRun.sprites    = images[1];

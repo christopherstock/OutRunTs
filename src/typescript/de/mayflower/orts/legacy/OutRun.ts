@@ -69,6 +69,12 @@ export class OutRun
 
       this.position = orts.Util.increase(this.position, dt * this.speed, this.trackLength);
 
+      // check pressed keys
+      this.keyLeft   = orts.Main.game.keySystem.isPressed( orts.KeyCodes.KEY_LEFT  );
+      this.keyRight  = orts.Main.game.keySystem.isPressed( orts.KeyCodes.KEY_RIGHT );
+      this.keyFaster = orts.Main.game.keySystem.isPressed( orts.KeyCodes.KEY_UP    );
+      this.keySlower = orts.Main.game.keySystem.isPressed( orts.KeyCodes.KEY_DOWN  );
+
       if (this.keyLeft)
         this.playerX = this.playerX - dx;
       else if (this.keyRight)
