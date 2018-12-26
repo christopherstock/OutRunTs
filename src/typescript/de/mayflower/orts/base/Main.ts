@@ -9,6 +9,7 @@
     *   =====================
     *   TODO Primal
     *   =====================
+    *   TODO Remove key system and replace by own implementation.
     *   TODO Remove single sprite sheet.
     *   TODO Remove legacy sprite system.
     *   TODO Move to classes.
@@ -31,37 +32,8 @@
             Main.game = new bz.Game();
             Main.game.init();
 */
-
-//            require( '../legacy/index.ts' );
-
-
-
-
-            //=========================================================================
-            // specify and start THE GAME LOOP
-            //=========================================================================
-
-            const outRun :orts.OutRun = new orts.OutRun();
-
-            orts.Game.run({
-                canvas: outRun.canvas, render: outRun.render, update: outRun.update, step: outRun.step,
-                images: ["background", "sprites"],
-                keys: [
-                    { keys: [orts.KEY.LEFT,  orts.KEY.A], mode: 'down', action: () => { outRun.keyLeft   = true;  } },
-                    { keys: [orts.KEY.RIGHT, orts.KEY.D], mode: 'down', action: () => { outRun.keyRight  = true;  } },
-                    { keys: [orts.KEY.UP,    orts.KEY.W], mode: 'down', action: () => { outRun.keyFaster = true;  } },
-                    { keys: [orts.KEY.DOWN,  orts.KEY.S], mode: 'down', action: () => { outRun.keySlower = true;  } },
-                    { keys: [orts.KEY.LEFT,  orts.KEY.A], mode: 'up',   action: () => { outRun.keyLeft   = false; } },
-                    { keys: [orts.KEY.RIGHT, orts.KEY.D], mode: 'up',   action: () => { outRun.keyRight  = false; } },
-                    { keys: [orts.KEY.UP,    orts.KEY.W], mode: 'up',   action: () => { outRun.keyFaster = false; } },
-                    { keys: [orts.KEY.DOWN,  orts.KEY.S], mode: 'up',   action: () => { outRun.keySlower = false; } }
-                ],
-                ready: (images) => {
-                    outRun.background = images[0];
-                    outRun.sprites    = images[1];
-                    outRun.reset({});
-                }
-            });
+            // start legacy game loop
+            Main.startLegacyLoop();
         }
 
         /** ************************************************************************************************************
@@ -73,5 +45,32 @@
 
             orts.Debug.acclaim.log( orts.Version.getCurrent() );
             orts.Debug.acclaim.log();
+        }
+
+        private static startLegacyLoop() : void
+        {
+            const outRun :orts.OutRun = new orts.OutRun();
+
+            orts.Game.run(
+                {
+                    canvas: outRun.canvas, render: outRun.render, update: outRun.update, step: outRun.step,
+                    images: ['background', 'sprites'],
+                    keys: [
+                        { keys: [orts.KEY.LEFT,  orts.KEY.A], mode: 'down', action: () :void => { outRun.keyLeft   = true;  } },
+                        { keys: [orts.KEY.RIGHT, orts.KEY.D], mode: 'down', action: () :void => { outRun.keyRight  = true;  } },
+                        { keys: [orts.KEY.UP,    orts.KEY.W], mode: 'down', action: () :void => { outRun.keyFaster = true;  } },
+                        { keys: [orts.KEY.DOWN,  orts.KEY.S], mode: 'down', action: () :void => { outRun.keySlower = true;  } },
+                        { keys: [orts.KEY.LEFT,  orts.KEY.A], mode: 'up',   action: () :void => { outRun.keyLeft   = false; } },
+                        { keys: [orts.KEY.RIGHT, orts.KEY.D], mode: 'up',   action: () :void => { outRun.keyRight  = false; } },
+                        { keys: [orts.KEY.UP,    orts.KEY.W], mode: 'up',   action: () :void => { outRun.keyFaster = false; } },
+                        { keys: [orts.KEY.DOWN,  orts.KEY.S], mode: 'up',   action: () :void => { outRun.keySlower = false; } }
+                    ],
+                    ready: (images:string[]) :void => {
+                        outRun.background = images[0];
+                        outRun.sprites    = images[1];
+                        outRun.reset({});
+                    }
+                }
+            );
         }
     }
