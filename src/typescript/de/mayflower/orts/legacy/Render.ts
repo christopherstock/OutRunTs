@@ -18,8 +18,6 @@ export var Render = {
         ctx.fill();
     },
 
-    //---------------------------------------------------------------------------
-
     segment: function(ctx, width, lanes, x1, y1, w1, x2, y2, w2, fog, color) {
 
         var r1 = Render.rumbleWidth(w1, lanes),
@@ -47,8 +45,6 @@ export var Render = {
         Render.fog(ctx, 0, y1, width, y2-y1, fog);
     },
 
-    //---------------------------------------------------------------------------
-
     background: function(ctx, background, width, height, layer, rotation, offset) {
 
         rotation = rotation || 0;
@@ -72,8 +68,6 @@ export var Render = {
             ctx.drawImage(background, layer.x, sourceY, imageW-sourceW, sourceH, destW-1, destY, width-destW, destH);
     },
 
-    //---------------------------------------------------------------------------
-
     sprite: function(ctx, width, height, resolution, roadWidth, sprites, sprite, scale, destX, destY, offsetX, offsetY, clipY) {
 
         //  scale for projection AND relative to roadWidth (for tweakUI)
@@ -89,8 +83,6 @@ export var Render = {
 
     },
 
-    //---------------------------------------------------------------------------
-
     player: function(ctx, width, height, resolution, roadWidth, sprites, speedPercent, scale, destX, destY, steer, updown) {
 
         var bounce = (1.5 * Math.random() * speedPercent * resolution) * orts.Util.randomChoice([-1,1]);
@@ -104,8 +96,6 @@ export var Render = {
 
         Render.sprite(ctx, width, height, resolution, roadWidth, sprites, sprite, scale, destX, destY + bounce, -0.5, -1, 0);
     },
-
-    //---------------------------------------------------------------------------
 
     fog: function(ctx, x, y, width, height, fog) {
         if (fog < 1) {

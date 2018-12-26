@@ -1,7 +1,5 @@
 
-import * as orts from '..'
-
-export var SPRITES:any = {
+export const SPRITES:any = {
     PALM_TREE:              { x:    5, y:    5, w:  215, h:  540 },
     BILLBOARD08:            { x:  230, y:    5, w:  385, h:  265 },
     TREE1:                  { x:  625, y:    5, w:  360, h:  360 },

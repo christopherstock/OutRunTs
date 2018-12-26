@@ -40,8 +40,6 @@ export var Game = {
         });
     },
 
-    //---------------------------------------------------------------------------
-
     loadImages: function(names, callback) { // load multiple images and callback when ALL images have loaded
         var result = [];
         var count  = names.length;
@@ -61,8 +59,6 @@ export var Game = {
             result[n].src = "res/image/legacy/" + name + ".png";
         }
     },
-
-    //---------------------------------------------------------------------------
 
     setKeyListener: function(keys) {
         var onkey = function(keyCode, mode) {
