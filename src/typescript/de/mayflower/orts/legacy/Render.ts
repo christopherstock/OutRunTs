@@ -47,7 +47,7 @@ export var Render = {
 
     background: function(ctx, width, height, sprite, rotation, offset) {
 
-        const image = orts.Main.legacyGame.outRun.images[ sprite.src ];
+        const image = orts.Main.legacyGame.outRun.images[ sprite ];
 
         rotation = rotation || 0;
         offset   = offset   || 0;
@@ -72,7 +72,7 @@ export var Render = {
 
     sprite: function(ctx, width, height, resolution, roadWidth, sprite, scale, destX, destY, offsetX, offsetY, clipY) {
 
-        const image = orts.Main.legacyGame.outRun.images[ sprite.src ];
+        const image = orts.Main.legacyGame.outRun.images[ sprite ];
 
         //  scale for projection AND relative to roadWidth (for tweakUI)
         var destW  = (image.width  * scale * width/2) * (orts.Sprite.SCALE * roadWidth);

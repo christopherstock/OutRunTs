@@ -24,18 +24,8 @@ export class Game
             }
         };
 
-        const imagesToLoad = [];
-
-        // TODO merge these two systems
-
-        // browse all sprites
-        for ( const sprite of orts.Sprite.ALL )
-        {
-            imagesToLoad.push( sprite.src );
-        }
-
         this.loadImages(
-            imagesToLoad,
+            orts.Sprite.ALL,
             function(images) {
 
             options.ready(images); // tell caller to initialize itself because images are loaded and we're ready to rumble
