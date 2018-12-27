@@ -9,7 +9,7 @@
     *   =====================
     *   TODO Primal
     *   =====================
-    *   TODO Remove key system and replace by own implementation.
+    *   TODO Remove image loading system and replace by own implementation.
     *   TODO Remove single sprite sheet.
     *   TODO Remove legacy sprite system.
     *   TODO Move to classes.

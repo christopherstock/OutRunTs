@@ -12,15 +12,36 @@ export var Game = {
         const outRun :orts.OutRun = new orts.OutRun();
         const options :any = {
             canvas: outRun.canvas, render: outRun.render, update: outRun.update, step: outRun.step,
-            images: ['background', 'sprites'],
             ready: (images:string[]) :void => {
-                outRun.background = images[0];
-                outRun.sprites    = images[1];
+
+                outRun.background = images[ 'background.png' ];
+                outRun.sprites    = images[ 'sprites.png' ];
+
+
                 outRun.reset({});
             }
         };
 
-        Game.loadImages(options.images, function(images) {
+        const imagesToLoad = [
+            'background.png',
+            'sprites.png',
+        ];
+
+        // TODO merge these two systems
+
+        // browse all sprites
+
+
+
+        // browse all backgrounds
+
+
+
+
+
+        Game.loadImages(
+            imagesToLoad,
+            function(images) {
 
             options.ready(images); // tell caller to initialize itself because images are loaded and we're ready to rumble
 
@@ -58,14 +79,13 @@ export var Game = {
                 callback(result);
         };
 
-        for(var n = 0 ; n < names.length ; n++) {
-            var name = names[n];
-            result[n] = document.createElement('img');
+        for (let n = 0 ; n < names.length ; n++)
+        {
+            const name = names[n];
 
-//      Dom.on(result[n], 'load', onload);
-            result[n].addEventListener( 'load', onload );
-
-            result[n].src = 'res/image/legacy/' + name + '.png';
+            result[name] = document.createElement('img');
+            result[name].addEventListener( 'load', onload );
+            result[name].src = 'res/image/legacy/' + name;
         }
     },
 };

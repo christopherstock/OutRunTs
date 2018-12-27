@@ -18,8 +18,11 @@ export class OutRun
     cars           = [];                      // array of cars on the road
     canvas :HTMLCanvasElement = document.getElementById('canvas') as HTMLCanvasElement;     // our canvas...
     ctx            = this.canvas.getContext('2d'); // ...and its drawing context
+
+    // TODO prune!
     background     = null;                    // our background image (loaded below)
     sprites        = null;                    // our spritesheet (loaded below)
+
     resolution     = null;                    // scaling factor to provide resolution independence (computed)
     roadWidth      = 2000;                    // actually half the roads width, easier math if the road spans from -roadWidth to +roadWidth
     segmentLength  = 200;                     // length of a single segment
