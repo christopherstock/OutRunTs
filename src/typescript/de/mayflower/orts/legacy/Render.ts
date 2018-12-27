@@ -72,16 +72,18 @@ export var Render = {
 
     sprite: function(ctx, width, height, resolution, roadWidth, sprites, sprite, scale, destX, destY, offsetX, offsetY, clipY) {
 
+        const image = orts.Main.legacyGame.outRun.images[ sprite.src ];
+
         //  scale for projection AND relative to roadWidth (for tweakUI)
-        var destW  = (sprite.w * scale * width/2) * (orts.SPRITES.SCALE * roadWidth);
-        var destH  = (sprite.h * scale * width/2) * (orts.SPRITES.SCALE * roadWidth);
+        var destW  = (image.width  * scale * width/2) * (orts.SPRITES.SCALE * roadWidth);
+        var destH  = (image.height * scale * width/2) * (orts.SPRITES.SCALE * roadWidth);
 
         destX = destX + (destW * (offsetX || 0));
         destY = destY + (destH * (offsetY || 0));
 
         var clipH = clipY ? Math.max(0, destY+destH-clipY) : 0;
         if (clipH < destH)
-            ctx.drawImage(sprites, sprite.x, sprite.y, sprite.w, sprite.h - (sprite.h*clipH/destH), destX, destY, destW, destH - clipH);
+            ctx.drawImage(image, 0, 0, image.width, image.height - (image.height * clipH/destH), destX, destY, destW, destH - clipH);
 
     },
 
