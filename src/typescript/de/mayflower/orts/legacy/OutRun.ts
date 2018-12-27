@@ -21,10 +21,6 @@ export class OutRun
 
     images         = null;                    // all images
 
-    // TODO prune!
-    background     = null;                    // our background image (loaded below)
-    sprites        = null;                    // our spritesheet (loaded below)
-
     resolution     = null;                    // scaling factor to provide resolution independence (computed)
     roadWidth      = 2000;                    // actually half the roads width, easier math if the road spans from -roadWidth to +roadWidth
     segmentLength  = 200;                     // length of a single segment
@@ -274,7 +270,7 @@ export class OutRun
           spriteScale = orts.Util.interpolate(segment.p1.screen.scale, segment.p2.screen.scale, car.percent);
           spriteX     = orts.Util.interpolate(segment.p1.screen.x,     segment.p2.screen.x,     car.percent) + (spriteScale * car.offset * this.roadWidth * this.width/2);
           spriteY     = orts.Util.interpolate(segment.p1.screen.y,     segment.p2.screen.y,     car.percent);
-          orts.Render.sprite(this.ctx, this.width, this.height, this.resolution, this.roadWidth, this.sprites, car.sprite, spriteScale, spriteX, spriteY, -0.5, -1, segment.clip);
+          orts.Render.sprite(this.ctx, this.width, this.height, this.resolution, this.roadWidth, car.sprite, spriteScale, spriteX, spriteY, -0.5, -1, segment.clip);
         }
 
         for(i = 0 ; i < segment.sprites.length ; i++) {
@@ -282,11 +278,11 @@ export class OutRun
           spriteScale = segment.p1.screen.scale;
           spriteX     = segment.p1.screen.x + (spriteScale * sprite.offset * this.roadWidth * this.width/2);
           spriteY     = segment.p1.screen.y;
-          orts.Render.sprite(this.ctx, this.width, this.height, this.resolution, this.roadWidth, this.sprites, sprite.source, spriteScale, spriteX, spriteY, (sprite.offset < 0 ? -1 : 0), -1, segment.clip);
+          orts.Render.sprite(this.ctx, this.width, this.height, this.resolution, this.roadWidth, sprite.source, spriteScale, spriteX, spriteY, (sprite.offset < 0 ? -1 : 0), -1, segment.clip);
         }
 
         if (segment === playerSegment) {
-          orts.Render.player(this.ctx, this.width, this.height, this.resolution, this.roadWidth, this.sprites, this.speed/this.maxSpeed,
+          orts.Render.player(this.ctx, this.width, this.height, this.resolution, this.roadWidth, this.speed/this.maxSpeed,
                         this.cameraDepth/this.playerZ,
                         this.width/2,
                         (this.height/2) - (this.cameraDepth/this.playerZ * orts.Util.interpolate(playerSegment.p1.camera.y, playerSegment.p2.camera.y, playerPercent) * this.height/2),

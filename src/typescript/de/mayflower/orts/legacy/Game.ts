@@ -16,9 +16,6 @@ export class Game
             canvas: this.outRun.canvas, render: this.outRun.render, update: this.outRun.update, step: this.outRun.step,
             ready: (images:string[]) :void => {
 
-                this.outRun.background = images[ 'background.png' ];
-                this.outRun.sprites    = images[ 'sprites.png' ];
-
                 this.outRun.images = images;
 
                 console.log( 'Images loaded: ', images );

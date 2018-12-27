@@ -70,7 +70,7 @@ export var Render = {
             ctx.drawImage(image, 0, sourceY, imageW-sourceW, sourceH, destW-1, destY, width-destW, destH);
     },
 
-    sprite: function(ctx, width, height, resolution, roadWidth, sprites, sprite, scale, destX, destY, offsetX, offsetY, clipY) {
+    sprite: function(ctx, width, height, resolution, roadWidth, sprite, scale, destX, destY, offsetX, offsetY, clipY) {
 
         const image = orts.Main.legacyGame.outRun.images[ sprite.src ];
 
@@ -87,7 +87,7 @@ export var Render = {
 
     },
 
-    player: function(ctx, width, height, resolution, roadWidth, sprites, speedPercent, scale, destX, destY, steer, updown) {
+    player: function(ctx, width, height, resolution, roadWidth, speedPercent, scale, destX, destY, steer, updown) {
 
         var bounce = (1.5 * Math.random() * speedPercent * resolution) * orts.Util.randomChoice([-1,1]);
         var sprite;
@@ -98,7 +98,7 @@ export var Render = {
         else
             sprite = (updown > 0) ? orts.SPRITES.PLAYER_UPHILL_STRAIGHT : orts.SPRITES.PLAYER_STRAIGHT;
 
-        Render.sprite(ctx, width, height, resolution, roadWidth, sprites, sprite, scale, destX, destY + bounce, -0.5, -1, 0);
+        Render.sprite(ctx, width, height, resolution, roadWidth, sprite, scale, destX, destY + bounce, -0.5, -1, 0);
     },
 
     fog: function(ctx, x, y, width, height, fog) {
