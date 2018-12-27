@@ -19,6 +19,9 @@
         /** The singleton instance of the game. */
         public      static          game                    :orts.GameEngine                = null;
 
+        /** The singleton instance of the legacy game. */
+        public      static          legacyGame              :orts.Game                      = null;
+
         /** ************************************************************************************************************
         *   This method is invoked when the application starts.
         ***************************************************************************************************************/
@@ -34,7 +37,8 @@
 
 
             // start legacy game loop
-            orts.Game.run();
+            Main.legacyGame = new orts.Game();
+            Main.legacyGame.run();
         }
 
         /** ************************************************************************************************************

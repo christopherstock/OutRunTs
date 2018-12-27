@@ -5,22 +5,25 @@ import * as orts from '..'
 // GAME LOOP helpers
 // =========================================================================
 
-export var Game = {
+export class Game
+{
+    outRun :orts.OutRun = null;
 
-    run: function() {
-
-        const outRun :orts.OutRun = new orts.OutRun();
+    run()
+    {
+        this.outRun = new orts.OutRun();
         const options :any = {
-            canvas: outRun.canvas, render: outRun.render, update: outRun.update, step: outRun.step,
+            canvas: this.outRun.canvas, render: this.outRun.render, update: this.outRun.update, step: this.outRun.step,
             ready: (images:string[]) :void => {
 
-                outRun.background = images[ 'background.png' ];
-                outRun.sprites    = images[ 'sprites.png' ];
+                this.outRun.background = images[ 'background.png' ];
+                this.outRun.sprites    = images[ 'sprites.png' ];
 
+                this.outRun.images = images;
 
                 console.log( 'Images loaded: ', images );
 
-                outRun.reset({});
+                this.outRun.reset({});
             }
         };
 
@@ -42,7 +45,7 @@ export var Game = {
             imagesToLoad.push( bg.src );
         }
 
-        Game.loadImages(
+        this.loadImages(
             imagesToLoad,
             function(images) {
 
@@ -71,9 +74,9 @@ export var Game = {
             }
             frame(); // lets get this party started
         });
-    },
+    };
 
-    loadImages: function(names, callback) { // load multiple images and callback when ALL images have loaded
+    loadImages(names, callback) { // load multiple images and callback when ALL images have loaded
         var result = [];
         var count  = names.length;
 
@@ -90,5 +93,5 @@ export var Game = {
             result[name].addEventListener( 'load', onload );
             result[name].src = 'res/image/legacy/' + name;
         }
-    },
-};
+    }
+}

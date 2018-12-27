@@ -45,17 +45,19 @@ export var Render = {
         Render.fog(ctx, 0, y1, width, y2-y1, fog);
     },
 
-    background: function(ctx, background, width, height, layer, rotation, offset) {
+    background: function(ctx, width, height, sprite, rotation, offset) {
+
+        const image = orts.Main.legacyGame.outRun.images[ sprite.src ];
 
         rotation = rotation || 0;
         offset   = offset   || 0;
 
-        var imageW = layer.w/2;
-        var imageH = layer.h;
+        var imageW = image.width / 2;
+        var imageH = image.height;
 
-        var sourceX = layer.x + Math.floor(layer.w * rotation);
-        var sourceY = layer.y;
-        var sourceW = Math.min(imageW, layer.x+layer.w-sourceX);
+        var sourceX = 0 + Math.floor(image.width * rotation);
+        var sourceY = 0;
+        var sourceW = Math.min(imageW, 0 + image.width - sourceX);
         var sourceH = imageH;
 
         var destX = 0;
@@ -63,9 +65,9 @@ export var Render = {
         var destW = Math.floor(width * (sourceW/imageW));
         var destH = height;
 
-        ctx.drawImage(background, sourceX, sourceY, sourceW, sourceH, destX, destY, destW, destH);
+        ctx.drawImage(image, sourceX, sourceY, sourceW, sourceH, destX, destY, destW, destH);
         if (sourceW < imageW)
-            ctx.drawImage(background, layer.x, sourceY, imageW-sourceW, sourceH, destW-1, destY, width-destW, destH);
+            ctx.drawImage(image, 0, sourceY, imageW-sourceW, sourceH, destW-1, destY, width-destW, destH);
     },
 
     sprite: function(ctx, width, height, resolution, roadWidth, sprites, sprite, scale, destX, destY, offsetX, offsetY, clipY) {

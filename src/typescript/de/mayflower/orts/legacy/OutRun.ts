@@ -19,6 +19,8 @@ export class OutRun
     canvas :HTMLCanvasElement = document.getElementById('canvas') as HTMLCanvasElement;     // our canvas...
     ctx            = this.canvas.getContext('2d'); // ...and its drawing context
 
+    images         = null;                    // all images
+
     // TODO prune!
     background     = null;                    // our background image (loaded below)
     sprites        = null;                    // our spritesheet (loaded below)
@@ -226,9 +228,9 @@ export class OutRun
 
       this.ctx.clearRect(0, 0, this.width, this.height);
 
-      orts.Render.background(this.ctx, this.background, this.width, this.height, orts.BACKGROUND.SKY,   this.skyOffset,  this.resolution * this.skySpeed  * playerY);
-      orts.Render.background(this.ctx, this.background, this.width, this.height, orts.BACKGROUND.HILLS, this.hillOffset, this.resolution * this.hillSpeed * playerY);
-      orts.Render.background(this.ctx, this.background, this.width, this.height, orts.BACKGROUND.TREES, this.treeOffset, this.resolution * this.treeSpeed * playerY);
+      orts.Render.background(this.ctx, this.width, this.height, orts.BACKGROUND.SKY,   this.skyOffset,  this.resolution * this.skySpeed  * playerY);
+      orts.Render.background(this.ctx, this.width, this.height, orts.BACKGROUND.HILLS, this.hillOffset, this.resolution * this.hillSpeed * playerY);
+      orts.Render.background(this.ctx, this.width, this.height, orts.BACKGROUND.TREES, this.treeOffset, this.resolution * this.treeSpeed * playerY);
 
       var n, i, segment, car, sprite, spriteScale, spriteX, spriteY;
 
