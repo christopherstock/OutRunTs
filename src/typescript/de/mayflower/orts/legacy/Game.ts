@@ -18,6 +18,8 @@ export var Game = {
                 outRun.sprites    = images[ 'sprites.png' ];
 
 
+                console.log( 'Images loaded: ', images );
+
                 outRun.reset({});
             }
         };
@@ -30,14 +32,15 @@ export var Game = {
         // TODO merge these two systems
 
         // browse all sprites
-
-
-
+        for ( const sprite of orts.SPRITES.ALL )
+        {
+            imagesToLoad.push( sprite.src );
+        }
         // browse all backgrounds
-
-
-
-
+        for ( const bg of orts.BACKGROUND.ALL )
+        {
+            imagesToLoad.push( bg.src );
+        }
 
         Game.loadImages(
             imagesToLoad,
