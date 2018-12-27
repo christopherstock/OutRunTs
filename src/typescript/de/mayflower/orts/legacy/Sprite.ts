@@ -1,5 +1,5 @@
 
-export class SPRITES
+export class Sprite
 {
     static BILLBOARD01 =            { x:  625, y:  375, w:  300, h:  170, src: 'sprite/billboard01.png' };
     static BILLBOARD02 =            { x:  245, y: 1262, w:  215, h:  220, src: 'sprite/billboard02.png' };
@@ -37,71 +37,79 @@ export class SPRITES
     static TREE2 =                  { x: 1205, y:    5, w:  282, h:  295, src: 'sprite/tree2.png' };
     static TRUCK =                  { x: 1365, y:  644, w:  100, h:   78, src: 'sprite/truck.png' };
 
-    static SCALE = 0.3 * (1/SPRITES.PLAYER_STRAIGHT.w); // the reference sprite width should be 1/3rd the (half-)roadWidth
+    static HILLS = { x:   5, y:   5, w: 1280, h: 480, src: 'background/hills.png' };
+    static SKY   = { x:   5, y: 495, w: 1280, h: 480, src: 'background/sky.png'   };
+    static TREES = { x:   5, y: 985, w: 1280, h: 480, src: 'background/trees.png' };
 
-    static BILLBOARDS = [SPRITES.BILLBOARD01, SPRITES.BILLBOARD02, SPRITES.BILLBOARD03, SPRITES.BILLBOARD04, SPRITES.BILLBOARD05, SPRITES.BILLBOARD06, SPRITES.BILLBOARD07, SPRITES.BILLBOARD08, SPRITES.BILLBOARD09];
-    static PLANTS     = [SPRITES.TREE1, SPRITES.TREE2, SPRITES.DEAD_TREE1, SPRITES.DEAD_TREE2, SPRITES.PALM_TREE, SPRITES.BUSH1, SPRITES.BUSH2, SPRITES.CACTUS, SPRITES.STUMP, SPRITES.BOULDER1, SPRITES.BOULDER2, SPRITES.BOULDER3];
-    static CARS       = [SPRITES.CAR01, SPRITES.CAR02, SPRITES.CAR03, SPRITES.CAR04, SPRITES.SEMI, SPRITES.TRUCK];
+    static SCALE = 0.3 * (1/Sprite.PLAYER_STRAIGHT.w); // the reference sprite width should be 1/3rd the (half-)roadWidth
+
+    static BILLBOARDS = [Sprite.BILLBOARD01, Sprite.BILLBOARD02, Sprite.BILLBOARD03, Sprite.BILLBOARD04, Sprite.BILLBOARD05, Sprite.BILLBOARD06, Sprite.BILLBOARD07, Sprite.BILLBOARD08, Sprite.BILLBOARD09];
+    static PLANTS     = [Sprite.TREE1, Sprite.TREE2, Sprite.DEAD_TREE1, Sprite.DEAD_TREE2, Sprite.PALM_TREE, Sprite.BUSH1, Sprite.BUSH2, Sprite.CACTUS, Sprite.STUMP, Sprite.BOULDER1, Sprite.BOULDER2, Sprite.BOULDER3];
+    static CARS       = [Sprite.CAR01, Sprite.CAR02, Sprite.CAR03, Sprite.CAR04, Sprite.SEMI, Sprite.TRUCK];
 
     static ALL :any[] = [
-        SPRITES.BILLBOARD01,
-        SPRITES.BILLBOARD02,
-        SPRITES.BILLBOARD03,
-        SPRITES.BILLBOARD04,
-        SPRITES.BILLBOARD05,
-        SPRITES.BILLBOARD06,
-        SPRITES.BILLBOARD07,
-        SPRITES.BILLBOARD08,
-        SPRITES.BILLBOARD09,
+        Sprite.BILLBOARD01,
+        Sprite.BILLBOARD02,
+        Sprite.BILLBOARD03,
+        Sprite.BILLBOARD04,
+        Sprite.BILLBOARD05,
+        Sprite.BILLBOARD06,
+        Sprite.BILLBOARD07,
+        Sprite.BILLBOARD08,
+        Sprite.BILLBOARD09,
 
-        SPRITES.BOULDER1,
-        SPRITES.BOULDER1,
-        SPRITES.BOULDER2,
-        SPRITES.BOULDER2,
-        SPRITES.BOULDER3,
-        SPRITES.BOULDER3,
-        SPRITES.BUSH1,
-        SPRITES.BUSH1,
-        SPRITES.BUSH2,
-        SPRITES.BUSH2,
-        SPRITES.CACTUS,
-        SPRITES.CACTUS,
-        SPRITES.CAR01,
-        SPRITES.CAR01,
-        SPRITES.CAR02,
-        SPRITES.CAR02,
-        SPRITES.CAR03,
-        SPRITES.CAR03,
-        SPRITES.CAR04,
-        SPRITES.CAR04,
-        SPRITES.COLUMN,
-        SPRITES.COLUMN,
-        SPRITES.DEAD_TREE1,
-        SPRITES.DEAD_TREE1,
-        SPRITES.DEAD_TREE2,
-        SPRITES.DEAD_TREE2,
-        SPRITES.PALM_TREE,
-        SPRITES.PALM_TREE,
-        SPRITES.PLAYER_LEFT,
-        SPRITES.PLAYER_LEFT,
-        SPRITES.PLAYER_RIGHT,
-        SPRITES.PLAYER_RIGHT,
-        SPRITES.PLAYER_STRAIGHT,
-        SPRITES.PLAYER_STRAIGHT,
-        SPRITES.PLAYER_UPHILL_LEFT,
-        SPRITES.PLAYER_UPHILL_LEFT,
-        SPRITES.PLAYER_UPHILL_RIGHT,
-        SPRITES.PLAYER_UPHILL_RIGHT,
-        SPRITES.PLAYER_UPHILL_STRAIGHT,
-        SPRITES.PLAYER_UPHILL_STRAIGHT,
-        SPRITES.SEMI,
-        SPRITES.SEMI,
-        SPRITES.STUMP,
-        SPRITES.STUMP,
-        SPRITES.TREE1,
-        SPRITES.TREE1,
-        SPRITES.TREE2,
-        SPRITES.TREE2,
-        SPRITES.TRUCK,
+        Sprite.BOULDER1,
+        Sprite.BOULDER1,
+        Sprite.BOULDER2,
+        Sprite.BOULDER2,
+        Sprite.BOULDER3,
+        Sprite.BOULDER3,
+        Sprite.BUSH1,
+        Sprite.BUSH1,
+        Sprite.BUSH2,
+        Sprite.BUSH2,
+        Sprite.CACTUS,
+        Sprite.CACTUS,
+        Sprite.CAR01,
+        Sprite.CAR01,
+        Sprite.CAR02,
+        Sprite.CAR02,
+        Sprite.CAR03,
+        Sprite.CAR03,
+        Sprite.CAR04,
+        Sprite.CAR04,
+        Sprite.COLUMN,
+        Sprite.COLUMN,
+        Sprite.DEAD_TREE1,
+        Sprite.DEAD_TREE1,
+        Sprite.DEAD_TREE2,
+        Sprite.DEAD_TREE2,
+        Sprite.PALM_TREE,
+        Sprite.PALM_TREE,
+        Sprite.PLAYER_LEFT,
+        Sprite.PLAYER_LEFT,
+        Sprite.PLAYER_RIGHT,
+        Sprite.PLAYER_RIGHT,
+        Sprite.PLAYER_STRAIGHT,
+        Sprite.PLAYER_STRAIGHT,
+        Sprite.PLAYER_UPHILL_LEFT,
+        Sprite.PLAYER_UPHILL_LEFT,
+        Sprite.PLAYER_UPHILL_RIGHT,
+        Sprite.PLAYER_UPHILL_RIGHT,
+        Sprite.PLAYER_UPHILL_STRAIGHT,
+        Sprite.PLAYER_UPHILL_STRAIGHT,
+        Sprite.SEMI,
+        Sprite.SEMI,
+        Sprite.STUMP,
+        Sprite.STUMP,
+        Sprite.TREE1,
+        Sprite.TREE1,
+        Sprite.TREE2,
+        Sprite.TREE2,
+        Sprite.TRUCK,
+
+        Sprite.HILLS,
+        Sprite.SKY,
+        Sprite.TREES,
     ];
 }

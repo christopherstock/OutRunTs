@@ -61,7 +61,7 @@ export class OutRun
 
       var n, car, carW, sprite, spriteW;
       var playerSegment = this.findSegment(this.position+this.playerZ);
-      var playerW       = orts.SPRITES.PLAYER_STRAIGHT.w * orts.SPRITES.SCALE;
+      var playerW       = orts.Sprite.PLAYER_STRAIGHT.w * orts.Sprite.SCALE;
       var speedPercent  = this.speed/this.maxSpeed;
       var dx            = dt * 2 * speedPercent; // at top speed, should be able to cross from left to right (-1 to 1) in 1 second
       var startPosition = this.position;
@@ -98,7 +98,7 @@ export class OutRun
 
         for(n = 0 ; n < playerSegment.sprites.length ; n++) {
           sprite  = playerSegment.sprites[n];
-          spriteW = sprite.source.w * orts.SPRITES.SCALE;
+          spriteW = sprite.source.w * orts.Sprite.SCALE;
           if (orts.Util.overlap(this.playerX, playerW, sprite.offset + spriteW/2 * (sprite.offset > 0 ? 1 : -1), spriteW, 0)) {
             this.speed = this.maxSpeed/5;
             this.position = orts.Util.increase(playerSegment.p1.world.z, -this.playerZ, this.trackLength); // stop in front of sprite (at front of segment)
@@ -109,7 +109,7 @@ export class OutRun
 
       for(n = 0 ; n < playerSegment.cars.length ; n++) {
         car  = playerSegment.cars[n];
-        carW = car.sprite.w * orts.SPRITES.SCALE;
+        carW = car.sprite.w * orts.Sprite.SCALE;
         if (this.speed > car.speed) {
           if (orts.Util.overlap(this.playerX, playerW, car.offset, carW, 0.8)) {
             this.speed    = car.speed * (car.speed/this.speed);
@@ -163,7 +163,7 @@ export class OutRun
 
     updateCarOffset=(car, carSegment, playerSegment, playerW)=> {
 
-      var i, j, dir, segment, otherCar, otherCarW, lookahead = 20, carW = car.sprite.w * orts.SPRITES.SCALE;
+      var i, j, dir, segment, otherCar, otherCarW, lookahead = 20, carW = car.sprite.w * orts.Sprite.SCALE;
 
       // optimization, dont bother steering around other cars when 'out of sight' of the player
       if ((carSegment.index - playerSegment.index) > this.drawDistance)
@@ -184,7 +184,7 @@ export class OutRun
 
         for(j = 0 ; j < segment.cars.length ; j++) {
           otherCar  = segment.cars[j];
-          otherCarW = otherCar.sprite.w * orts.SPRITES.SCALE;
+          otherCarW = otherCar.sprite.w * orts.Sprite.SCALE;
           if ((car.speed > otherCar.speed) && orts.Util.overlap(car.offset, carW, otherCar.offset, otherCarW, 1.2)) {
             if (otherCar.offset > 0.5)
               dir = -1;
@@ -224,9 +224,9 @@ export class OutRun
 
       this.ctx.clearRect(0, 0, this.width, this.height);
 
-      orts.Render.background(this.ctx, this.width, this.height, orts.BACKGROUND.SKY,   this.skyOffset,  this.resolution * this.skySpeed  * playerY);
-      orts.Render.background(this.ctx, this.width, this.height, orts.BACKGROUND.HILLS, this.hillOffset, this.resolution * this.hillSpeed * playerY);
-      orts.Render.background(this.ctx, this.width, this.height, orts.BACKGROUND.TREES, this.treeOffset, this.resolution * this.treeSpeed * playerY);
+      orts.Render.background(this.ctx, this.width, this.height, orts.Sprite.SKY,   this.skyOffset,  this.resolution * this.skySpeed  * playerY);
+      orts.Render.background(this.ctx, this.width, this.height, orts.Sprite.HILLS, this.hillOffset, this.resolution * this.hillSpeed * playerY);
+      orts.Render.background(this.ctx, this.width, this.height, orts.Sprite.TREES, this.treeOffset, this.resolution * this.treeSpeed * playerY);
 
       var n, i, segment, car, sprite, spriteScale, spriteX, spriteY;
 
@@ -426,42 +426,42 @@ export class OutRun
     resetSprites=()=> {
       var n, i;
 
-      this.addSprite(20,  orts.SPRITES.BILLBOARD07, -1);
-      this.addSprite(40,  orts.SPRITES.BILLBOARD06, -1);
-      this.addSprite(60,  orts.SPRITES.BILLBOARD08, -1);
-      this.addSprite(80,  orts.SPRITES.BILLBOARD09, -1);
-      this.addSprite(100, orts.SPRITES.BILLBOARD01, -1);
-      this.addSprite(120, orts.SPRITES.BILLBOARD02, -1);
-      this.addSprite(140, orts.SPRITES.BILLBOARD03, -1);
-      this.addSprite(160, orts.SPRITES.BILLBOARD04, -1);
-      this.addSprite(180, orts.SPRITES.BILLBOARD05, -1);
+      this.addSprite(20,  orts.Sprite.BILLBOARD07, -1);
+      this.addSprite(40,  orts.Sprite.BILLBOARD06, -1);
+      this.addSprite(60,  orts.Sprite.BILLBOARD08, -1);
+      this.addSprite(80,  orts.Sprite.BILLBOARD09, -1);
+      this.addSprite(100, orts.Sprite.BILLBOARD01, -1);
+      this.addSprite(120, orts.Sprite.BILLBOARD02, -1);
+      this.addSprite(140, orts.Sprite.BILLBOARD03, -1);
+      this.addSprite(160, orts.Sprite.BILLBOARD04, -1);
+      this.addSprite(180, orts.Sprite.BILLBOARD05, -1);
 
-      this.addSprite(240,                  orts.SPRITES.BILLBOARD07, -1.2);
-      this.addSprite(240,                  orts.SPRITES.BILLBOARD06,  1.2);
-      this.addSprite(this.segments.length - 25, orts.SPRITES.BILLBOARD07, -1.2);
-      this.addSprite(this.segments.length - 25, orts.SPRITES.BILLBOARD06,  1.2);
+      this.addSprite(240,                  orts.Sprite.BILLBOARD07, -1.2);
+      this.addSprite(240,                  orts.Sprite.BILLBOARD06,  1.2);
+      this.addSprite(this.segments.length - 25, orts.Sprite.BILLBOARD07, -1.2);
+      this.addSprite(this.segments.length - 25, orts.Sprite.BILLBOARD06,  1.2);
 
       for(n = 10 ; n < 200 ; n += 4 + Math.floor(n/100)) {
-        this.addSprite(n, orts.SPRITES.PALM_TREE, 0.5 + Math.random()*0.5);
-        this.addSprite(n, orts.SPRITES.PALM_TREE,   1 + Math.random()*2);
+        this.addSprite(n, orts.Sprite.PALM_TREE, 0.5 + Math.random()*0.5);
+        this.addSprite(n, orts.Sprite.PALM_TREE,   1 + Math.random()*2);
       }
 
       for(n = 250 ; n < 1000 ; n += 5) {
-        this.addSprite(n,     orts.SPRITES.COLUMN, 1.1);
-        this.addSprite(n + orts.Util.randomInt(0,5), orts.SPRITES.TREE1, -1 - (Math.random() * 2));
-        this.addSprite(n + orts.Util.randomInt(0,5), orts.SPRITES.TREE2, -1 - (Math.random() * 2));
+        this.addSprite(n,     orts.Sprite.COLUMN, 1.1);
+        this.addSprite(n + orts.Util.randomInt(0,5), orts.Sprite.TREE1, -1 - (Math.random() * 2));
+        this.addSprite(n + orts.Util.randomInt(0,5), orts.Sprite.TREE2, -1 - (Math.random() * 2));
       }
 
       for(n = 200 ; n < this.segments.length ; n += 3) {
-        this.addSprite(n, orts.Util.randomChoice(orts.SPRITES.PLANTS), orts.Util.randomChoice([1,-1]) * (2 + Math.random() * 5));
+        this.addSprite(n, orts.Util.randomChoice(orts.Sprite.PLANTS), orts.Util.randomChoice([1,-1]) * (2 + Math.random() * 5));
       }
 
       var side, sprite, offset;
       for(n = 1000 ; n < (this.segments.length-50) ; n += 100) {
         side      = orts.Util.randomChoice([1, -1]);
-        this.addSprite(n + orts.Util.randomInt(0, 50), orts.Util.randomChoice(orts.SPRITES.BILLBOARDS), -side);
+        this.addSprite(n + orts.Util.randomInt(0, 50), orts.Util.randomChoice(orts.Sprite.BILLBOARDS), -side);
         for(i = 0 ; i < 20 ; i++) {
-          sprite = orts.Util.randomChoice(orts.SPRITES.PLANTS);
+          sprite = orts.Util.randomChoice(orts.Sprite.PLANTS);
           offset = side * (1.5 + Math.random());
           this.addSprite(n + orts.Util.randomInt(0, 50), sprite, offset);
         }
@@ -476,8 +476,8 @@ export class OutRun
       for (var n = 0 ; n < this.totalCars ; n++) {
         offset = Math.random() * orts.Util.randomChoice([-0.8, 0.8]);
         z      = Math.floor(Math.random() * this.segments.length) * this.segmentLength;
-        sprite = orts.Util.randomChoice(orts.SPRITES.CARS);
-        speed  = this.maxSpeed/4 + Math.random() * this.maxSpeed/(sprite === orts.SPRITES.SEMI ? 4 : 2);
+        sprite = orts.Util.randomChoice(orts.Sprite.CARS);
+        speed  = this.maxSpeed/4 + Math.random() * this.maxSpeed/(sprite === orts.Sprite.SEMI ? 4 : 2);
         car = { offset: offset, z: z, sprite: sprite, speed: speed };
         segment = this.findSegment(car.z);
         segment.cars.push(car);

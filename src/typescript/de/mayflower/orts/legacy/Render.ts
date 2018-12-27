@@ -75,8 +75,8 @@ export var Render = {
         const image = orts.Main.legacyGame.outRun.images[ sprite.src ];
 
         //  scale for projection AND relative to roadWidth (for tweakUI)
-        var destW  = (image.width  * scale * width/2) * (orts.SPRITES.SCALE * roadWidth);
-        var destH  = (image.height * scale * width/2) * (orts.SPRITES.SCALE * roadWidth);
+        var destW  = (image.width  * scale * width/2) * (orts.Sprite.SCALE * roadWidth);
+        var destH  = (image.height * scale * width/2) * (orts.Sprite.SCALE * roadWidth);
 
         destX = destX + (destW * (offsetX || 0));
         destY = destY + (destH * (offsetY || 0));
@@ -92,11 +92,11 @@ export var Render = {
         var bounce = (1.5 * Math.random() * speedPercent * resolution) * orts.Util.randomChoice([-1,1]);
         var sprite;
         if (steer < 0)
-            sprite = (updown > 0) ? orts.SPRITES.PLAYER_UPHILL_LEFT : orts.SPRITES.PLAYER_LEFT;
+            sprite = (updown > 0) ? orts.Sprite.PLAYER_UPHILL_LEFT : orts.Sprite.PLAYER_LEFT;
         else if (steer > 0)
-            sprite = (updown > 0) ? orts.SPRITES.PLAYER_UPHILL_RIGHT : orts.SPRITES.PLAYER_RIGHT;
+            sprite = (updown > 0) ? orts.Sprite.PLAYER_UPHILL_RIGHT : orts.Sprite.PLAYER_RIGHT;
         else
-            sprite = (updown > 0) ? orts.SPRITES.PLAYER_UPHILL_STRAIGHT : orts.SPRITES.PLAYER_STRAIGHT;
+            sprite = (updown > 0) ? orts.Sprite.PLAYER_UPHILL_STRAIGHT : orts.Sprite.PLAYER_STRAIGHT;
 
         Render.sprite(ctx, width, height, resolution, roadWidth, sprite, scale, destX, destY + bounce, -0.5, -1, 0);
     },

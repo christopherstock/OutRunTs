@@ -24,22 +24,14 @@ export class Game
             }
         };
 
-        const imagesToLoad = [
-            'background.png',
-            'sprites.png',
-        ];
+        const imagesToLoad = [];
 
         // TODO merge these two systems
 
         // browse all sprites
-        for ( const sprite of orts.SPRITES.ALL )
+        for ( const sprite of orts.Sprite.ALL )
         {
             imagesToLoad.push( sprite.src );
-        }
-        // browse all backgrounds
-        for ( const bg of orts.BACKGROUND.ALL )
-        {
-            imagesToLoad.push( bg.src );
         }
 
         this.loadImages(
