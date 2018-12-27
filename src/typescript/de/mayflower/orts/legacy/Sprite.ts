@@ -1,45 +1,45 @@
 
 export class Sprite
 {
-    static BILLBOARD01 =            { w:  300, src: 'sprite/billboard01.png' };
-    static BILLBOARD02 =            { w:  215, src: 'sprite/billboard02.png' };
-    static BILLBOARD03 =            { w:  230, src: 'sprite/billboard03.png' };
-    static BILLBOARD04 =            { w:  268, src: 'sprite/billboard04.png' };
-    static BILLBOARD05 =            { w:  298, src: 'sprite/billboard05.png' };
-    static BILLBOARD06 =            { w:  298, src: 'sprite/billboard06.png' };
-    static BILLBOARD07 =            { w:  298, src: 'sprite/billboard07.png' };
-    static BILLBOARD08 =            { w:  385, src: 'sprite/billboard08.png' };
-    static BILLBOARD09 =            { w:  328, src: 'sprite/billboard09.png' };
+    static BILLBOARD01 =            { src: 'sprite/billboard01.png' };
+    static BILLBOARD02 =            { src: 'sprite/billboard02.png' };
+    static BILLBOARD03 =            { src: 'sprite/billboard03.png' };
+    static BILLBOARD04 =            { src: 'sprite/billboard04.png' };
+    static BILLBOARD05 =            { src: 'sprite/billboard05.png' };
+    static BILLBOARD06 =            { src: 'sprite/billboard06.png' };
+    static BILLBOARD07 =            { src: 'sprite/billboard07.png' };
+    static BILLBOARD08 =            { src: 'sprite/billboard08.png' };
+    static BILLBOARD09 =            { src: 'sprite/billboard09.png' };
 
-    static BOULDER1 =               { w:  168, src: 'sprite/boulder1.png' };
-    static BOULDER2 =               { w:  298, src: 'sprite/boulder2.png' };
-    static BOULDER3 =               { w:  320, src: 'sprite/boulder3.png' };
-    static BUSH1 =                  { w:  240, src: 'sprite/bush1.png' };
-    static BUSH2 =                  { w:  232, src: 'sprite/bush2.png' };
-    static CACTUS =                 { w:  235, src: 'sprite/cactus.png' };
-    static CAR01 =                  { w:   80, src: 'sprite/car01.png' };
-    static CAR02 =                  { w:   80, src: 'sprite/car02.png' };
-    static CAR03 =                  { w:   88, src: 'sprite/car03.png' };
-    static CAR04 =                  { w:   80, src: 'sprite/car04.png' };
-    static COLUMN =                 { w:  200, src: 'sprite/column.png' };
-    static DEAD_TREE1 =             { w:  135, src: 'sprite/dead_tree1.png' };
-    static DEAD_TREE2 =             { w:  150, src: 'sprite/dead_tree2.png' };
-    static PALM_TREE =              { w:  215, src: 'sprite/palm_tree.png' };
-    static PLAYER_LEFT =            { w:   80, src: 'sprite/player_left.png' };
-    static PLAYER_RIGHT =           { w:   80, src: 'sprite/player_right.png' };
-    static PLAYER_STRAIGHT =        { w:   80, src: 'sprite/player_straight.png' };
-    static PLAYER_UPHILL_LEFT =     { w:   80, src: 'sprite/player_uphill_left.png' };
-    static PLAYER_UPHILL_RIGHT =    { w:   80, src: 'sprite/player_uphill_right.png' };
-    static PLAYER_UPHILL_STRAIGHT = { w:   80, src: 'sprite/player_uphill_straight.png' };
-    static SEMI =                   { w:  122, src: 'sprite/semi.png' };
-    static STUMP =                  { w:  195, src: 'sprite/stump.png' };
-    static TREE1 =                  { w:  360, src: 'sprite/tree1.png' };
-    static TREE2 =                  { w:  282, src: 'sprite/tree2.png' };
-    static TRUCK =                  { w:  100, src: 'sprite/truck.png' };
+    static BOULDER1 =               { src: 'sprite/boulder1.png' };
+    static BOULDER2 =               { src: 'sprite/boulder2.png' };
+    static BOULDER3 =               { src: 'sprite/boulder3.png' };
+    static BUSH1 =                  { src: 'sprite/bush1.png' };
+    static BUSH2 =                  { src: 'sprite/bush2.png' };
+    static CACTUS =                 { src: 'sprite/cactus.png' };
+    static CAR01 =                  { src: 'sprite/car01.png' };
+    static CAR02 =                  { src: 'sprite/car02.png' };
+    static CAR03 =                  { src: 'sprite/car03.png' };
+    static CAR04 =                  { src: 'sprite/car04.png' };
+    static COLUMN =                 { src: 'sprite/column.png' };
+    static DEAD_TREE1 =             { src: 'sprite/dead_tree1.png' };
+    static DEAD_TREE2 =             { src: 'sprite/dead_tree2.png' };
+    static PALM_TREE =              { src: 'sprite/palm_tree.png' };
+    static PLAYER_LEFT =            { src: 'sprite/player_left.png' };
+    static PLAYER_RIGHT =           { src: 'sprite/player_right.png' };
+    static PLAYER_STRAIGHT =        { src: 'sprite/player_straight.png' };
+    static PLAYER_UPHILL_LEFT =     { src: 'sprite/player_uphill_left.png' };
+    static PLAYER_UPHILL_RIGHT =    { src: 'sprite/player_uphill_right.png' };
+    static PLAYER_UPHILL_STRAIGHT = { src: 'sprite/player_uphill_straight.png' };
+    static SEMI =                   { src: 'sprite/semi.png' };
+    static STUMP =                  { src: 'sprite/stump.png' };
+    static TREE1 =                  { src: 'sprite/tree1.png' };
+    static TREE2 =                  { src: 'sprite/tree2.png' };
+    static TRUCK =                  { src: 'sprite/truck.png' };
 
-    static HILLS = { src: 'background/hills.png' };
-    static SKY   = { src: 'background/sky.png'   };
-    static TREES = { src: 'background/trees.png' };
+    static HILLS =                  { src: 'background/hills.png' };
+    static SKY   =                  { src: 'background/sky.png'   };
+    static TREES =                  { src: 'background/trees.png' };
 
     static SCALE = 0.3 * (1 / 80); // the reference sprite width should be 1/3rd the (half-)roadWidth
 

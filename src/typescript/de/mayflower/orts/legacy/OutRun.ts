@@ -98,7 +98,8 @@ export class OutRun
 
         for(n = 0 ; n < playerSegment.sprites.length ; n++) {
           sprite  = playerSegment.sprites[n];
-          spriteW = sprite.source.w * orts.Sprite.SCALE;
+          spriteW = orts.Main.legacyGame.outRun.images[ sprite.source.src ].width * orts.Sprite.SCALE;
+
           if (orts.Util.overlap(this.playerX, playerW, sprite.offset + spriteW/2 * (sprite.offset > 0 ? 1 : -1), spriteW, 0)) {
             this.speed = this.maxSpeed/5;
             this.position = orts.Util.increase(playerSegment.p1.world.z, -this.playerZ, this.trackLength); // stop in front of sprite (at front of segment)
@@ -109,7 +110,7 @@ export class OutRun
 
       for(n = 0 ; n < playerSegment.cars.length ; n++) {
         car  = playerSegment.cars[n];
-        carW = car.sprite.w * orts.Sprite.SCALE;
+        carW = orts.Main.legacyGame.outRun.images[ car.sprite.src ].width * orts.Sprite.SCALE;
         if (this.speed > car.speed) {
           if (orts.Util.overlap(this.playerX, playerW, car.offset, carW, 0.8)) {
             this.speed    = car.speed * (car.speed/this.speed);
@@ -163,7 +164,7 @@ export class OutRun
 
     updateCarOffset=(car, carSegment, playerSegment, playerW)=> {
 
-      var i, j, dir, segment, otherCar, otherCarW, lookahead = 20, carW = car.sprite.w * orts.Sprite.SCALE;
+      var i, j, dir, segment, otherCar, otherCarW, lookahead = 20, carW = orts.Main.legacyGame.outRun.images[ car.sprite.src ].width * orts.Sprite.SCALE;
 
       // optimization, dont bother steering around other cars when 'out of sight' of the player
       if ((carSegment.index - playerSegment.index) > this.drawDistance)
@@ -184,7 +185,7 @@ export class OutRun
 
         for(j = 0 ; j < segment.cars.length ; j++) {
           otherCar  = segment.cars[j];
-          otherCarW = otherCar.sprite.w * orts.Sprite.SCALE;
+          otherCarW = orts.Main.legacyGame.outRun.images[ otherCar.sprite.src ].width * orts.Sprite.SCALE;
           if ((car.speed > otherCar.speed) && orts.Util.overlap(car.offset, carW, otherCar.offset, otherCarW, 1.2)) {
             if (otherCar.offset > 0.5)
               dir = -1;
