@@ -18,7 +18,7 @@ export class Game
 
                 this.outRun.images = images;
 
-                console.log( 'Images loaded: ', images );
+                // console.log( 'Images loaded: ', images );
 
                 this.outRun.reset({});
             }

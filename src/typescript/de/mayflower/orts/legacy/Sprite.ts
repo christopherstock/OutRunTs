@@ -37,11 +37,11 @@ export class Sprite
     static TREE2 =                  { x: 1205, y:    5, w:  282, h:  295, src: 'sprite/tree2.png' };
     static TRUCK =                  { x: 1365, y:  644, w:  100, h:   78, src: 'sprite/truck.png' };
 
-    static HILLS = { x:   5, y:   5, w: 1280, h: 480, src: 'background/hills.png' };
-    static SKY   = { x:   5, y: 495, w: 1280, h: 480, src: 'background/sky.png'   };
-    static TREES = { x:   5, y: 985, w: 1280, h: 480, src: 'background/trees.png' };
+    static HILLS = { src: 'background/hills.png' };
+    static SKY   = { src: 'background/sky.png'   };
+    static TREES = { src: 'background/trees.png' };
 
-    static SCALE = 0.3 * (1/Sprite.PLAYER_STRAIGHT.w); // the reference sprite width should be 1/3rd the (half-)roadWidth
+    static SCALE = 0.3 * (1 / 80); // the reference sprite width should be 1/3rd the (half-)roadWidth
 
     static BILLBOARDS = [Sprite.BILLBOARD01, Sprite.BILLBOARD02, Sprite.BILLBOARD03, Sprite.BILLBOARD04, Sprite.BILLBOARD05, Sprite.BILLBOARD06, Sprite.BILLBOARD07, Sprite.BILLBOARD08, Sprite.BILLBOARD09];
     static PLANTS     = [Sprite.TREE1, Sprite.TREE2, Sprite.DEAD_TREE1, Sprite.DEAD_TREE2, Sprite.PALM_TREE, Sprite.BUSH1, Sprite.BUSH2, Sprite.CACTUS, Sprite.STUMP, Sprite.BOULDER1, Sprite.BOULDER2, Sprite.BOULDER3];

@@ -61,7 +61,7 @@ export class OutRun
 
       var n, car, carW, sprite, spriteW;
       var playerSegment = this.findSegment(this.position+this.playerZ);
-      var playerW       = orts.Sprite.PLAYER_STRAIGHT.w * orts.Sprite.SCALE;
+      var playerW       = 80 * orts.Sprite.SCALE;
       var speedPercent  = this.speed/this.maxSpeed;
       var dx            = dt * 2 * speedPercent; // at top speed, should be able to cross from left to right (-1 to 1) in 1 second
       var startPosition = this.position;
