@@ -10,6 +10,9 @@
     export * from './hid/KeyCodes';
     export * from './hid/KeySystem';
 
+    export * from './io/ImageFile';
+    export * from './io/ImageSystem';
+
     export * from './util/HTML';
     export * from './util/MathUtil';
     export * from './util/String';
