@@ -34,11 +34,6 @@
 
             Main.game = new orts.GameEngine();
             Main.game.init();
-
-
-            // start legacy game loop
-            Main.legacyGame = new orts.Game();
-            Main.legacyGame.run();
         }
 
         /** ************************************************************************************************************

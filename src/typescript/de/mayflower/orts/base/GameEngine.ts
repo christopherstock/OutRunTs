@@ -32,6 +32,8 @@
         {
             orts.Debug.init.log( 'All images loaded successfully' );
 
-
+            // start legacy game loop
+            orts.Main.legacyGame = new orts.Game();
+            orts.Main.legacyGame.run();
         }
     }
