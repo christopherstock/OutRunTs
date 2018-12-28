@@ -62,7 +62,7 @@
 
           var n, car, carW, sprite, spriteW;
           var playerSegment = this.findSegment(this.position+this.playerZ);
-          var playerW       = 80 * orts.Sprite.SCALE;
+          var playerW       = 80 * orts.SettingGame.SPRITE_SCALE;
           var speedPercent  = this.speed/this.maxSpeed;
           var dx            = dt * 2 * speedPercent; // at top speed, should be able to cross from left to right (-1 to 1) in 1 second
           var startPosition = this.position;
@@ -99,7 +99,7 @@
 
             for(n = 0 ; n < playerSegment.sprites.length ; n++) {
               sprite  = playerSegment.sprites[n];
-              spriteW = orts.Main.game.imageSystem.getImage( sprite.source ).width * orts.Sprite.SCALE;
+              spriteW = orts.Main.game.imageSystem.getImage( sprite.source ).width * orts.SettingGame.SPRITE_SCALE;
 
               if (orts.Util.overlap(this.playerX, playerW, sprite.offset + spriteW/2 * (sprite.offset > 0 ? 1 : -1), spriteW, 0)) {
                 this.speed = this.maxSpeed/5;
@@ -111,7 +111,7 @@
 
           for(n = 0 ; n < playerSegment.cars.length ; n++) {
             car  = playerSegment.cars[n];
-            carW = orts.Main.game.imageSystem.getImage( car.sprite ).width * orts.Sprite.SCALE;
+            carW = orts.Main.game.imageSystem.getImage( car.sprite ).width * orts.SettingGame.SPRITE_SCALE;
             if (this.speed > car.speed) {
               if (orts.Util.overlap(this.playerX, playerW, car.offset, carW, 0.8)) {
                 this.speed    = car.speed * (car.speed/this.speed);
@@ -165,7 +165,7 @@
 
         updateCarOffset=(car, carSegment, playerSegment, playerW)=> {
 
-          var i, j, dir, segment, otherCar, otherCarW, lookahead = 20, carW = orts.Main.game.imageSystem.getImage( car.sprite ).width * orts.Sprite.SCALE;
+          var i, j, dir, segment, otherCar, otherCarW, lookahead = 20, carW = orts.Main.game.imageSystem.getImage( car.sprite ).width * orts.SettingGame.SPRITE_SCALE;
 
           // optimization, dont bother steering around other cars when 'out of sight' of the player
           if ((carSegment.index - playerSegment.index) > this.drawDistance)
@@ -186,7 +186,7 @@
 
             for(j = 0 ; j < segment.cars.length ; j++) {
               otherCar  = segment.cars[j];
-              otherCarW = orts.Main.game.imageSystem.getImage( otherCar.sprite ).width * orts.Sprite.SCALE;
+              otherCarW = orts.Main.game.imageSystem.getImage( otherCar.sprite ).width * orts.SettingGame.SPRITE_SCALE;
               if ((car.speed > otherCar.speed) && orts.Util.overlap(car.offset, carW, otherCar.offset, otherCarW, 1.2)) {
                 if (otherCar.offset > 0.5)
                   dir = -1;
@@ -313,7 +313,7 @@
               curve: curve,
             sprites: [],
                cars: [],
-              color: Math.floor(n/this.rumbleLength)%2 ? orts.COLORS.DARK : orts.COLORS.LIGHT
+              color: Math.floor(n/this.rumbleLength)%2 ? orts.SettingColor.DARK : orts.SettingColor.LIGHT
           });
         }
 
@@ -417,10 +417,10 @@
           this.resetSprites();
           this.resetCars();
 
-          this.segments[this.findSegment(this.playerZ).index + 2].color = orts.COLORS.START;
-          this.segments[this.findSegment(this.playerZ).index + 3].color = orts.COLORS.START;
+          this.segments[this.findSegment(this.playerZ).index + 2].color = orts.SettingColor.START;
+          this.segments[this.findSegment(this.playerZ).index + 3].color = orts.SettingColor.START;
           for(var n = 0 ; n < this.rumbleLength ; n++)
-            this.segments[this.segments.length-1-n].color = orts.COLORS.FINISH;
+            this.segments[this.segments.length-1-n].color = orts.SettingColor.FINISH;
 
           this.trackLength = this.segments.length * this.segmentLength;
         }
@@ -455,15 +455,15 @@
           }
 
           for(n = 200 ; n < this.segments.length ; n += 3) {
-            this.addSprite(n, orts.Util.randomChoice(orts.Sprite.PLANTS), orts.Util.randomChoice([1,-1]) * (2 + Math.random() * 5));
+            this.addSprite(n, orts.Util.randomChoice(orts.SettingGame.PLANTS), orts.Util.randomChoice([1,-1]) * (2 + Math.random() * 5));
           }
 
           var side, sprite, offset;
           for(n = 1000 ; n < (this.segments.length-50) ; n += 100) {
             side      = orts.Util.randomChoice([1, -1]);
-            this.addSprite(n + orts.Util.randomInt(0, 50), orts.Util.randomChoice(orts.Sprite.BILLBOARDS), -side);
+            this.addSprite(n + orts.Util.randomInt(0, 50), orts.Util.randomChoice(orts.SettingGame.BILLBOARDS), -side);
             for(i = 0 ; i < 20 ; i++) {
-              sprite = orts.Util.randomChoice(orts.Sprite.PLANTS);
+              sprite = orts.Util.randomChoice(orts.SettingGame.PLANTS);
               offset = side * (1.5 + Math.random());
               this.addSprite(n + orts.Util.randomInt(0, 50), sprite, offset);
             }
@@ -476,7 +476,7 @@
           for (var n = 0 ; n < this.totalCars ; n++) {
             offset = Math.random() * orts.Util.randomChoice([-0.8, 0.8]);
             z      = Math.floor(Math.random() * this.segments.length) * this.segmentLength;
-            sprite = orts.Util.randomChoice(orts.Sprite.CARS);
+            sprite = orts.Util.randomChoice(orts.SettingGame.CARS);
             speed  = this.maxSpeed/4 + Math.random() * this.maxSpeed/(sprite === orts.ImageFile.SEMI ? 4 : 2);
             car = { offset: offset, z: z, sprite: sprite, speed: speed };
             segment = this.findSegment(car.z);

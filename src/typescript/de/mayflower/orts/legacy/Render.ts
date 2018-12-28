@@ -75,8 +75,8 @@
             const image = orts.Main.game.imageSystem.getImage( sprite );
 
             //  scale for projection AND relative to roadWidth (for tweakUI)
-            var destW  = (image.width  * scale * width/2) * (orts.Sprite.SCALE * roadWidth);
-            var destH  = (image.height * scale * width/2) * (orts.Sprite.SCALE * roadWidth);
+            var destW  = (image.width  * scale * width/2) * (orts.SettingGame.SPRITE_SCALE * roadWidth);
+            var destH  = (image.height * scale * width/2) * (orts.SettingGame.SPRITE_SCALE * roadWidth);
 
             destX = destX + (destW * (offsetX || 0));
             destY = destY + (destH * (offsetY || 0));
@@ -105,7 +105,7 @@
         {
             if (fog < 1) {
                 ctx.globalAlpha = (1-fog);
-                ctx.fillStyle = orts.COLORS.FOG;
+                ctx.fillStyle = orts.SettingColor.FOG;
                 ctx.fillRect(x, y, width, height);
                 ctx.globalAlpha = 1;
             }
