@@ -41,13 +41,13 @@
         }
 
         /** ************************************************************************************************************
-        *   Triggers loading all images.
+        *   Triggers loading all images. TODO extract to path setting!
         ***************************************************************************************************************/
         private loadImages() : void
         {
             for ( const fileName of this.fileNames )
             {
-                this.loadedImages[ fileName ] = this.loadImage( fileName );
+                this.loadedImages[ fileName ] = this.loadImage( 'res/image/legacy/' + fileName );
             }
         }
 

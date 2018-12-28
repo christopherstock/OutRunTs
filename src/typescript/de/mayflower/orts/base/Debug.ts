@@ -21,7 +21,7 @@
         /** Debugs key system. */
         public      static      readonly    key                 :Debug              = new Debug( false );
         /** Debugs image system. */
-        public      static      readonly    image               :Debug              = new Debug( true  );
+        public      static      readonly    image               :Debug              = new Debug( false );
 
         /** Flags if logging for this debug group is enabled. */
         private                 readonly    debugEnabled        :boolean            = false;

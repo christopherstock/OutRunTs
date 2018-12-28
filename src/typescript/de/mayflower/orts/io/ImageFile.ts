@@ -4,119 +4,109 @@
     *******************************************************************************************************************/
     export class ImageFile
     {
-        /** The image for the 'player default'. */
-        public      static      PLAYER_DEFAULT          :string                 = 'player/default.png';
-        /** The image for the 'player crashed'. */
-        public      static      PLAYER_CRASHED          :string                 = 'player/crashed.png';
-
-        /** The image for the background. */
-        public      static      BG_1                    :string                 = 'bg/bg1.jpg';
-
-        /** The image for the deco 'road straight'. */
-        public      static      DECO_ROAD_STRAIGHT      :string                 = 'deco/roadStraight.png';
-        /** The image for the deco 'road left'. */
-        public      static      DECO_ROAD_LEFT          :string                 = 'deco/roadLeft.png';
-        /** The image for the deco 'road right'. */
-        public      static      DECO_ROAD_RIGHT         :string                 = 'deco/roadRight.png';
-        /** The image for the deco 'finish line'. */
-        public      static      DECO_ROAD_FINISH_LINE   :string                 = 'deco/finishLine.png';
-        /** The image for the deco 'bridge'. */
-        public      static      DECO_BRIDGE             :string                 = 'deco/bridge.png';
-        /** The image for the deco 'field 1'. */
-        public      static      DECO_FIELD_1            :string                 = 'deco/field1.png';
-        /** The image for the deco 'country road'. */
-        public      static      DECO_COUNTY_ROAD        :string                 = 'deco/countryRoad.png';
-
-        /** The image for the obstacle 'water 1'. */
-        public      static      OBSTACLE_WATER_1        :string                 = 'obstacle/water1.png';
-        /** The image for the obstacle 'water 2'. */
-        public      static      OBSTACLE_WATER_2        :string                 = 'obstacle/water2.png';
-
-        /** The image for the obstacle 'tree 1'. */
-        public      static      OBSTACLE_TREE_1         :string                 = 'obstacle/tree1.png';
-        /** The image for the obstacle 'tree 2'. */
-        public      static      OBSTACLE_TREE_2         :string                 = 'obstacle/tree2.png';
-        /** The image for the obstacle 'tree 3'. */
-        public      static      OBSTACLE_TREE_3         :string                 = 'obstacle/tree3.png';
-        /** The image for the obstacle 'tree 4'. */
-        public      static      OBSTACLE_TREE_4         :string                 = 'obstacle/tree4.png';
-        /** The image for the obstacle 'tree 5'. */
-        public      static      OBSTACLE_TREE_5         :string                 = 'obstacle/tree5.png';
-        /** The image for the obstacle 'tree 6'. */
-        public      static      OBSTACLE_TREE_6         :string                 = 'obstacle/tree6.png';
-        /** The image for the obstacle 'tree 7'. */
-        public      static      OBSTACLE_TREE_7         :string                 = 'obstacle/tree7.png';
-        /** The image for the obstacle 'tree 8'. */
-        public      static      OBSTACLE_TREE_8         :string                 = 'obstacle/tree8.png';
-        /** The image for the obstacle 'tree 9'. */
-        public      static      OBSTACLE_TREE_9         :string                 = 'obstacle/tree9.png';
-
-        /** The image for the obstacle 'car 1'. */
-        public      static      OBSTACLE_CAR_1          :string                 = 'obstacle/car1.png';
-        /** The image for the obstacle 'car 2'. */
-        public      static      OBSTACLE_CAR_2          :string                 = 'obstacle/car2.png';
-        /** The image for the obstacle 'car 3'. */
-        public      static      OBSTACLE_CAR_3          :string                 = 'obstacle/car3.png';
-        /** The image for the obstacle 'car 4'. */
-        public      static      OBSTACLE_CAR_4          :string                 = 'obstacle/car4.png';
-        /** The image for the obstacle 'truck 1'. */
-        public      static      OBSTACLE_TRUCK_1        :string                 = 'obstacle/truck1.png';
-        /** The image for the obstacle 'truck 2'. */
-        public      static      OBSTACLE_TRUCK_2        :string                 = 'obstacle/truck2.png';
-        /** The image for the obstacle 'truck 3'. */
-        public      static      OBSTACLE_TRUCK_3        :string                 = 'obstacle/truck3.png';
-        /** The image for the obstacle 'truck 4'. */
-        public      static      OBSTACLE_TRUCK_4        :string                 = 'obstacle/truck4.png';
-        /** The image for the obstacle 'truck 5'. */
-        public      static      OBSTACLE_TRUCK_5        :string                 = 'obstacle/truck5.png';
-
-        /** The image for the obstacle 'house 1'. */
-        public      static      OBSTACLE_HOUSE_1        :string                 = 'obstacle/house1.png';
-
-        /** The image for the obstacle 'sign 1'. */
-        public      static      OBSTACLE_SIGN_1         :string                 = 'obstacle/sign1.png';
+        public  static  BILLBOARD01             :string         = 'sprite/billboard01.png' ;
+        public  static  BILLBOARD02             :string         = 'sprite/billboard02.png' ;
+        public  static  BILLBOARD03             :string         = 'sprite/billboard03.png' ;
+        public  static  BILLBOARD04             :string         = 'sprite/billboard04.png' ;
+        public  static  BILLBOARD05             :string         = 'sprite/billboard05.png' ;
+        public  static  BILLBOARD06             :string         = 'sprite/billboard06.png' ;
+        public  static  BILLBOARD07             :string         = 'sprite/billboard07.png' ;
+        public  static  BILLBOARD08             :string         = 'sprite/billboard08.png' ;
+        public  static  BILLBOARD09             :string         = 'sprite/billboard09.png' ;
+        public  static  BOULDER1                :string         = 'sprite/boulder1.png' ;
+        public  static  BOULDER2                :string         = 'sprite/boulder2.png' ;
+        public  static  BOULDER3                :string         = 'sprite/boulder3.png' ;
+        public  static  BUSH1                   :string         = 'sprite/bush1.png' ;
+        public  static  BUSH2                   :string         = 'sprite/bush2.png' ;
+        public  static  CACTUS                  :string         = 'sprite/cactus.png' ;
+        public  static  CAR01                   :string         = 'sprite/car01.png' ;
+        public  static  CAR02                   :string         = 'sprite/car02.png' ;
+        public  static  CAR03                   :string         = 'sprite/car03.png' ;
+        public  static  CAR04                   :string         = 'sprite/car04.png' ;
+        public  static  COLUMN                  :string         = 'sprite/column.png' ;
+        public  static  DEAD_TREE1              :string         = 'sprite/dead_tree1.png' ;
+        public  static  DEAD_TREE2              :string         = 'sprite/dead_tree2.png' ;
+        public  static  PALM_TREE               :string         = 'sprite/palm_tree.png' ;
+        public  static  PLAYER_LEFT             :string         = 'sprite/player_left.png' ;
+        public  static  PLAYER_RIGHT            :string         = 'sprite/player_right.png' ;
+        public  static  PLAYER_STRAIGHT         :string         = 'sprite/player_straight.png' ;
+        public  static  PLAYER_UPHILL_LEFT      :string         = 'sprite/player_uphill_left.png' ;
+        public  static  PLAYER_UPHILL_RIGHT     :string         = 'sprite/player_uphill_right.png' ;
+        public  static  PLAYER_UPHILL_STRAIGHT  :string         = 'sprite/player_uphill_straight.png' ;
+        public  static  SEMI                    :string         = 'sprite/semi.png' ;
+        public  static  STUMP                   :string         = 'sprite/stump.png' ;
+        public  static  TREE1                   :string         = 'sprite/tree1.png' ;
+        public  static  TREE2                   :string         = 'sprite/tree2.png' ;
+        public  static  TRUCK                   :string         = 'sprite/truck.png' ;
+        public  static  HILLS                   :string         = 'background/hills.png' ;
+        public  static  SKY                     :string         = 'background/sky.png'   ;
+        public  static  TREES                   :string         = 'background/trees.png' ;
 
         /** This array contains all filenames of all images that shall be loaded. */
-        public      static      FILE_NAMES              :string[]               =
+        public  static  FILE_NAMES              :string[]       =
         [
-            ImageFile.PLAYER_DEFAULT,
-            ImageFile.PLAYER_CRASHED,
+            ImageFile.BILLBOARD01,
+            ImageFile.BILLBOARD02,
+            ImageFile.BILLBOARD03,
+            ImageFile.BILLBOARD04,
+            ImageFile.BILLBOARD05,
+            ImageFile.BILLBOARD06,
+            ImageFile.BILLBOARD07,
+            ImageFile.BILLBOARD08,
+            ImageFile.BILLBOARD09,
 
-            ImageFile.BG_1,
+            ImageFile.BOULDER1,
+            ImageFile.BOULDER1,
+            ImageFile.BOULDER2,
+            ImageFile.BOULDER2,
+            ImageFile.BOULDER3,
+            ImageFile.BOULDER3,
+            ImageFile.BUSH1,
+            ImageFile.BUSH1,
+            ImageFile.BUSH2,
+            ImageFile.BUSH2,
+            ImageFile.CACTUS,
+            ImageFile.CACTUS,
+            ImageFile.CAR01,
+            ImageFile.CAR01,
+            ImageFile.CAR02,
+            ImageFile.CAR02,
+            ImageFile.CAR03,
+            ImageFile.CAR03,
+            ImageFile.CAR04,
+            ImageFile.CAR04,
+            ImageFile.COLUMN,
+            ImageFile.COLUMN,
+            ImageFile.DEAD_TREE1,
+            ImageFile.DEAD_TREE1,
+            ImageFile.DEAD_TREE2,
+            ImageFile.DEAD_TREE2,
+            ImageFile.PALM_TREE,
+            ImageFile.PALM_TREE,
+            ImageFile.PLAYER_LEFT,
+            ImageFile.PLAYER_LEFT,
+            ImageFile.PLAYER_RIGHT,
+            ImageFile.PLAYER_RIGHT,
+            ImageFile.PLAYER_STRAIGHT,
+            ImageFile.PLAYER_STRAIGHT,
+            ImageFile.PLAYER_UPHILL_LEFT,
+            ImageFile.PLAYER_UPHILL_LEFT,
+            ImageFile.PLAYER_UPHILL_RIGHT,
+            ImageFile.PLAYER_UPHILL_RIGHT,
+            ImageFile.PLAYER_UPHILL_STRAIGHT,
+            ImageFile.PLAYER_UPHILL_STRAIGHT,
+            ImageFile.SEMI,
+            ImageFile.SEMI,
+            ImageFile.STUMP,
+            ImageFile.STUMP,
+            ImageFile.TREE1,
+            ImageFile.TREE1,
+            ImageFile.TREE2,
+            ImageFile.TREE2,
+            ImageFile.TRUCK,
 
-            ImageFile.DECO_ROAD_LEFT,
-            ImageFile.DECO_ROAD_RIGHT,
-            ImageFile.DECO_ROAD_STRAIGHT,
-            ImageFile.DECO_ROAD_FINISH_LINE,
-            ImageFile.DECO_BRIDGE,
-            ImageFile.DECO_FIELD_1,
-            ImageFile.DECO_COUNTY_ROAD,
-
-            ImageFile.OBSTACLE_WATER_1,
-            ImageFile.OBSTACLE_WATER_2,
-
-            ImageFile.OBSTACLE_TREE_1,
-            ImageFile.OBSTACLE_TREE_2,
-            ImageFile.OBSTACLE_TREE_3,
-            ImageFile.OBSTACLE_TREE_4,
-            ImageFile.OBSTACLE_TREE_5,
-            ImageFile.OBSTACLE_TREE_6,
-            ImageFile.OBSTACLE_TREE_7,
-            ImageFile.OBSTACLE_TREE_8,
-            ImageFile.OBSTACLE_TREE_9,
-
-            ImageFile.OBSTACLE_CAR_1,
-            ImageFile.OBSTACLE_CAR_2,
-            ImageFile.OBSTACLE_CAR_3,
-            ImageFile.OBSTACLE_CAR_4,
-            ImageFile.OBSTACLE_TRUCK_1,
-            ImageFile.OBSTACLE_TRUCK_2,
-            ImageFile.OBSTACLE_TRUCK_3,
-            ImageFile.OBSTACLE_TRUCK_4,
-            ImageFile.OBSTACLE_TRUCK_5,
-
-            ImageFile.OBSTACLE_HOUSE_1,
-
-            ImageFile.OBSTACLE_SIGN_1,
+            ImageFile.HILLS,
+            ImageFile.SKY,
+            ImageFile.TREES,
         ];
     }
