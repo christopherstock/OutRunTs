@@ -22,8 +22,6 @@
         canvas :HTMLCanvasElement = document.getElementById('canvas') as HTMLCanvasElement;     // our canvas...
         ctx            = this.canvas.getContext('2d'); // ...and its drawing context
 
-        images         = null;                    // all images
-
         resolution     = null;                    // scaling factor to provide resolution independence (computed)
         roadWidth      = 2000;                    // actually half the roads width, easier math if the road spans from -roadWidth to +roadWidth
         segmentLength  = 200;                     // length of a single segment
@@ -101,7 +99,7 @@
 
             for(n = 0 ; n < playerSegment.sprites.length ; n++) {
               sprite  = playerSegment.sprites[n];
-              spriteW = orts.Main.legacyGame.outRun.images[ sprite.source ].width * orts.Sprite.SCALE;
+              spriteW = orts.Main.game.imageSystem.getImage( sprite.source ).width * orts.Sprite.SCALE;
 
               if (orts.Util.overlap(this.playerX, playerW, sprite.offset + spriteW/2 * (sprite.offset > 0 ? 1 : -1), spriteW, 0)) {
                 this.speed = this.maxSpeed/5;
@@ -113,7 +111,7 @@
 
           for(n = 0 ; n < playerSegment.cars.length ; n++) {
             car  = playerSegment.cars[n];
-            carW = orts.Main.legacyGame.outRun.images[ car.sprite ].width * orts.Sprite.SCALE;
+            carW = orts.Main.game.imageSystem.getImage( car.sprite ).width * orts.Sprite.SCALE;
             if (this.speed > car.speed) {
               if (orts.Util.overlap(this.playerX, playerW, car.offset, carW, 0.8)) {
                 this.speed    = car.speed * (car.speed/this.speed);
@@ -167,7 +165,7 @@
 
         updateCarOffset=(car, carSegment, playerSegment, playerW)=> {
 
-          var i, j, dir, segment, otherCar, otherCarW, lookahead = 20, carW = orts.Main.legacyGame.outRun.images[ car.sprite ].width * orts.Sprite.SCALE;
+          var i, j, dir, segment, otherCar, otherCarW, lookahead = 20, carW = orts.Main.game.imageSystem.getImage( car.sprite ).width * orts.Sprite.SCALE;
 
           // optimization, dont bother steering around other cars when 'out of sight' of the player
           if ((carSegment.index - playerSegment.index) > this.drawDistance)
@@ -188,7 +186,7 @@
 
             for(j = 0 ; j < segment.cars.length ; j++) {
               otherCar  = segment.cars[j];
-              otherCarW = orts.Main.legacyGame.outRun.images[ otherCar.sprite ].width * orts.Sprite.SCALE;
+              otherCarW = orts.Main.game.imageSystem.getImage( otherCar.sprite ).width * orts.Sprite.SCALE;
               if ((car.speed > otherCar.speed) && orts.Util.overlap(car.offset, carW, otherCar.offset, otherCarW, 1.2)) {
                 if (otherCar.offset > 0.5)
                   dir = -1;
@@ -228,9 +226,9 @@
 
           this.ctx.clearRect(0, 0, this.width, this.height);
 
-          orts.Render.background(this.ctx, this.width, this.height, orts.Sprite.SKY,   this.skyOffset,  this.resolution * this.skySpeed  * playerY);
-          orts.Render.background(this.ctx, this.width, this.height, orts.Sprite.HILLS, this.hillOffset, this.resolution * this.hillSpeed * playerY);
-          orts.Render.background(this.ctx, this.width, this.height, orts.Sprite.TREES, this.treeOffset, this.resolution * this.treeSpeed * playerY);
+          orts.Render.background(this.ctx, this.width, this.height, orts.ImageFile.SKY,   this.skyOffset,  this.resolution * this.skySpeed  * playerY);
+          orts.Render.background(this.ctx, this.width, this.height, orts.ImageFile.HILLS, this.hillOffset, this.resolution * this.hillSpeed * playerY);
+          orts.Render.background(this.ctx, this.width, this.height, orts.ImageFile.TREES, this.treeOffset, this.resolution * this.treeSpeed * playerY);
 
           var n, i, segment, car, sprite, spriteScale, spriteX, spriteY;
 
@@ -430,30 +428,30 @@
         resetSprites=()=> {
           var n, i;
 
-          this.addSprite(20,  orts.Sprite.BILLBOARD07, -1);
-          this.addSprite(40,  orts.Sprite.BILLBOARD06, -1);
-          this.addSprite(60,  orts.Sprite.BILLBOARD08, -1);
-          this.addSprite(80,  orts.Sprite.BILLBOARD09, -1);
-          this.addSprite(100, orts.Sprite.BILLBOARD01, -1);
-          this.addSprite(120, orts.Sprite.BILLBOARD02, -1);
-          this.addSprite(140, orts.Sprite.BILLBOARD03, -1);
-          this.addSprite(160, orts.Sprite.BILLBOARD04, -1);
-          this.addSprite(180, orts.Sprite.BILLBOARD05, -1);
+          this.addSprite(20,  orts.ImageFile.BILLBOARD07, -1);
+          this.addSprite(40,  orts.ImageFile.BILLBOARD06, -1);
+          this.addSprite(60,  orts.ImageFile.BILLBOARD08, -1);
+          this.addSprite(80,  orts.ImageFile.BILLBOARD09, -1);
+          this.addSprite(100, orts.ImageFile.BILLBOARD01, -1);
+          this.addSprite(120, orts.ImageFile.BILLBOARD02, -1);
+          this.addSprite(140, orts.ImageFile.BILLBOARD03, -1);
+          this.addSprite(160, orts.ImageFile.BILLBOARD04, -1);
+          this.addSprite(180, orts.ImageFile.BILLBOARD05, -1);
 
-          this.addSprite(240,                  orts.Sprite.BILLBOARD07, -1.2);
-          this.addSprite(240,                  orts.Sprite.BILLBOARD06,  1.2);
-          this.addSprite(this.segments.length - 25, orts.Sprite.BILLBOARD07, -1.2);
-          this.addSprite(this.segments.length - 25, orts.Sprite.BILLBOARD06,  1.2);
+          this.addSprite(240,                  orts.ImageFile.BILLBOARD07, -1.2);
+          this.addSprite(240,                  orts.ImageFile.BILLBOARD06,  1.2);
+          this.addSprite(this.segments.length - 25, orts.ImageFile.BILLBOARD07, -1.2);
+          this.addSprite(this.segments.length - 25, orts.ImageFile.BILLBOARD06,  1.2);
 
           for(n = 10 ; n < 200 ; n += 4 + Math.floor(n/100)) {
-            this.addSprite(n, orts.Sprite.PALM_TREE, 0.5 + Math.random()*0.5);
-            this.addSprite(n, orts.Sprite.PALM_TREE,   1 + Math.random()*2);
+            this.addSprite(n, orts.ImageFile.PALM_TREE, 0.5 + Math.random()*0.5);
+            this.addSprite(n, orts.ImageFile.PALM_TREE,   1 + Math.random()*2);
           }
 
           for(n = 250 ; n < 1000 ; n += 5) {
-            this.addSprite(n,     orts.Sprite.COLUMN, 1.1);
-            this.addSprite(n + orts.Util.randomInt(0,5), orts.Sprite.TREE1, -1 - (Math.random() * 2));
-            this.addSprite(n + orts.Util.randomInt(0,5), orts.Sprite.TREE2, -1 - (Math.random() * 2));
+            this.addSprite(n,     orts.ImageFile.COLUMN, 1.1);
+            this.addSprite(n + orts.Util.randomInt(0,5), orts.ImageFile.TREE1, -1 - (Math.random() * 2));
+            this.addSprite(n + orts.Util.randomInt(0,5), orts.ImageFile.TREE2, -1 - (Math.random() * 2));
           }
 
           for(n = 200 ; n < this.segments.length ; n += 3) {
@@ -469,9 +467,7 @@
               offset = side * (1.5 + Math.random());
               this.addSprite(n + orts.Util.randomInt(0, 50), sprite, offset);
             }
-
           }
-
         }
 
         resetCars=()=> {
@@ -481,7 +477,7 @@
             offset = Math.random() * orts.Util.randomChoice([-0.8, 0.8]);
             z      = Math.floor(Math.random() * this.segments.length) * this.segmentLength;
             sprite = orts.Util.randomChoice(orts.Sprite.CARS);
-            speed  = this.maxSpeed/4 + Math.random() * this.maxSpeed/(sprite === orts.Sprite.SEMI ? 4 : 2);
+            speed  = this.maxSpeed/4 + Math.random() * this.maxSpeed/(sprite === orts.ImageFile.SEMI ? 4 : 2);
             car = { offset: offset, z: z, sprite: sprite, speed: speed };
             segment = this.findSegment(car.z);
             segment.cars.push(car);
