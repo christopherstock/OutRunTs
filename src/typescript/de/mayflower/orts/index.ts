@@ -22,4 +22,3 @@
 
     export * from './legacy/OutRun';
     export * from './legacy/Render';
-    export * from './legacy/Util';

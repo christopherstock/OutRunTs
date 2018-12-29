@@ -95,7 +95,7 @@
 
         static player(ctx, width, height, resolution, roadWidth, speedPercent, scale, destX, destY, steer, updown)
         {
-            var bounce = (1.5 * Math.random() * speedPercent * resolution) * orts.Util.randomChoice([-1,1]);
+            var bounce = (1.5 * Math.random() * speedPercent * resolution) * orts.MathUtil.randomChoice([-1,1]);
             var sprite;
             if (steer < 0)
                 sprite = (updown > 0) ? orts.ImageFile.PLAYER_UPHILL_LEFT : orts.ImageFile.PLAYER_LEFT;
