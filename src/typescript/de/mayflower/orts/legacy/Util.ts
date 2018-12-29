@@ -4,19 +4,18 @@
     *******************************************************************************************************************/
     export class Util
     {
-        static timestamp()
+        /** ************************************************************************************************************
+        *   Converts the given number into an integer value.
+        *   All decimal places are cut off.
+        *
+        *   @param x The number to convert to an integer.
+        *
+        *   @return The converted value as an integer.
+        ***************************************************************************************************************/
+        public static toInt( x:number ) : number
         {
-            return new Date().getTime();
-        };
-
-        static toInt(obj, def)
-        {
-            if (obj !== null) {
-                var x = parseInt(obj, 10);
-                if (!isNaN(x)) return x;
-            }
-            return Util.toInt(def, 0);
-        };
+            return parseInt( String( x ), 10 );
+        }
 
         static toFloat(obj, def)
         {

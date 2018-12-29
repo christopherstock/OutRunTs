@@ -326,7 +326,7 @@
 
         addRoad=(enter, hold, leave, curve, y)=> {
           var startY   = this.lastY();
-          var endY     = startY + (orts.Util.toInt(y, 0) * this.segmentLength);
+          var endY     = startY + (orts.Util.toInt(y) * this.segmentLength);
           var n, total = enter + hold + leave;
           for(n = 0 ; n < enter ; n++)
             this.addSegment(orts.Util.easeIn(0, curve, n/enter), orts.Util.easeInOut(startY, endY, n/total));
