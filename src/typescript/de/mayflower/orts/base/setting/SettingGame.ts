@@ -16,6 +16,6 @@
         public  static  readonly    PLANTS              :string[]           = [orts.ImageFile.TREE1, orts.ImageFile.TREE2, orts.ImageFile.DEAD_TREE1, orts.ImageFile.DEAD_TREE2, orts.ImageFile.PALM_TREE, orts.ImageFile.BUSH1, orts.ImageFile.BUSH2, orts.ImageFile.CACTUS, orts.ImageFile.STUMP, orts.ImageFile.BOULDER1, orts.ImageFile.BOULDER2, orts.ImageFile.BOULDER3];
         public  static  readonly    CARS                :string[]           = [orts.ImageFile.CAR01, orts.ImageFile.CAR02, orts.ImageFile.CAR03, orts.ImageFile.CAR04, orts.ImageFile.SEMI, orts.ImageFile.TRUCK];
 
-        public  static  readonly    CANVAS_MIN_WIDTH    :number             = 800;
-        public  static  readonly    CANVAS_MIN_HEIGHT   :number             = 600;
+        public  static  readonly    CANVAS_WIDTH        :number             = 640;
+        public  static  readonly    CANVAS_HEIGHT       :number             = 480;
     }

@@ -19,8 +19,7 @@
         treeOffset     = 0;                       // current tree scroll offset
         segments       = [];                      // array of road segments
         cars           = [];                      // array of cars on the road
-        canvas :HTMLCanvasElement = document.getElementById('canvas') as HTMLCanvasElement;     // our canvas...
-        ctx            = this.canvas.getContext('2d'); // ...and its drawing context
+        ctx            = orts.Main.game.canvasSystem.getCanvasContext(); // ...and its drawing context
 
         resolution     = null;                    // scaling factor to provide resolution independence (computed)
         roadWidth      = 2000;                    // actually half the roads width, easier math if the road spans from -roadWidth to +roadWidth
@@ -224,7 +223,11 @@
           var x  = 0;
           var dx = - (baseSegment.curve * basePercent);
 
+          // clear canvas
           this.ctx.clearRect(0, 0, this.width, this.height);
+
+          // fill canvas with sky color
+          orts.Render.rect( this.ctx, 0, 0, this.width, this.height, orts.SettingColor.SKY );
 
           orts.Render.background(this.ctx, this.width, this.height, orts.ImageFile.SKY,   this.skyOffset,  this.resolution * this.skySpeed  * playerY);
           orts.Render.background(this.ctx, this.width, this.height, orts.ImageFile.HILLS, this.hillOffset, this.resolution * this.hillSpeed * playerY);
@@ -339,25 +342,29 @@
           CURVE:  { NONE: 0, EASY:    2, MEDIUM:    4, HARD:    6 }
         };
 
-        addStraight=(num)=> {
+        addStraight=(num)=>
+        {
           num = num || this.ROAD.LENGTH.MEDIUM;
           this.addRoad(num, num, num, 0, 0);
         }
 
-        addHill=(num, height)=> {
+        addHill=(num, height)=>
+        {
           num    = num    || this.ROAD.LENGTH.MEDIUM;
           height = height || this.ROAD.HILL.MEDIUM;
           this.addRoad(num, num, num, 0, height);
         }
 
-        addCurve=(num, curve, height)=> {
+        addCurve=(num, curve, height)=>
+        {
           num    = num    || this.ROAD.LENGTH.MEDIUM;
           curve  = curve  || this.ROAD.CURVE.MEDIUM;
           height = height || this.ROAD.HILL.NONE;
           this.addRoad(num, num, num, curve, height);
         }
 
-        addLowRollingHills=(num, height)=> {
+        addLowRollingHills=(num, height)=>
+        {
           num    = num    || this.ROAD.LENGTH.SHORT;
           height = height || this.ROAD.HILL.LOW;
           this.addRoad(num, num, num,  0,                height/2);
@@ -368,7 +375,8 @@
           this.addRoad(num, num, num,  0,                0);
         }
 
-        addSCurves=()=> {
+        addSCurves=()=>
+        {
           this.addRoad(this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM,  -this.ROAD.CURVE.EASY,    this.ROAD.HILL.NONE);
           this.addRoad(this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM,   this.ROAD.CURVE.MEDIUM,  this.ROAD.HILL.MEDIUM);
           this.addRoad(this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM,   this.ROAD.CURVE.EASY,   -this.ROAD.HILL.LOW);
@@ -376,7 +384,8 @@
           this.addRoad(this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM,  -this.ROAD.CURVE.MEDIUM, -this.ROAD.HILL.MEDIUM);
         }
 
-        addBumps=()=> {
+        addBumps=()=>
+        {
           this.addRoad(10, 10, 10, 0,  5);
           this.addRoad(10, 10, 10, 0, -2);
           this.addRoad(10, 10, 10, 0, -5);
@@ -387,12 +396,14 @@
           this.addRoad(10, 10, 10, 0, -2);
         }
 
-        addDownhillToEnd=(num)=> {
+        addDownhillToEnd=(num)=>
+        {
           num = num || 200;
           this.addRoad(num, num, num, -this.ROAD.CURVE.EASY, -this.lastY()/this.segmentLength);
         }
 
-        resetRoad=()=> {
+        resetRoad=()=>
+        {
           this.segments = [];
 
           this.addStraight(this.ROAD.LENGTH.SHORT);
@@ -425,7 +436,8 @@
           this.trackLength = this.segments.length * this.segmentLength;
         }
 
-        resetSprites=()=> {
+        resetSprites=()=>
+        {
           var n, i;
 
           this.addSprite(20,  orts.ImageFile.BILLBOARD07, -1);
@@ -470,7 +482,8 @@
           }
         }
 
-        resetCars=()=> {
+        resetCars=()=>
+        {
           this.cars = [];
           var car, segment, offset, z, sprite, speed;
           for (var n = 0 ; n < this.totalCars ; n++) {
@@ -485,13 +498,15 @@
           }
         }
 
-        reset=(options)=> {
-          options       = options || {};
-          this.canvas.width  = this.width  = orts.Util.toInt(options.width,          this.width);
-          this.canvas.height = this.height = orts.Util.toInt(options.height,         this.height);
-          this.cameraDepth            = 1 / Math.tan((this.fieldOfView/2) * Math.PI/180);
-          this.playerZ                = (this.cameraHeight * this.cameraDepth);
-          this.resolution             = this.height/480;
+        reset=()=>
+        {
+          this.cameraDepth = 1 / Math.tan((this.fieldOfView/2) * Math.PI/180);
+          this.playerZ     = (this.cameraHeight * this.cameraDepth);
+
+          this.width  = orts.Main.game.canvasSystem.getWidth();
+          this.height = orts.Main.game.canvasSystem.getHeight();
+
+          this.resolution             = this.height / 480;
 
           if ((this.segments.length === 0))
             this.resetRoad(); // only rebuild road when necessary

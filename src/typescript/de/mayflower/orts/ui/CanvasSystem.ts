@@ -9,7 +9,7 @@
         /** The native HTML5 canvas element. */
         private         readonly    canvas                  :HTMLCanvasElement              = null;
         /** The canvas rendering context. */
-        private         readonly    canvasContext           :WebGLRenderingContext          = null;
+        private         readonly    canvasContext           :CanvasRenderingContext2D       = null;
 
         /** ************************************************************************************************************
         *   Constructs a new canvas system.
@@ -19,8 +19,8 @@
             // create native canvas
             this.canvas = document.createElement( 'canvas' );
 
-            // reference 3d rendering context
-            this.canvasContext = this.canvas.getContext( 'webgl' );
+            // reference 2d rendering context
+            this.canvasContext = this.canvas.getContext( '2d' );
 
             // append to body
             document.body.appendChild( this.canvas );
@@ -34,13 +34,13 @@
         public updateDimensions() : boolean
         {
             // get inner window dimensions
-            let canvasWidth:number  = window.innerWidth;
-            let canvasHeight:number = window.innerHeight;
-
+            let canvasWidth:number  = orts.SettingGame.CANVAS_WIDTH;  // window.innerWidth;
+            let canvasHeight:number = orts.SettingGame.CANVAS_HEIGHT; // window.innerHeight;
+/*
             // clip to minimum canvas dimensions
             if ( canvasWidth  < orts.SettingGame.CANVAS_MIN_WIDTH  ) canvasWidth  = orts.SettingGame.CANVAS_MIN_WIDTH;
             if ( canvasHeight < orts.SettingGame.CANVAS_MIN_HEIGHT ) canvasHeight = orts.SettingGame.CANVAS_MIN_HEIGHT;
-
+*/
             const dimensionsChanged:boolean =
             (
                    this.canvas.width  !== canvasWidth
@@ -93,9 +93,9 @@
         /** ************************************************************************************************************
         *   Returns the current canvas rendering context.
         *
-        *   @return The webGL rendering context.
+        *   @return The 2D rendering context.
         ***************************************************************************************************************/
-        public getCanvasContext() : WebGLRenderingContext
+        public getCanvasContext() : CanvasRenderingContext2D
         {
             return this.canvasContext;
         }

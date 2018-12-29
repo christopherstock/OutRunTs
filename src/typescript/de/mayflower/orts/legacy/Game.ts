@@ -13,15 +13,13 @@
             this.outRun = new orts.OutRun();
 
             const options :any = {
-                canvas: this.outRun.canvas,
                 render: this.outRun.render,
                 update: this.outRun.update,
                 step: this.outRun.step,
             };
 
-            this.outRun.reset({});
+            this.outRun.reset();
 
-            // var canvas = options.canvas,    // canvas render target is provided by caller
             var update = options.update;    // method to update game logic is provided by caller
             var render = options.render;    // method to render the game is provided by caller
             var step   = options.step;      // fixed frame step (1/fps) is specified by caller

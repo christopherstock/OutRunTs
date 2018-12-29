@@ -8,10 +8,10 @@
     {
         /** The key system that manages pressed keys. */
         public              keySystem               :orts.KeySystem             = null;
-        /** The image system that manages all images. */
-        public              imageSystem             :orts.ImageSystem           = null;
         /** The canvas system that manages the canvas. */
         public              canvasSystem            :orts.CanvasSystem          = null;
+        /** The image system that manages all images. */
+        public              imageSystem             :orts.ImageSystem           = null;
 
         /** ************************************************************************************************************
         *   Inits the game from scratch.
