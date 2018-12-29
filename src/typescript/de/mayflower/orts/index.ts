@@ -1,6 +1,6 @@
 
     export * from './base/Debug';
-    export * from './base/GameEngine';
+    export * from './base/Game';
     export * from './base/Main';
     export * from './base/Version';
 
@@ -20,7 +20,6 @@
     export * from './util/MathUtil';
     export * from './util/String';
 
-    export * from './legacy/Game';
     export * from './legacy/OutRun';
     export * from './legacy/Render';
     export * from './legacy/Util';

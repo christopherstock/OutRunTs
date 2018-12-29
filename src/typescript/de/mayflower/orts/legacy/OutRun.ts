@@ -221,10 +221,10 @@
           var maxy          = this.height;
 
           var x  = 0;
-          var dx = - (baseSegment.curve * basePercent);
+          var dx = - ( baseSegment.curve * basePercent );
 
           // clear canvas
-          this.ctx.clearRect(0, 0, this.width, this.height);
+          this.ctx.clearRect( 0, 0, this.width, this.height );
 
           // fill canvas with sky color
           orts.Render.rect( this.ctx, 0, 0, this.width, this.height, orts.SettingColor.SKY );
@@ -510,5 +510,17 @@
 
           if ((this.segments.length === 0))
             this.resetRoad(); // only rebuild road when necessary
+        }
+
+        start=()=>
+        {
+            const frame:()=>void = (): void =>
+            {
+                this.update( this.step );
+                this.render();
+
+                requestAnimationFrame( frame );
+            };
+            frame();
         }
     }

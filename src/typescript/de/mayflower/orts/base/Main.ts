@@ -17,10 +17,7 @@
     export class Main
     {
         /** The singleton instance of the game. */
-        public      static          game                    :orts.GameEngine                = null;
-
-        /** The singleton instance of the legacy game. */
-        public      static          legacyGame              :orts.Game                      = null;
+        public      static          game                    :orts.Game                = null;
 
         /** ************************************************************************************************************
         *   This method is invoked when the application starts.
@@ -32,7 +29,7 @@
 
             Main.acclaim();
 
-            Main.game = new orts.GameEngine();
+            Main.game = new orts.Game();
             Main.game.init();
         }
 

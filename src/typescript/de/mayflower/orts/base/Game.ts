@@ -4,7 +4,7 @@
     /** ****************************************************************************************************************
     *   Manages the game logic.
     *******************************************************************************************************************/
-    export class GameEngine
+    export class Game
     {
         /** The key system that manages pressed keys. */
         public              keySystem               :orts.KeySystem             = null;
@@ -39,7 +39,8 @@
             orts.Debug.init.log( 'All images loaded successfully' );
 
             // start legacy game loop
-            orts.Main.legacyGame = new orts.Game();
-            orts.Main.legacyGame.run();
+            const outRun:orts.OutRun = new orts.OutRun();
+            outRun.reset();
+            outRun.start();
         }
     }
