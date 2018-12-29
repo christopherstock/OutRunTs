@@ -14,6 +14,8 @@
     export * from './hid/KeyCodes';
     export * from './hid/KeySystem';
 
+    export * from './ui/CanvasSystem';
+
     export * from './util/HTML';
     export * from './util/MathUtil';
     export * from './util/String';

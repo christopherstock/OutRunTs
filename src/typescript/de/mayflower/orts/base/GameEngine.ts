@@ -10,6 +10,8 @@
         public              keySystem               :orts.KeySystem             = null;
         /** The image system that manages all images. */
         public              imageSystem             :orts.ImageSystem           = null;
+        /** The canvas system that manages the canvas. */
+        public              canvasSystem            :orts.CanvasSystem          = null;
 
         /** ************************************************************************************************************
         *   Inits the game from scratch.
@@ -20,6 +22,10 @@
 
             orts.Debug.init.log( 'Init key system' );
             this.keySystem = new orts.KeySystem();
+
+            orts.Debug.init.log( 'Init canvas system' );
+            this.canvasSystem = new orts.CanvasSystem();
+            this.canvasSystem.updateDimensions();
 
             orts.Debug.init.log( 'Init image system' );
             this.imageSystem = new orts.ImageSystem( orts.ImageFile.FILE_NAMES, this.onImagesLoaded );
