@@ -2,50 +2,53 @@
     import * as orts from '..'
 
     /** ****************************************************************************************************************
-     *   The main legacy game engine.
-     *******************************************************************************************************************/
+    *   The main legacy game engine.
+    *******************************************************************************************************************/
+    // tslint:disable:max-line-length
     export class OutRun
     {
-        private fps = 60;                           // how many 'update' frames per second
-        private step = 1 / this.fps;                // how long is each frame (in seconds)
-        private width: number = 1024;               // logical canvas width
-        private height = 768;                       // logical canvas height
-        private centrifugal = 0.3;                  // centrifugal force multiplier when going around curves
-        private skySpeed = 0.001;                   // background sky layer scroll speed when going around curve (or up hill)
-        private hillSpeed = 0.002;                  // background hill layer scroll speed when going around curve (or up hill)
-        private treeSpeed = 0.003;                  // background tree layer scroll speed when going around curve (or up hill)
-        private skyOffset = 0;                      // current sky scroll offset
-        private hillOffset = 0;                     // current hill scroll offset
-        private treeOffset = 0;                     // current tree scroll offset
-        private segments = [];                      // array of road segments
-        private cars = [];                          // array of cars on the road
-        private ctx = orts.Main.game.canvasSystem.getCanvasContext(); // ...and its drawing context
-        private resolution = null;                  // scaling factor to provide resolution independence (computed)
-        private roadWidth = 2000;                   // actually half the roads width, easier math if the road spans from -roadWidth to +roadWidth
-        private segmentLength = 200;                // length of a single segment
-        private rumbleLength = 3;                   // number of segments per red/white rumble strip
-        private trackLength = null;                 // z length of entire track (computed)
-        private lanes = 4;                          // number of lanes
-        private fieldOfView = 100;                     // angle (degrees) for field of view
-        private cameraHeight = 1000;                    // z height of camera
-        private cameraDepth = null;                    // z distance camera is from screen (computed)
-        private drawDistance = 300;                     // number of segments to draw
-        private playerX = 0;                       // player x offset from center of road (-1 to 1 to stay independent of roadWidth)
-        private playerZ = null;                    // player relative z distance from camera (computed)
-        private fogDensity = 5;                       // exponential fog density
-        private position = 0;                       // current camera Z position (add playerZ to get player's absolute Z position)
-        private speed = 0;                       // current speed
-        private maxSpeed = this.segmentLength / this.step;      // top speed (ensure we can't move more than 1 segment in a single frame to make collision detection easier)
-        private accel = this.maxSpeed / 5;             // acceleration rate - tuned until it 'felt' right
-        private breaking = -this.maxSpeed;               // deceleration rate when braking
-        private decel = -this.maxSpeed / 5;             // 'natural' deceleration rate when neither accelerating, nor braking
-        private offRoadDecel = -this.maxSpeed / 2;             // speed multiploier for off road - off road deceleration is somewhere in between
-        private offRoadLimit = this.maxSpeed / 4;             // limit when off road deceleration no longer applies (e.g. you can always go at least this speed even when off road)
-        private totalCars = 200;                     // total number of cars on the road
-        private keyLeft = false;
-        private keyRight = false;
-        private keyFaster = false;
-        private keySlower = false;
+        private     readonly    fps                 :number                     = 60;                               // how many 'update' frames per second
+        private     readonly    step                :number                     = 1 / this.fps;                     // how long is each frame (in seconds)
+        private     readonly    centrifugal         :number                     = 0.3;                              // centrifugal force multiplier when going around curves
+        private     readonly    skySpeed            :number                     = 0.001;                            // background sky layer scroll speed when going around curve (or up hill)
+        private     readonly    hillSpeed           :number                     = 0.002;                            // background hill layer scroll speed when going around curve (or up hill)
+        private     readonly    treeSpeed           :number                     = 0.003;                            // background tree layer scroll speed when going around curve (or up hill)
+        private     readonly    ctx                 :CanvasRenderingContext2D   = orts.Main.game.canvasSystem.getCanvasContext(); // ...and its drawing context
+        private     readonly    roadWidth           :number                     = 2000;                             // actually half the roads width, easier math if the road spans from -roadWidth to +roadWidth
+        private     readonly    segmentLength       :number                     = 200;                              // length of a single segment
+        private     readonly    rumbleLength        :number                     = 3;                                // number of segments per red/white rumble strip
+        private     readonly    lanes               :number                     = 4;                                // number of lanes
+        private     readonly    fieldOfView         :number                     = 100;                              // angle (degrees) for field of view
+        private     readonly    cameraHeight        :number                     = 1000;                             // z height of camera
+        private     readonly    drawDistance        :number                     = 300;                              // number of segments to draw
+        private     readonly    fogDensity          :number                     = 5;                                // exponential fog density
+        private     readonly    maxSpeed            :number                     = this.segmentLength / this.step;   // top speed (ensure we can't move more than 1 segment in a single frame to make collision detection easier)
+        private     readonly    accel               :number                     = this.maxSpeed / 5;                // acceleration rate - tuned until it 'felt' right
+        private     readonly    breaking            :number                     = -this.maxSpeed;                   // deceleration rate when braking
+        private     readonly    decel               :number                     = -this.maxSpeed / 5;               // 'natural' deceleration rate when neither accelerating, nor braking
+        private     readonly    offRoadDecel        :number                     = -this.maxSpeed / 2;               // speed multiploier for off road - off road deceleration is somewhere in between
+        private     readonly    offRoadLimit        :number                     = this.maxSpeed / 4;                // limit when off road deceleration no longer applies (e.g. you can always go at least this speed even when off road)
+        private     readonly    totalCars           :number                     = 200;                              // total number of cars on the road
+
+        private                 width               :number                     = 1024;                             // logical canvas width
+        private                 height              :number                     = 768;                              // logical canvas height
+        private                 skyOffset           :number                     = 0;                                // current sky scroll offset
+        private                 hillOffset          :number                     = 0;                                // current hill scroll offset
+        private                 treeOffset          :number                     = 0;                                // current tree scroll offset
+        private                 segments            :any[]                      = [];                               // array of road segments
+        private                 cars                :any[]                      = [];                               // array of cars on the road
+        private                 resolution          :number                     = null;                             // scaling factor to provide resolution independence (computed)
+        private                 trackLength         :number                     = null;                             // z length of entire track (computed)
+        private                 cameraDepth         :number                     = null;                             // z distance camera is from screen (computed)
+        private                 playerX             :number                     = 0;                                // player x offset from center of road (-1 to 1 to stay independent of roadWidth)
+        private                 playerZ             :number                     = null;                             // player relative z distance from camera (computed)
+        private                 position            :number                     = 0;                                // current camera Z position (add playerZ to get player's absolute Z position)
+        private                 speed               :number                     = 0;                                // current speed
+
+        private                 keyLeft             :boolean                    = false;
+        private                 keyRight            :boolean                    = false;
+        private                 keyFaster           :boolean                    = false;
+        private                 keySlower           :boolean                    = false;
 
         public reset() : void
         {
