@@ -4,15 +4,16 @@
     /** ****************************************************************************************************************
     *   canvas rendering helpers.
     *******************************************************************************************************************/
+    // tslint:disable:max-line-length
     export class Render
     {
-        public static rect( ctx:CanvasRenderingContext2D, left, top, width, height, color ) : void
+        public static rect( ctx:CanvasRenderingContext2D, left:number, top:number, width:number, height:number, color:string ) : void
         {
             ctx.fillStyle = color;
             ctx.fillRect( left, top, width, height );
         }
 
-        public static polygon( ctx, x1, y1, x2, y2, x3, y3, x4, y4, color ) : void
+        public static polygon( ctx:CanvasRenderingContext2D, x1:number, y1:number, x2:number, y2:number, x3:number, y3:number, x4:number, y4:number, color:string ) : void
         {
             ctx.fillStyle = color;
             ctx.beginPath();
@@ -53,7 +54,7 @@
             Render.fog( ctx, 0, y1, width, y2-y1, fog );
         }
 
-        public static background( ctx, width, height, sprite, rotation, offset ) : void
+        public static background( ctx:CanvasRenderingContext2D, width, height, sprite, rotation, offset ) : void
         {
             const image = orts.Main.game.imageSystem.getImage( sprite );
 
@@ -80,9 +81,9 @@
             }
         }
 
-        public static sprite( ctx, width, height, resolution, roadWidth, sprite, scale, destX, destY, offsetX, offsetY, clipY ) : void
+        public static sprite( ctx:CanvasRenderingContext2D, width, height, resolution, roadWidth, sprite, scale, destX, destY, offsetX, offsetY, clipY ) : void
         {
-            const image = orts.Main.game.imageSystem.getImage( sprite );
+            const image:HTMLImageElement = orts.Main.game.imageSystem.getImage( sprite );
 
             //  scale for projection AND relative to roadWidth (for tweakUI)
             var destW  = (image.width  * scale * width/2) * (orts.SettingGame.SPRITE_SCALE * roadWidth);
@@ -98,10 +99,11 @@
             }
         }
 
-        public static player( ctx, width, height, resolution, roadWidth, speedPercent, scale, destX, destY, steer, updown ) : void
+        public static player( ctx:CanvasRenderingContext2D, width:number, height:number, resolution:number, roadWidth:number, speedPercent:number, scale:number, destX:number, destY:number, steer:number, updown:number ) : void
         {
-            var bounce = (1.5 * Math.random() * speedPercent * resolution) * orts.MathUtil.randomChoice([-1,1]);
-            var sprite;
+            const bounce :number = (1.5 * Math.random() * speedPercent * resolution) * orts.MathUtil.randomChoice([-1,1]);
+            let   sprite :string;
+
             if (steer < 0)
             {
                 sprite = (updown > 0) ? orts.ImageFile.PLAYER_UPHILL_LEFT : orts.ImageFile.PLAYER_LEFT;
@@ -118,7 +120,7 @@
             Render.sprite(ctx, width, height, resolution, roadWidth, sprite, scale, destX, destY + bounce, -0.5, -1, 0);
         }
 
-        public static fog( ctx, x, y, width, height, fog ) : void
+        public static fog( ctx:CanvasRenderingContext2D, x:number, y:number, width:number, height:number, fog:number ) : void
         {
             if ( fog < 1 ) {
                 ctx.globalAlpha = ( 1 - fog );
@@ -128,12 +130,12 @@
             }
         }
 
-        public static rumbleWidth( projectedRoadWidth, lanes ) : number
+        public static rumbleWidth( projectedRoadWidth:number, lanes:number ) : number
         {
             return ( projectedRoadWidth / Math.max( 6,  2 * lanes ) );
         }
 
-        public static laneMarkerWidth( projectedRoadWidth, lanes ) : number
+        public static laneMarkerWidth( projectedRoadWidth:number, lanes:number ) : number
         {
             return ( projectedRoadWidth / Math.max( 32, 8 * lanes ) );
         }
