@@ -131,11 +131,6 @@
             if (this.currentLapTime && (startPosition < this.playerZ)) {
               this.lastLapTime    = this.currentLapTime;
               this.currentLapTime = 0;
-        /*
-              if (lastLapTime <= orts.MathUtil.toFloat(Dom.storage.fast_lap_time)) {
-                Dom.storage.fast_lap_time = lastLapTime;
-              }
-        */
             }
             else {
               this.currentLapTime += dt;
@@ -160,7 +155,7 @@
               newSegment.cars.push(car);
             }
           }
-        }
+        };
 
         updateCarOffset=(car, carSegment, playerSegment, playerW)=> {
 
@@ -205,7 +200,7 @@
             return -0.1;
           else
             return 0;
-        }
+        };
 
         //=========================================================================
         // RENDER THE GAME WORLD
@@ -295,17 +290,17 @@
                             playerSegment.p2.world.y - playerSegment.p1.world.y);
             }
           }
-        }
+        };
 
         findSegment=(z)=> {
           return this.segments[Math.floor(z/this.segmentLength) % this.segments.length];
-        }
+        };
 
         //=========================================================================
         // BUILD ROAD GEOMETRY
         //=========================================================================
 
-        lastY=()=> { return (this.segments.length === 0) ? 0 : this.segments[this.segments.length-1].p2.world.y; }
+        lastY=()=> { return (this.segments.length === 0) ? 0 : this.segments[this.segments.length-1].p2.world.y; };
 
         addSegment=(curve, y)=> {
           var n = this.segments.length;
@@ -318,11 +313,11 @@
                cars: [],
               color: Math.floor(n/this.rumbleLength)%2 ? orts.SettingColor.DARK : orts.SettingColor.LIGHT
           });
-        }
+        };
 
         addSprite=(n, sprite, offset)=> {
           this.segments[n].sprites.push({ source: sprite, offset: offset });
-        }
+        };
 
         addRoad=(enter, hold, leave, curve, y)=> {
           var startY   = this.lastY();
@@ -334,7 +329,7 @@
             this.addSegment(curve, orts.MathUtil.easeInOut(startY, endY, (enter+n)/total));
           for(n = 0 ; n < leave ; n++)
             this.addSegment(orts.MathUtil.easeInOut(curve, 0, n/leave), orts.MathUtil.easeInOut(startY, endY, (enter+hold+n)/total));
-        }
+        };
 
         ROAD = {
           LENGTH: { NONE: 0, SHORT:  25, MEDIUM:   50, LONG:  100 },
@@ -346,14 +341,14 @@
         {
           num = num || this.ROAD.LENGTH.MEDIUM;
           this.addRoad(num, num, num, 0, 0);
-        }
+        };
 
         addHill=(num, height)=>
         {
           num    = num    || this.ROAD.LENGTH.MEDIUM;
           height = height || this.ROAD.HILL.MEDIUM;
           this.addRoad(num, num, num, 0, height);
-        }
+        };
 
         addCurve=(num, curve, height)=>
         {
@@ -361,7 +356,7 @@
           curve  = curve  || this.ROAD.CURVE.MEDIUM;
           height = height || this.ROAD.HILL.NONE;
           this.addRoad(num, num, num, curve, height);
-        }
+        };
 
         addLowRollingHills=(num, height)=>
         {
@@ -373,7 +368,7 @@
           this.addRoad(num, num, num,  0,                0);
           this.addRoad(num, num, num, -this.ROAD.CURVE.EASY,  height/2);
           this.addRoad(num, num, num,  0,                0);
-        }
+        };
 
         addSCurves=()=>
         {
@@ -382,7 +377,7 @@
           this.addRoad(this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM,   this.ROAD.CURVE.EASY,   -this.ROAD.HILL.LOW);
           this.addRoad(this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM,  -this.ROAD.CURVE.EASY,    this.ROAD.HILL.MEDIUM);
           this.addRoad(this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM,  -this.ROAD.CURVE.MEDIUM, -this.ROAD.HILL.MEDIUM);
-        }
+        };
 
         addBumps=()=>
         {
@@ -394,13 +389,13 @@
           this.addRoad(10, 10, 10, 0, -7);
           this.addRoad(10, 10, 10, 0,  5);
           this.addRoad(10, 10, 10, 0, -2);
-        }
+        };
 
         addDownhillToEnd=(num)=>
         {
           num = num || 200;
           this.addRoad(num, num, num, -this.ROAD.CURVE.EASY, -this.lastY()/this.segmentLength);
-        }
+        };
 
         resetRoad=()=>
         {
@@ -434,7 +429,7 @@
             this.segments[this.segments.length-1-n].color = orts.SettingColor.FINISH;
 
           this.trackLength = this.segments.length * this.segmentLength;
-        }
+        };
 
         resetSprites=()=>
         {
@@ -480,7 +475,7 @@
               this.addSprite(n + orts.MathUtil.randomInt(0, 50), sprite, offset);
             }
           }
-        }
+        };
 
         resetCars=()=>
         {
@@ -496,7 +491,7 @@
             segment.cars.push(car);
             this.cars.push(car);
           }
-        }
+        };
 
         reset=()=>
         {
@@ -510,10 +505,11 @@
 
           if ((this.segments.length === 0))
             this.resetRoad(); // only rebuild road when necessary
-        }
+        };
 
         start=()=>
         {
+/*
             const frame:()=>void = (): void =>
             {
                 this.update( this.step );
@@ -522,5 +518,25 @@
                 requestAnimationFrame( frame );
             };
             frame();
-        }
+*/
+
+            var now    = null;
+            var last   = new Date().getTime();
+            var dt     = 0;
+            var gdt    = 0;
+
+            const frame=()=> {
+                now = new Date().getTime();
+                dt  = Math.min(1, (now - last) / 1000); // using requestAnimationFrame have to be able to handle large delta's caused when it 'hibernates' in a background or non-visible tab
+                gdt = gdt + dt;
+                while (gdt > this.step) {
+                    gdt = gdt - this.step;
+                    this.update(this.step);
+                }
+                this.render();
+                last = now;
+                requestAnimationFrame( frame );
+            };
+            frame(); // lets get this party started
+        };
     }
