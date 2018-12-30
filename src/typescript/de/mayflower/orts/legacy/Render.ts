@@ -25,7 +25,7 @@
             ctx.fill();
         }
 
-        public static segment( ctx, width, lanes, x1, y1, w1, x2, y2, w2, fog, color ) : void
+        public static segment( ctx:CanvasRenderingContext2D, width:number, lanes:number, x1:number, y1:number, w1:number, x2:number, y2:number, w2:number, fog:number, color:any ) : void
         {
             var r1 = Render.rumbleWidth(w1, lanes),
                 r2 = Render.rumbleWidth(w2, lanes),
@@ -54,25 +54,25 @@
             Render.fog( ctx, 0, y1, width, y2-y1, fog );
         }
 
-        public static background( ctx:CanvasRenderingContext2D, width, height, sprite, rotation, offset ) : void
+        public static background( ctx:CanvasRenderingContext2D, width:number, height:number, sprite:string, rotation:number, offset:number ) : void
         {
-            const image = orts.Main.game.imageSystem.getImage( sprite );
+            const image:HTMLImageElement = orts.Main.game.imageSystem.getImage( sprite );
 
             rotation = rotation || 0;
             offset   = offset   || 0;
 
-            var imageW = image.width / 2;
-            var imageH = image.height;
+            const imageW:number = image.width / 2;
+            const imageH:number = image.height;
 
-            var sourceX = 0 + Math.floor( image.width * rotation );
-            var sourceY = 0;
-            var sourceW = Math.min( imageW, 0 + image.width - sourceX );
-            var sourceH = imageH;
+            const sourceX:number = Math.floor( image.width * rotation );
+            const sourceY:number = 0;
+            const sourceW:number = Math.min( imageW, image.width - sourceX );
+            const sourceH:number = imageH;
 
-            var destX = 0;
-            var destY = offset;
-            var destW = Math.floor( width * ( sourceW / imageW ) );
-            var destH = height;
+            const destX:number = 0;
+            const destY:number = offset;
+            const destW:number = Math.floor( width * ( sourceW / imageW ) );
+            const destH:number = height;
 
             ctx.drawImage(image, sourceX, sourceY, sourceW, sourceH, destX, destY, destW, destH);
             if ( sourceW < imageW )
@@ -81,18 +81,18 @@
             }
         }
 
-        public static sprite( ctx:CanvasRenderingContext2D, width, height, resolution, roadWidth, sprite, scale, destX, destY, offsetX, offsetY, clipY ) : void
+        public static sprite( ctx:CanvasRenderingContext2D, width:number, height:number, resolution:number, roadWidth:number, sprite:string, scale:number, destX:number, destY:number, offsetX:number, offsetY:number, clipY:number ) : void
         {
             const image:HTMLImageElement = orts.Main.game.imageSystem.getImage( sprite );
 
             //  scale for projection AND relative to roadWidth (for tweakUI)
-            var destW  = (image.width  * scale * width/2) * (orts.SettingGame.SPRITE_SCALE * roadWidth);
-            var destH  = (image.height * scale * width/2) * (orts.SettingGame.SPRITE_SCALE * roadWidth);
+            const destW:number  = (image.width  * scale * width/2) * (orts.SettingGame.SPRITE_SCALE * roadWidth);
+            const destH:number  = (image.height * scale * width/2) * (orts.SettingGame.SPRITE_SCALE * roadWidth);
 
             destX = destX + (destW * (offsetX || 0));
             destY = destY + (destH * (offsetY || 0));
 
-            var clipH = clipY ? Math.max(0, destY+destH-clipY) : 0;
+            const clipH:number = clipY ? Math.max( 0, destY + destH - clipY ) : 0;
             if (clipH < destH)
             {
                 ctx.drawImage(image, 0, 0, image.width, image.height - (image.height * clipH/destH), destX, destY, destW, destH - clipH);
