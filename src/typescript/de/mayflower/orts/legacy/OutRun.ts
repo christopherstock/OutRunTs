@@ -222,11 +222,11 @@
           this.ctx.clearRect( 0, 0, this.width, this.height );
 
           // fill canvas with sky color
-          orts.Render.rect( this.ctx, 0, 0, this.width, this.height, orts.SettingColor.SKY );
+          orts.Drawing2D.rect( this.ctx, 0, 0, this.width, this.height, orts.SettingColor.SKY );
 
-          orts.Render.background(this.ctx, this.width, this.height, orts.ImageFile.SKY,   this.skyOffset,  this.resolution * this.skySpeed  * playerY);
-          orts.Render.background(this.ctx, this.width, this.height, orts.ImageFile.HILLS, this.hillOffset, this.resolution * this.hillSpeed * playerY);
-          orts.Render.background(this.ctx, this.width, this.height, orts.ImageFile.TREES, this.treeOffset, this.resolution * this.treeSpeed * playerY);
+          orts.Drawing2D.background(this.ctx, this.width, this.height, orts.ImageFile.SKY,   this.skyOffset,  this.resolution * this.skySpeed  * playerY);
+          orts.Drawing2D.background(this.ctx, this.width, this.height, orts.ImageFile.HILLS, this.hillOffset, this.resolution * this.hillSpeed * playerY);
+          orts.Drawing2D.background(this.ctx, this.width, this.height, orts.ImageFile.TREES, this.treeOffset, this.resolution * this.treeSpeed * playerY);
 
           var n, i, segment, car, sprite, spriteScale, spriteX, spriteY;
 
@@ -248,7 +248,7 @@
                 (segment.p2.screen.y >= maxy))                  // clip by (already rendered) hill
               continue;
 
-            orts.Render.segment(this.ctx, this.width, this.lanes,
+            orts.Drawing2D.segment(this.ctx, this.width, this.lanes,
                            segment.p1.screen.x,
                            segment.p1.screen.y,
                            segment.p1.screen.w,
@@ -270,7 +270,7 @@
               spriteScale = orts.MathUtil.interpolate(segment.p1.screen.scale, segment.p2.screen.scale, car.percent);
               spriteX     = orts.MathUtil.interpolate(segment.p1.screen.x,     segment.p2.screen.x,     car.percent) + (spriteScale * car.offset * this.roadWidth * this.width/2);
               spriteY     = orts.MathUtil.interpolate(segment.p1.screen.y,     segment.p2.screen.y,     car.percent);
-              orts.Render.sprite(this.ctx, this.width, this.height, this.resolution, this.roadWidth, car.sprite, spriteScale, spriteX, spriteY, -0.5, -1, segment.clip);
+              orts.Drawing2D.sprite(this.ctx, this.width, this.height, this.resolution, this.roadWidth, car.sprite, spriteScale, spriteX, spriteY, -0.5, -1, segment.clip);
             }
 
             for(i = 0 ; i < segment.sprites.length ; i++) {
@@ -278,11 +278,11 @@
               spriteScale = segment.p1.screen.scale;
               spriteX     = segment.p1.screen.x + (spriteScale * sprite.offset * this.roadWidth * this.width/2);
               spriteY     = segment.p1.screen.y;
-              orts.Render.sprite(this.ctx, this.width, this.height, this.resolution, this.roadWidth, sprite.source, spriteScale, spriteX, spriteY, (sprite.offset < 0 ? -1 : 0), -1, segment.clip);
+              orts.Drawing2D.sprite(this.ctx, this.width, this.height, this.resolution, this.roadWidth, sprite.source, spriteScale, spriteX, spriteY, (sprite.offset < 0 ? -1 : 0), -1, segment.clip);
             }
 
             if (segment === playerSegment) {
-              orts.Render.player(this.ctx, this.width, this.height, this.resolution, this.roadWidth, this.speed/this.maxSpeed,
+              orts.Drawing2D.player(this.ctx, this.width, this.height, this.resolution, this.roadWidth, this.speed/this.maxSpeed,
                             this.cameraDepth/this.playerZ,
                             this.width/2,
                             (this.height/2) - (this.cameraDepth/this.playerZ * orts.MathUtil.interpolate(playerSegment.p1.camera.y, playerSegment.p2.camera.y, playerPercent) * this.height/2),

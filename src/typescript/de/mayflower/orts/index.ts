@@ -15,10 +15,10 @@
     export * from './hid/KeySystem';
 
     export * from './ui/CanvasSystem';
+    export * from './ui/Drawing2D';
 
     export * from './util/HTML';
     export * from './util/MathUtil';
     export * from './util/String';
 
     export * from './legacy/OutRun';
-    export * from './legacy/Render';

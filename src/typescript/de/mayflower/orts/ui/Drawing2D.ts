@@ -1,11 +1,11 @@
 
-    import * as orts from '..'
+    import * as orts from '../index'
 
     /** ****************************************************************************************************************
     *   canvas rendering helpers.
     *******************************************************************************************************************/
     // tslint:disable:max-line-length
-    export class Render
+    export class Drawing2D
     {
         public static rect( ctx:CanvasRenderingContext2D, left:number, top:number, width:number, height:number, color:string ) : void
         {
@@ -27,31 +27,38 @@
 
         public static segment( ctx:CanvasRenderingContext2D, width:number, lanes:number, x1:number, y1:number, w1:number, x2:number, y2:number, w2:number, fog:number, color:any ) : void
         {
-            var r1 = Render.rumbleWidth(w1, lanes),
-                r2 = Render.rumbleWidth(w2, lanes),
-                l1 = Render.laneMarkerWidth(w1, lanes),
-                l2 = Render.laneMarkerWidth(w2, lanes),
-                lanew1, lanew2, lanex1, lanex2, lane;
+            const r1 :number = Drawing2D.rumbleWidth(w1, lanes);
+            const r2 :number = Drawing2D.rumbleWidth(w2, lanes);
+            const l1 :number = Drawing2D.laneMarkerWidth(w1, lanes);
+            const l2 :number = Drawing2D.laneMarkerWidth(w2, lanes);
+
+            let lanew1 :number = 0;
+            let lanew2 :number = 0;
+            let lanex1 :number = 0;
+            let lanex2 :number = 0;
 
             ctx.fillStyle = color.grass;
             ctx.fillRect(0, y2, width, y1 - y2);
 
-            Render.polygon(ctx, x1-w1-r1, y1, x1-w1, y1, x2-w2, y2, x2-w2-r2, y2, color.rumble);
-            Render.polygon(ctx, x1+w1+r1, y1, x1+w1, y1, x2+w2, y2, x2+w2+r2, y2, color.rumble);
-            Render.polygon(ctx, x1-w1,    y1, x1+w1, y1, x2+w2, y2, x2-w2,    y2, color.road);
+            Drawing2D.polygon(ctx, x1-w1-r1, y1, x1-w1, y1, x2-w2, y2, x2-w2-r2, y2, color.rumble);
+            Drawing2D.polygon(ctx, x1+w1+r1, y1, x1+w1, y1, x2+w2, y2, x2+w2+r2, y2, color.rumble);
+            Drawing2D.polygon(ctx, x1-w1,    y1, x1+w1, y1, x2+w2, y2, x2-w2,    y2, color.road);
 
             if (color.lane) {
                 lanew1 = w1*2/lanes;
                 lanew2 = w2*2/lanes;
                 lanex1 = x1 - w1 + lanew1;
                 lanex2 = x2 - w2 + lanew2;
-                for (lane = 1 ; lane < lanes ; lanex1 += lanew1, lanex2 += lanew2, lane++)
+                for ( let lane:number = 1; lane < lanes; lane++)
                 {
-                    Render.polygon(ctx, lanex1 - l1 / 2, y1, lanex1 + l1 / 2, y1, lanex2 + l2 / 2, y2, lanex2 - l2 / 2, y2, color.lane);
+                    Drawing2D.polygon(ctx, lanex1 - l1 / 2, y1, lanex1 + l1 / 2, y1, lanex2 + l2 / 2, y2, lanex2 - l2 / 2, y2, color.lane);
+
+                    lanex1 += lanew1;
+                    lanex2 += lanew2;
                 }
             }
 
-            Render.fog( ctx, 0, y1, width, y2-y1, fog );
+            Drawing2D.fog( ctx, 0, y1, width, y2-y1, fog );
         }
 
         public static background( ctx:CanvasRenderingContext2D, width:number, height:number, sprite:string, rotation:number, offset:number ) : void
@@ -101,23 +108,23 @@
 
         public static player( ctx:CanvasRenderingContext2D, width:number, height:number, resolution:number, roadWidth:number, speedPercent:number, scale:number, destX:number, destY:number, steer:number, updown:number ) : void
         {
-            const bounce :number = (1.5 * Math.random() * speedPercent * resolution) * orts.MathUtil.randomChoice([-1,1]);
+            const bounce :number = ( 1.5 * Math.random() * speedPercent * resolution ) * orts.MathUtil.randomChoice( [ -1, 1 ] );
             let   sprite :string;
 
-            if (steer < 0)
+            if ( steer < 0 )
             {
-                sprite = (updown > 0) ? orts.ImageFile.PLAYER_UPHILL_LEFT : orts.ImageFile.PLAYER_LEFT;
+                sprite = ( updown > 0 ) ? orts.ImageFile.PLAYER_UPHILL_LEFT : orts.ImageFile.PLAYER_LEFT;
             }
-            else if (steer > 0)
+            else if ( steer > 0 )
             {
-                sprite = (updown > 0) ? orts.ImageFile.PLAYER_UPHILL_RIGHT : orts.ImageFile.PLAYER_RIGHT;
+                sprite = ( updown > 0 ) ? orts.ImageFile.PLAYER_UPHILL_RIGHT : orts.ImageFile.PLAYER_RIGHT;
             }
             else
             {
-                sprite = (updown > 0) ? orts.ImageFile.PLAYER_UPHILL_STRAIGHT : orts.ImageFile.PLAYER_STRAIGHT;
+                sprite = ( updown > 0 ) ? orts.ImageFile.PLAYER_UPHILL_STRAIGHT : orts.ImageFile.PLAYER_STRAIGHT;
             }
 
-            Render.sprite(ctx, width, height, resolution, roadWidth, sprite, scale, destX, destY + bounce, -0.5, -1, 0);
+            Drawing2D.sprite( ctx, width, height, resolution, roadWidth, sprite, scale, destX, destY + bounce, -0.5, -1, 0 );
         }
 
         public static fog( ctx:CanvasRenderingContext2D, x:number, y:number, width:number, height:number, fog:number ) : void

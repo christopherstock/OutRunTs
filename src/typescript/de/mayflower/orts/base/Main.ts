@@ -9,10 +9,7 @@
     *   =====================
     *   TODO Primal
     *   =====================
-    *   TODO Remove image loading system and replace by own implementation.
-    *   TODO Remove single sprite sheet.
-    *   TODO Remove legacy sprite system.
-    *   TODO Move to classes.
+    *   TODO Scale canvas to screen size .. update all dimensions on size rechange.
     *******************************************************************************************************************/
     export class Main
     {
