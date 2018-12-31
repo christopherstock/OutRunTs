@@ -10,31 +10,57 @@
         /** The 2D drawing context for the canvas. */
         private     readonly    ctx                 :CanvasRenderingContext2D   = null;
 
-        private                 width               :number                     = 1024;                             // logical canvas width
-        private                 height              :number                     = 768;                              // logical canvas height
-        private                 skyOffset           :number                     = 0;                                // current sky scroll offset
-        private                 hillOffset          :number                     = 0;                                // current hill scroll offset
-        private                 treeOffset          :number                     = 0;                                // current tree scroll offset
-        private                 segments            :any[]                      = [];                               // array of road segments
-        private                 cars                :any[]                      = [];                               // array of cars on the road
-        private                 resolution          :number                     = null;                             // scaling factor to provide resolution independence (computed)
-        private                 trackLength         :number                     = null;                             // z length of entire track (computed)
-        private                 cameraDepth         :number                     = null;                             // z distance camera is from screen (computed)
-        private                 playerX             :number                     = 0;                                // player x offset from center of road (-1 to 1 to stay independent of roadWidth)
-        private                 playerZ             :number                     = null;                             // player relative z distance from camera (computed)
-        private                 position            :number                     = 0;                                // current camera Z position (add playerZ to get player's absolute Z position)
-        private                 speed               :number                     = 0;                                // current speed
+        /** logical canvas width */
+        private                 width               :number                     = 1024;
+        /** logical canvas height */
+        private                 height              :number                     = 768;
+        /** current sky scroll offset */
+        private                 skyOffset           :number                     = 0;
+        /** current hill scroll offset */
+        private                 hillOffset          :number                     = 0;
+        /** current tree scroll offset */
+        private                 treeOffset          :number                     = 0;
+        /** array of road segments */
+        private                 segments            :any[]                      = [];
+        /** array of cars on the road */
+        private                 cars                :any[]                      = [];
+        /** scaling factor to provide resolution independence (computed) */
+        private                 resolution          :number                     = null;
+        /** z length of entire track (computed) */
+        private                 trackLength         :number                     = null;
+        /** z distance camera is from screen (computed) */
+        private                 cameraDepth         :number                     = null;
+        /** player x offset from center of road (-1 to 1 to stay independent of roadWidth) */
+        private                 playerX             :number                     = 0;
+        /** player relative z distance from camera (computed) */
+        private                 playerZ             :number                     = null;
+        /** current camera Z position (add playerZ to get player's absolute Z position) */
+        private                 position            :number                     = 0;
+        /** current speed */
+        private                 speed               :number                     = 0;
 
+        /** Indicates if the 'steer left' key is pressed this game tick. */
         private                 keyLeft             :boolean                    = false;
+        /** Indicates if the 'steer right' key is pressed this game tick. */
         private                 keyRight            :boolean                    = false;
+        /** Indicates if the 'faster' key is pressed this game tick. */
         private                 keyFaster           :boolean                    = false;
+        /** Indicates if the 'slower' key is pressed this game tick. */
         private                 keySlower           :boolean                    = false;
 
+        /** ************************************************************************************************************
+        *   Creates a new legacy game system.
+        *
+        *   @param ctx The canvas context to draw onto.
+        ***************************************************************************************************************/
         public constructor( ctx:CanvasRenderingContext2D )
         {
             this.ctx = ctx;
         }
 
+        /** ************************************************************************************************************
+        *   Resets the legacy game to its initial defaults.
+        ***************************************************************************************************************/
         public reset() : void
         {
             this.cameraDepth = 1 / Math.tan((orts.SettingGame.FIELD_OF_VIEW / 2) * Math.PI / 180);
@@ -49,6 +75,9 @@
                 this.resetRoad(); // only rebuild road when necessary
         };
 
+        /** ************************************************************************************************************
+        *   Starts the legacy game.
+        ***************************************************************************************************************/
         public start() : void
         {
             /*
@@ -62,12 +91,12 @@
                         frame();
             */
 
-            var now = null;
-            var last = new Date().getTime();
-            var dt = 0;
-            var gdt = 0;
+            let now  :number = null;
+            let last :number = new Date().getTime();
+            let dt   :number = 0;
+            let gdt  :number = 0;
 
-            const frame=():void=>
+            const frame :()=>void = ():void =>
             {
                 now = new Date().getTime();
 
@@ -86,10 +115,11 @@
             frame(); // lets get this party started
         };
 
-        //=========================================================================
-        // UPDATE THE GAME WORLD
-        //=========================================================================
-
+        /** ************************************************************************************************************
+        *   Updates the game world.
+        *
+        *   @param dt The delta time to update the game.
+        ***************************************************************************************************************/
         private update( dt )
         {
             var n, car, carW, sprite, spriteW;
@@ -161,6 +191,11 @@
             this.treeOffset = orts.MathUtil.increase(this.treeOffset, orts.SettingGame.TREE_SPEED * playerSegment.curve * (this.position - startPosition) / orts.SettingGame.SEGMENT_LENGTH, 1);
         }
 
+        /** ************************************************************************************************************
+        *   Updates the cars in the game world.
+        *
+        *   @param dt The delta time to update the game.
+        ***************************************************************************************************************/
         private updateCars( dt, playerSegment, playerW )
         {
             var n, car, oldSegment, newSegment;
@@ -179,6 +214,9 @@
             }
         }
 
+        /** ************************************************************************************************************
+        *   Updates the offset for the player car.
+        ***************************************************************************************************************/
         private updateCarOffset( car, carSegment, playerSegment, playerW )
         {
             var i, j, dir, segment, otherCar, otherCarW, lookahead = 20,
@@ -225,10 +263,9 @@
                 return 0;
         };
 
-        //=========================================================================
-        // RENDER THE GAME WORLD
-        //=========================================================================
-
+        /** ************************************************************************************************************
+        *   Renders the current tick of the legacy game.
+        ***************************************************************************************************************/
         private render()
         {
             var baseSegment = this.findSegment(this.position);
@@ -315,20 +352,29 @@
             }
         }
 
+        /** ************************************************************************************************************
+        *   Finds the segment with the specified index.
+        ***************************************************************************************************************/
         private findSegment( z )
         {
             return this.segments[Math.floor(z / orts.SettingGame.SEGMENT_LENGTH) % this.segments.length];
         }
 
-        //=========================================================================
+        // =========================================================================
         // BUILD ROAD GEOMETRY
-        //=========================================================================
+        // =========================================================================
 
+        /** ************************************************************************************************************
+        *
+        ***************************************************************************************************************/
         private lastY()
         {
             return (this.segments.length === 0) ? 0 : this.segments[this.segments.length - 1].p2.world.y;
         }
 
+        /** ************************************************************************************************************
+        *
+        ***************************************************************************************************************/
         private addSegment( curve, y )
         {
             var n = this.segments.length;
@@ -343,11 +389,17 @@
             });
         }
 
+        /** ************************************************************************************************************
+        *
+        ***************************************************************************************************************/
         private addSprite( n, sprite, offset )
         {
             this.segments[n].sprites.push({source: sprite, offset: offset});
         }
 
+        /** ************************************************************************************************************
+        *
+        ***************************************************************************************************************/
         private addRoad( enter, hold, leave, curve, y )
         {
             var startY = this.lastY();
@@ -361,18 +413,27 @@
                 this.addSegment(orts.MathUtil.easeInOut(curve, 0, n / leave), orts.MathUtil.easeInOut(startY, endY, (enter + hold + n) / total));
         }
 
+        /** ************************************************************************************************************
+        *
+        ***************************************************************************************************************/
         private ROAD = {
             LENGTH: {NONE: 0, SHORT: 25, MEDIUM: 50, LONG: 100},
             HILL: {NONE: 0, LOW: 20, MEDIUM: 40, HIGH: 60},
             CURVE: {NONE: 0, EASY: 2, MEDIUM: 4, HARD: 6}
         };
 
+        /** ************************************************************************************************************
+        *
+        ***************************************************************************************************************/
         private addStraight( num )
         {
             num = num || this.ROAD.LENGTH.MEDIUM;
             this.addRoad(num, num, num, 0, 0);
         }
 
+        /** ************************************************************************************************************
+        *
+        ***************************************************************************************************************/
         private addHill( num, height )
         {
             num = num || this.ROAD.LENGTH.MEDIUM;
@@ -380,6 +441,9 @@
             this.addRoad(num, num, num, 0, height);
         }
 
+        /** ************************************************************************************************************
+        *
+        ***************************************************************************************************************/
         private addCurve( num, curve, height )
         {
             num = num || this.ROAD.LENGTH.MEDIUM;
@@ -388,6 +452,9 @@
             this.addRoad(num, num, num, curve, height);
         }
 
+        /** ************************************************************************************************************
+        *
+        ***************************************************************************************************************/
         private addLowRollingHills( num, height )
         {
             num = num || this.ROAD.LENGTH.SHORT;
@@ -400,6 +467,9 @@
             this.addRoad(num, num, num, 0, 0);
         }
 
+        /** ************************************************************************************************************
+        *
+        ***************************************************************************************************************/
         private addSCurves()
         {
             this.addRoad(this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, -this.ROAD.CURVE.EASY, this.ROAD.HILL.NONE);
@@ -409,6 +479,9 @@
             this.addRoad(this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, -this.ROAD.CURVE.MEDIUM, -this.ROAD.HILL.MEDIUM);
         };
 
+        /** ************************************************************************************************************
+        *
+        ***************************************************************************************************************/
         private addBumps()
         {
             this.addRoad(10, 10, 10, 0, 5);
@@ -421,12 +494,18 @@
             this.addRoad(10, 10, 10, 0, -2);
         }
 
+        /** ************************************************************************************************************
+        *
+        ***************************************************************************************************************/
         private addDownhillToEnd( num )
         {
             num = num || 200;
             this.addRoad(num, num, num, -this.ROAD.CURVE.EASY, -this.lastY() / orts.SettingGame.SEGMENT_LENGTH);
         }
 
+        /** ************************************************************************************************************
+        *
+        ***************************************************************************************************************/
         private resetRoad()
         {
             this.segments = [];
@@ -461,6 +540,9 @@
             this.trackLength = this.segments.length * orts.SettingGame.SEGMENT_LENGTH;
         }
 
+        /** ************************************************************************************************************
+        *
+        ***************************************************************************************************************/
         private resetSprites()
         {
             var n, i;
@@ -507,6 +589,9 @@
             }
         }
 
+        /** ************************************************************************************************************
+        *
+        ***************************************************************************************************************/
         private resetCars()
         {
             this.cars = [];
