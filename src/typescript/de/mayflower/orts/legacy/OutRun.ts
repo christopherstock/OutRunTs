@@ -7,28 +7,8 @@
     // tslint:disable:max-line-length
     export class OutRun
     {
-        private     readonly    fps                 :number                     = 60;                               // how many 'update' frames per second
-        private     readonly    step                :number                     = 1 / this.fps;                     // how long is each frame (in seconds)
-        private     readonly    centrifugal         :number                     = 0.3;                              // centrifugal force multiplier when going around curves
-        private     readonly    skySpeed            :number                     = 0.001;                            // background sky layer scroll speed when going around curve (or up hill)
-        private     readonly    hillSpeed           :number                     = 0.002;                            // background hill layer scroll speed when going around curve (or up hill)
-        private     readonly    treeSpeed           :number                     = 0.003;                            // background tree layer scroll speed when going around curve (or up hill)
-        private     readonly    ctx                 :CanvasRenderingContext2D   = orts.Main.game.canvasSystem.getCanvasContext(); // ...and its drawing context
-        private     readonly    roadWidth           :number                     = 2000;                             // actually half the roads width, easier math if the road spans from -roadWidth to +roadWidth
-        private     readonly    segmentLength       :number                     = 200;                              // length of a single segment
-        private     readonly    rumbleLength        :number                     = 3;                                // number of segments per red/white rumble strip
-        private     readonly    lanes               :number                     = 4;                                // number of lanes
-        private     readonly    fieldOfView         :number                     = 100;                              // angle (degrees) for field of view
-        private     readonly    cameraHeight        :number                     = 1000;                             // z height of camera
-        private     readonly    drawDistance        :number                     = 300;                              // number of segments to draw
-        private     readonly    fogDensity          :number                     = 5;                                // exponential fog density
-        private     readonly    maxSpeed            :number                     = this.segmentLength / this.step;   // top speed (ensure we can't move more than 1 segment in a single frame to make collision detection easier)
-        private     readonly    accel               :number                     = this.maxSpeed / 5;                // acceleration rate - tuned until it 'felt' right
-        private     readonly    breaking            :number                     = -this.maxSpeed;                   // deceleration rate when braking
-        private     readonly    decel               :number                     = -this.maxSpeed / 5;               // 'natural' deceleration rate when neither accelerating, nor braking
-        private     readonly    offRoadDecel        :number                     = -this.maxSpeed / 2;               // speed multiploier for off road - off road deceleration is somewhere in between
-        private     readonly    offRoadLimit        :number                     = this.maxSpeed / 4;                // limit when off road deceleration no longer applies (e.g. you can always go at least this speed even when off road)
-        private     readonly    totalCars           :number                     = 200;                              // total number of cars on the road
+        /** The 2D drawing context for the canvas. */
+        private     readonly    ctx                 :CanvasRenderingContext2D   = null;
 
         private                 width               :number                     = 1024;                             // logical canvas width
         private                 height              :number                     = 768;                              // logical canvas height
@@ -50,10 +30,15 @@
         private                 keyFaster           :boolean                    = false;
         private                 keySlower           :boolean                    = false;
 
+        public constructor( ctx:CanvasRenderingContext2D )
+        {
+            this.ctx = ctx;
+        }
+
         public reset() : void
         {
-            this.cameraDepth = 1 / Math.tan((this.fieldOfView / 2) * Math.PI / 180);
-            this.playerZ = (this.cameraHeight * this.cameraDepth);
+            this.cameraDepth = 1 / Math.tan((orts.SettingGame.FIELD_OF_VIEW / 2) * Math.PI / 180);
+            this.playerZ = (orts.SettingGame.CAMERA_HEIGHT * this.cameraDepth);
 
             this.width = orts.Main.game.canvasSystem.getWidth();
             this.height = orts.Main.game.canvasSystem.getHeight();
@@ -69,7 +54,7 @@
             /*
                         const frame:()=>void = (): void =>
                         {
-                            this.update( this.step );
+                            this.update( this.STEP );
                             this.render();
 
                             requestAnimationFrame( frame );
@@ -90,9 +75,9 @@
                 dt = Math.min(1, (now - last) / 1000);
 
                 gdt = gdt + dt;
-                while (gdt > this.step) {
-                    gdt = gdt - this.step;
-                    this.update(this.step);
+                while (gdt > orts.SettingGame.STEP) {
+                    gdt = gdt - orts.SettingGame.STEP;
+                    this.update(orts.SettingGame.STEP);
                 }
                 this.render();
                 last = now;
@@ -110,7 +95,7 @@
             var n, car, carW, sprite, spriteW;
             var playerSegment = this.findSegment(this.position + this.playerZ);
             var playerW = 80 * orts.SettingGame.SPRITE_SCALE;
-            var speedPercent = this.speed / this.maxSpeed;
+            var speedPercent = this.speed / orts.SettingGame.MAX_SPEED;
             var dx = dt * 2 * speedPercent; // at top speed, should be able to cross from left to right (-1 to 1) in 1 second
             var startPosition = this.position;
 
@@ -129,27 +114,27 @@
             else if (this.keyRight)
                 this.playerX = this.playerX + dx;
 
-            this.playerX = this.playerX - (dx * speedPercent * playerSegment.curve * this.centrifugal);
+            this.playerX = this.playerX - (dx * speedPercent * playerSegment.curve * orts.SettingGame.CENTRIFUGAL);
 
             if (this.keyFaster)
-                this.speed = orts.MathUtil.accelerate(this.speed, this.accel, dt);
+                this.speed = orts.MathUtil.accelerate(this.speed, orts.SettingGame.ACCELERATION_RATE, dt);
             else if (this.keySlower)
-                this.speed = orts.MathUtil.accelerate(this.speed, this.breaking, dt);
+                this.speed = orts.MathUtil.accelerate(this.speed, orts.SettingGame.BREAKING_RATE, dt);
             else
-                this.speed = orts.MathUtil.accelerate(this.speed, this.decel, dt);
+                this.speed = orts.MathUtil.accelerate(this.speed, orts.SettingGame.NATURAL_DECELERATION_RATE, dt);
 
 
             if ((this.playerX < -1) || (this.playerX > 1)) {
 
-                if (this.speed > this.offRoadLimit)
-                    this.speed = orts.MathUtil.accelerate(this.speed, this.offRoadDecel, dt);
+                if (this.speed > orts.SettingGame.OFF_ROAD_LIMIT)
+                    this.speed = orts.MathUtil.accelerate(this.speed, orts.SettingGame.OFF_ROAD_DECELERATION, dt);
 
                 for (n = 0; n < playerSegment.sprites.length; n++) {
                     sprite = playerSegment.sprites[n];
                     spriteW = orts.Main.game.imageSystem.getImage(sprite.source).width * orts.SettingGame.SPRITE_SCALE;
 
                     if (orts.MathUtil.overlap(this.playerX, playerW, sprite.offset + spriteW / 2 * (sprite.offset > 0 ? 1 : -1), spriteW, 0)) {
-                        this.speed = this.maxSpeed / 5;
+                        this.speed = orts.SettingGame.MAX_SPEED / 5;
                         this.position = orts.MathUtil.increase(playerSegment.p1.world.z, -this.playerZ, this.trackLength); // stop in front of sprite (at front of segment)
                         break;
                     }
@@ -169,11 +154,11 @@
             }
 
             this.playerX = orts.MathUtil.limit(this.playerX, -3, 3);     // dont ever let it go too far out of bounds
-            this.speed = orts.MathUtil.limit(this.speed, 0, this.maxSpeed); // or exceed maxSpeed
+            this.speed = orts.MathUtil.limit(this.speed, 0, orts.SettingGame.MAX_SPEED); // or exceed maxSpeed
 
-            this.skyOffset = orts.MathUtil.increase(this.skyOffset, this.skySpeed * playerSegment.curve * (this.position - startPosition) / this.segmentLength, 1);
-            this.hillOffset = orts.MathUtil.increase(this.hillOffset, this.hillSpeed * playerSegment.curve * (this.position - startPosition) / this.segmentLength, 1);
-            this.treeOffset = orts.MathUtil.increase(this.treeOffset, this.treeSpeed * playerSegment.curve * (this.position - startPosition) / this.segmentLength, 1);
+            this.skyOffset = orts.MathUtil.increase(this.skyOffset, orts.SettingGame.SKY_SPEED * playerSegment.curve * (this.position - startPosition) / orts.SettingGame.SEGMENT_LENGTH, 1);
+            this.hillOffset = orts.MathUtil.increase(this.hillOffset, orts.SettingGame.HILL_SPEED * playerSegment.curve * (this.position - startPosition) / orts.SettingGame.SEGMENT_LENGTH, 1);
+            this.treeOffset = orts.MathUtil.increase(this.treeOffset, orts.SettingGame.TREE_SPEED * playerSegment.curve * (this.position - startPosition) / orts.SettingGame.SEGMENT_LENGTH, 1);
         }
 
         private updateCars( dt, playerSegment, playerW )
@@ -184,7 +169,7 @@
                 oldSegment = this.findSegment(car.z);
                 car.offset = car.offset + this.updateCarOffset(car, oldSegment, playerSegment, playerW);
                 car.z = orts.MathUtil.increase(car.z, dt * car.speed, this.trackLength);
-                car.percent = orts.MathUtil.percentRemaining(car.z, this.segmentLength); // useful for interpolation during rendering phase
+                car.percent = orts.MathUtil.percentRemaining(car.z, orts.SettingGame.SEGMENT_LENGTH); // useful for interpolation during rendering phase
                 newSegment = this.findSegment(car.z);
                 if (oldSegment !== newSegment) {
                     var index = oldSegment.cars.indexOf(car);
@@ -200,7 +185,7 @@
                 carW = orts.Main.game.imageSystem.getImage(car.sprite).width * orts.SettingGame.SPRITE_SCALE;
 
             // optimization, dont bother steering around other cars when 'out of sight' of the player
-            if ((carSegment.index - playerSegment.index) > this.drawDistance)
+            if ((carSegment.index - playerSegment.index) > orts.SettingGame.DRAW_DISTANCE)
                 return 0;
 
             for (i = 1; i < lookahead; i++) {
@@ -213,7 +198,7 @@
                         dir = 1;
                     else
                         dir = (car.offset > this.playerX) ? 1 : -1;
-                    return dir * 1 / i * (car.speed - this.speed) / this.maxSpeed; // the closer the cars (smaller i) and the greated the speed ratio, the larger the offset
+                    return dir * 1 / i * (car.speed - this.speed) / orts.SettingGame.MAX_SPEED; // the closer the cars (smaller i) and the greated the speed ratio, the larger the offset
                 }
 
                 for (j = 0; j < segment.cars.length; j++) {
@@ -226,7 +211,7 @@
                             dir = 1;
                         else
                             dir = (car.offset > otherCar.offset) ? 1 : -1;
-                        return dir * 1 / i * (car.speed - otherCar.speed) / this.maxSpeed;
+                        return dir * 1 / i * (car.speed - otherCar.speed) / orts.SettingGame.MAX_SPEED;
                     }
                 }
             }
@@ -247,9 +232,9 @@
         private render()
         {
             var baseSegment = this.findSegment(this.position);
-            var basePercent = orts.MathUtil.percentRemaining(this.position, this.segmentLength);
+            var basePercent = orts.MathUtil.percentRemaining(this.position, orts.SettingGame.SEGMENT_LENGTH);
             var playerSegment = this.findSegment(this.position + this.playerZ);
-            var playerPercent = orts.MathUtil.percentRemaining(this.position + this.playerZ, this.segmentLength);
+            var playerPercent = orts.MathUtil.percentRemaining(this.position + this.playerZ, orts.SettingGame.SEGMENT_LENGTH);
             var playerY = orts.MathUtil.interpolate(playerSegment.p1.world.y, playerSegment.p2.world.y, playerPercent);
             var maxy = this.height;
 
@@ -262,21 +247,21 @@
             // fill canvas with sky color
             orts.Drawing2D.rect(this.ctx, 0, 0, this.width, this.height, orts.SettingColor.SKY);
 
-            orts.Drawing2D.background(this.ctx, this.width, this.height, orts.ImageFile.SKY, this.skyOffset, this.resolution * this.skySpeed * playerY);
-            orts.Drawing2D.background(this.ctx, this.width, this.height, orts.ImageFile.HILLS, this.hillOffset, this.resolution * this.hillSpeed * playerY);
-            orts.Drawing2D.background(this.ctx, this.width, this.height, orts.ImageFile.TREES, this.treeOffset, this.resolution * this.treeSpeed * playerY);
+            orts.Drawing2D.background(this.ctx, this.width, this.height, orts.ImageFile.SKY, this.skyOffset, this.resolution * orts.SettingGame.SKY_SPEED * playerY);
+            orts.Drawing2D.background(this.ctx, this.width, this.height, orts.ImageFile.HILLS, this.hillOffset, this.resolution * orts.SettingGame.HILL_SPEED * playerY);
+            orts.Drawing2D.background(this.ctx, this.width, this.height, orts.ImageFile.TREES, this.treeOffset, this.resolution * orts.SettingGame.TREE_SPEED * playerY);
 
             var n, i, segment, car, sprite, spriteScale, spriteX, spriteY;
 
-            for (n = 0; n < this.drawDistance; n++) {
+            for (n = 0; n < orts.SettingGame.DRAW_DISTANCE; n++) {
 
                 segment = this.segments[(baseSegment.index + n) % this.segments.length];
                 segment.looped = segment.index < baseSegment.index;
-                segment.fog = orts.MathUtil.exponentialFog(n / this.drawDistance, this.fogDensity);
+                segment.fog = orts.MathUtil.exponentialFog(n / orts.SettingGame.DRAW_DISTANCE, orts.SettingGame.FOG_DENSITY);
                 segment.clip = maxy;
 
-                orts.MathUtil.project(segment.p1, (this.playerX * this.roadWidth) - x, playerY + this.cameraHeight, this.position - (segment.looped ? this.trackLength : 0), this.cameraDepth, this.width, this.height, this.roadWidth);
-                orts.MathUtil.project(segment.p2, (this.playerX * this.roadWidth) - x - dx, playerY + this.cameraHeight, this.position - (segment.looped ? this.trackLength : 0), this.cameraDepth, this.width, this.height, this.roadWidth);
+                orts.MathUtil.project(segment.p1, (this.playerX * orts.SettingGame.ROAD_WIDTH) - x, playerY + orts.SettingGame.CAMERA_HEIGHT, this.position - (segment.looped ? this.trackLength : 0), this.cameraDepth, this.width, this.height, orts.SettingGame.ROAD_WIDTH);
+                orts.MathUtil.project(segment.p2, (this.playerX * orts.SettingGame.ROAD_WIDTH) - x - dx, playerY + orts.SettingGame.CAMERA_HEIGHT, this.position - (segment.looped ? this.trackLength : 0), this.cameraDepth, this.width, this.height, orts.SettingGame.ROAD_WIDTH);
 
                 x = x + dx;
                 dx = dx + segment.curve;
@@ -286,7 +271,7 @@
                     (segment.p2.screen.y >= maxy))                  // clip by (already rendered) hill
                     continue;
 
-                orts.Drawing2D.segment(this.ctx, this.width, this.lanes,
+                orts.Drawing2D.segment(this.ctx, this.width, orts.SettingGame.LANES,
                     segment.p1.screen.x,
                     segment.p1.screen.y,
                     segment.p1.screen.w,
@@ -299,28 +284,28 @@
                 maxy = segment.p1.screen.y;
             }
 
-            for (n = (this.drawDistance - 1); n > 0; n--) {
+            for (n = (orts.SettingGame.DRAW_DISTANCE - 1); n > 0; n--) {
                 segment = this.segments[(baseSegment.index + n) % this.segments.length];
 
                 for (i = 0; i < segment.cars.length; i++) {
                     car = segment.cars[i];
                     sprite = car.sprite;
                     spriteScale = orts.MathUtil.interpolate(segment.p1.screen.scale, segment.p2.screen.scale, car.percent);
-                    spriteX = orts.MathUtil.interpolate(segment.p1.screen.x, segment.p2.screen.x, car.percent) + (spriteScale * car.offset * this.roadWidth * this.width / 2);
+                    spriteX = orts.MathUtil.interpolate(segment.p1.screen.x, segment.p2.screen.x, car.percent) + (spriteScale * car.offset * orts.SettingGame.ROAD_WIDTH * this.width / 2);
                     spriteY = orts.MathUtil.interpolate(segment.p1.screen.y, segment.p2.screen.y, car.percent);
-                    orts.Drawing2D.sprite(this.ctx, this.width, this.height, this.resolution, this.roadWidth, car.sprite, spriteScale, spriteX, spriteY, -0.5, -1, segment.clip);
+                    orts.Drawing2D.sprite(this.ctx, this.width, this.height, this.resolution, orts.SettingGame.ROAD_WIDTH, car.sprite, spriteScale, spriteX, spriteY, -0.5, -1, segment.clip);
                 }
 
                 for (i = 0; i < segment.sprites.length; i++) {
                     sprite = segment.sprites[i];
                     spriteScale = segment.p1.screen.scale;
-                    spriteX = segment.p1.screen.x + (spriteScale * sprite.offset * this.roadWidth * this.width / 2);
+                    spriteX = segment.p1.screen.x + (spriteScale * sprite.offset * orts.SettingGame.ROAD_WIDTH * this.width / 2);
                     spriteY = segment.p1.screen.y;
-                    orts.Drawing2D.sprite(this.ctx, this.width, this.height, this.resolution, this.roadWidth, sprite.source, spriteScale, spriteX, spriteY, (sprite.offset < 0 ? -1 : 0), -1, segment.clip);
+                    orts.Drawing2D.sprite(this.ctx, this.width, this.height, this.resolution, orts.SettingGame.ROAD_WIDTH, sprite.source, spriteScale, spriteX, spriteY, (sprite.offset < 0 ? -1 : 0), -1, segment.clip);
                 }
 
                 if (segment === playerSegment) {
-                    orts.Drawing2D.player(this.ctx, this.width, this.height, this.resolution, this.roadWidth, this.speed / this.maxSpeed,
+                    orts.Drawing2D.player(this.ctx, this.width, this.height, this.resolution, orts.SettingGame.ROAD_WIDTH, this.speed / orts.SettingGame.MAX_SPEED,
                         this.cameraDepth / this.playerZ,
                         this.width / 2,
                         (this.height / 2) - (this.cameraDepth / this.playerZ * orts.MathUtil.interpolate(playerSegment.p1.camera.y, playerSegment.p2.camera.y, playerPercent) * this.height / 2),
@@ -332,7 +317,7 @@
 
         private findSegment( z )
         {
-            return this.segments[Math.floor(z / this.segmentLength) % this.segments.length];
+            return this.segments[Math.floor(z / orts.SettingGame.SEGMENT_LENGTH) % this.segments.length];
         }
 
         //=========================================================================
@@ -349,12 +334,12 @@
             var n = this.segments.length;
             this.segments.push({
                 index: n,
-                p1: {world: {y: this.lastY(), z: n * this.segmentLength}, camera: {}, screen: {}},
-                p2: {world: {y: y, z: (n + 1) * this.segmentLength}, camera: {}, screen: {}},
+                p1: {world: {y: this.lastY(), z: n * orts.SettingGame.SEGMENT_LENGTH}, camera: {}, screen: {}},
+                p2: {world: {y: y, z: (n + 1) * orts.SettingGame.SEGMENT_LENGTH}, camera: {}, screen: {}},
                 curve: curve,
                 sprites: [],
                 cars: [],
-                color: Math.floor(n / this.rumbleLength) % 2 ? orts.SettingColor.DARK : orts.SettingColor.LIGHT
+                color: Math.floor(n / orts.SettingGame.RUMBLE_LENGTH) % 2 ? orts.SettingColor.DARK : orts.SettingColor.LIGHT
             });
         }
 
@@ -366,7 +351,7 @@
         private addRoad( enter, hold, leave, curve, y )
         {
             var startY = this.lastY();
-            var endY = startY + (orts.MathUtil.toInt(y) * this.segmentLength);
+            var endY = startY + (orts.MathUtil.toInt(y) * orts.SettingGame.SEGMENT_LENGTH);
             var n, total = enter + hold + leave;
             for (n = 0; n < enter; n++)
                 this.addSegment(orts.MathUtil.easeIn(0, curve, n / enter), orts.MathUtil.easeInOut(startY, endY, n / total));
@@ -439,7 +424,7 @@
         private addDownhillToEnd( num )
         {
             num = num || 200;
-            this.addRoad(num, num, num, -this.ROAD.CURVE.EASY, -this.lastY() / this.segmentLength);
+            this.addRoad(num, num, num, -this.ROAD.CURVE.EASY, -this.lastY() / orts.SettingGame.SEGMENT_LENGTH);
         }
 
         private resetRoad()
@@ -470,10 +455,10 @@
 
             this.segments[this.findSegment(this.playerZ).index + 2].color = orts.SettingColor.START;
             this.segments[this.findSegment(this.playerZ).index + 3].color = orts.SettingColor.START;
-            for (var n = 0; n < this.rumbleLength; n++)
+            for (var n = 0; n < orts.SettingGame.RUMBLE_LENGTH; n++)
                 this.segments[this.segments.length - 1 - n].color = orts.SettingColor.FINISH;
 
-            this.trackLength = this.segments.length * this.segmentLength;
+            this.trackLength = this.segments.length * orts.SettingGame.SEGMENT_LENGTH;
         }
 
         private resetSprites()
@@ -526,11 +511,11 @@
         {
             this.cars = [];
             var car, segment, offset, z, sprite, speed;
-            for (var n = 0; n < this.totalCars; n++) {
+            for (var n = 0; n < orts.SettingGame.TOTAL_CARS; n++) {
                 offset = Math.random() * orts.MathUtil.randomChoice([-0.8, 0.8]);
-                z = Math.floor(Math.random() * this.segments.length) * this.segmentLength;
+                z = Math.floor(Math.random() * this.segments.length) * orts.SettingGame.SEGMENT_LENGTH;
                 sprite = orts.MathUtil.randomChoice(orts.SettingGame.CARS);
-                speed = this.maxSpeed / 4 + Math.random() * this.maxSpeed / (sprite === orts.ImageFile.SEMI ? 4 : 2);
+                speed = orts.SettingGame.MAX_SPEED / 4 + Math.random() * orts.SettingGame.MAX_SPEED / (sprite === orts.ImageFile.SEMI ? 4 : 2);
                 car = {offset: offset, z: z, sprite: sprite, speed: speed};
                 segment = this.findSegment(car.z);
                 segment.cars.push(car);

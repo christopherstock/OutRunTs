@@ -34,12 +34,12 @@
         /** ************************************************************************************************************
         *   Being invoked when all images are loaded.
         ***************************************************************************************************************/
-        public onImagesLoaded() : void
+        public onImagesLoaded=() : void =>
         {
             orts.Debug.init.log( 'All images loaded successfully' );
 
             // start legacy game loop
-            const outRun:orts.OutRun = new orts.OutRun();
+            const outRun:orts.OutRun = new orts.OutRun( this.canvasSystem.getCanvasContext() );
             outRun.reset();
             outRun.start();
         }
