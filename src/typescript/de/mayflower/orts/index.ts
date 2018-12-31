@@ -23,4 +23,5 @@
 
     export * from './legacy/Background';
     export * from './legacy/OutRun';
+    export * from './legacy/Player';
     export * from './legacy/Stage';
