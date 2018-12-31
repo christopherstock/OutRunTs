@@ -22,3 +22,4 @@
     export * from './util/String';
 
     export * from './legacy/OutRun';
+    export * from './legacy/Stage';

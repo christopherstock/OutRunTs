@@ -10,6 +10,9 @@
         /** The 2D drawing context for the canvas. */
         private     readonly    ctx                 :CanvasRenderingContext2D   = null;
 
+        /** The game stage. */
+        private                 stage               :orts.Stage                 = null;
+
         /** logical canvas width */
         private                 width               :number                     = 1024;
         /** logical canvas height */
@@ -71,9 +74,12 @@
 
             this.resolution = this.height / 480;
 
-            if ((this.segments.length === 0))
-                this.resetRoad(); // only rebuild road when necessary
-        };
+            // rebuild the stage
+            this.stage = new orts.Stage();
+
+            // rebuild the road
+            this.resetRoad();
+        }
 
         /** ************************************************************************************************************
         *   Starts the legacy game.
