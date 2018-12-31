@@ -7,8 +7,8 @@
     // tslint:disable:max-line-length
     export class OutRun
     {
-        /** The 2D drawing context for the canvas. */
-        private     readonly    ctx                 :CanvasRenderingContext2D   = null;
+        /** The canvas system. */
+        private     readonly    canvasSystem        :orts.CanvasSystem          = null;
 
         /** The player. */
         private                 player              :orts.Player                = null;
@@ -19,16 +19,8 @@
         /** The stage camera. */
         private                 camera              :orts.Camera                = null;
 
-        // ?
-
-        /** logical canvas width */
-        private                 width               :number                     = 1024;
-        /** logical canvas height */
-        private                 height              :number                     = 768;
         /** scaling factor to provide resolution independence (computed) */
         private                 resolution          :number                     = null;
-
-        // player!
 
         /** Indicates if the 'steer left' key is pressed this game tick. */
         private                 keyLeft             :boolean                    = false;
@@ -42,11 +34,11 @@
         /** ************************************************************************************************************
         *   Creates a new legacy game system.
         *
-        *   @param ctx The canvas context to draw onto.
+        *   @param canvasSystem The canvas system to use for rendering.
         ***************************************************************************************************************/
-        public constructor( ctx:CanvasRenderingContext2D )
+        public constructor( canvasSystem:orts.CanvasSystem )
         {
-            this.ctx = ctx;
+            this.canvasSystem = canvasSystem;
         }
 
         /** ************************************************************************************************************
@@ -60,15 +52,10 @@
             // create the camera
             this.camera = new orts.Camera();
 
-
             this.camera.cameraDepth = 1 / Math.tan((orts.SettingGame.FIELD_OF_VIEW / 2) * Math.PI / 180);
             this.player.playerZ = (orts.SettingGame.CAMERA_HEIGHT * this.camera.cameraDepth);
 
-            this.width = orts.Main.game.canvasSystem.getWidth();
-            this.height = orts.Main.game.canvasSystem.getHeight();
-
-            this.resolution = this.height / 480;
-
+            this.resolution = this.canvasSystem.getHeight() / 480;
 
             // rebuild the stage
             this.stage = new orts.Stage();
@@ -274,20 +261,20 @@
             var playerSegment = this.stage.findSegment(this.camera.cameraZ + this.player.playerZ);
             var playerPercent = orts.MathUtil.percentRemaining(this.camera.cameraZ + this.player.playerZ, orts.SettingGame.SEGMENT_LENGTH);
             var playerY = orts.MathUtil.interpolate(playerSegment.p1.world.y, playerSegment.p2.world.y, playerPercent);
-            var maxy = this.height;
+            var maxy = this.canvasSystem.getHeight();
 
             var x = 0;
             var dx = -(baseSegment.curve * basePercent);
 
             // clear canvas
-            this.ctx.clearRect(0, 0, this.width, this.height);
+            this.canvasSystem.getCanvasContext().clearRect(0, 0, this.canvasSystem.getWidth(), this.canvasSystem.getHeight());
 
             // fill canvas with sky color
-            orts.Drawing2D.rect(this.ctx, 0, 0, this.width, this.height, orts.SettingColor.SKY);
+            orts.Drawing2D.rect(this.canvasSystem.getCanvasContext(), 0, 0, this.canvasSystem.getWidth(), this.canvasSystem.getHeight(), orts.SettingColor.SKY);
 
-            orts.Drawing2D.background(this.ctx, this.width, this.height, orts.ImageFile.SKY, this.background.skyOffset, this.resolution * orts.SettingGame.SKY_SPEED * playerY);
-            orts.Drawing2D.background(this.ctx, this.width, this.height, orts.ImageFile.HILLS, this.background.hillOffset, this.resolution * orts.SettingGame.HILL_SPEED * playerY);
-            orts.Drawing2D.background(this.ctx, this.width, this.height, orts.ImageFile.TREES, this.background.treeOffset, this.resolution * orts.SettingGame.TREE_SPEED * playerY);
+            orts.Drawing2D.background(this.canvasSystem.getCanvasContext(), this.canvasSystem.getWidth(), this.canvasSystem.getHeight(), orts.ImageFile.SKY, this.background.skyOffset, this.resolution * orts.SettingGame.SKY_SPEED * playerY);
+            orts.Drawing2D.background(this.canvasSystem.getCanvasContext(), this.canvasSystem.getWidth(), this.canvasSystem.getHeight(), orts.ImageFile.HILLS, this.background.hillOffset, this.resolution * orts.SettingGame.HILL_SPEED * playerY);
+            orts.Drawing2D.background(this.canvasSystem.getCanvasContext(), this.canvasSystem.getWidth(), this.canvasSystem.getHeight(), orts.ImageFile.TREES, this.background.treeOffset, this.resolution * orts.SettingGame.TREE_SPEED * playerY);
 
             var n, i, segment, car, sprite, spriteScale, spriteX, spriteY;
 
@@ -298,8 +285,8 @@
                 segment.fog = orts.MathUtil.exponentialFog(n / orts.SettingGame.DRAW_DISTANCE, orts.SettingGame.FOG_DENSITY);
                 segment.clip = maxy;
 
-                orts.MathUtil.project(segment.p1, (this.player.playerX * orts.SettingGame.ROAD_WIDTH) - x, playerY + orts.SettingGame.CAMERA_HEIGHT, this.camera.cameraZ - (segment.looped ? this.stage.trackLength : 0), this.camera.cameraDepth, this.width, this.height, orts.SettingGame.ROAD_WIDTH);
-                orts.MathUtil.project(segment.p2, (this.player.playerX * orts.SettingGame.ROAD_WIDTH) - x - dx, playerY + orts.SettingGame.CAMERA_HEIGHT, this.camera.cameraZ - (segment.looped ? this.stage.trackLength : 0), this.camera.cameraDepth, this.width, this.height, orts.SettingGame.ROAD_WIDTH);
+                orts.MathUtil.project(segment.p1, (this.player.playerX * orts.SettingGame.ROAD_WIDTH) - x, playerY + orts.SettingGame.CAMERA_HEIGHT, this.camera.cameraZ - (segment.looped ? this.stage.trackLength : 0), this.camera.cameraDepth, this.canvasSystem.getWidth(), this.canvasSystem.getHeight(), orts.SettingGame.ROAD_WIDTH);
+                orts.MathUtil.project(segment.p2, (this.player.playerX * orts.SettingGame.ROAD_WIDTH) - x - dx, playerY + orts.SettingGame.CAMERA_HEIGHT, this.camera.cameraZ - (segment.looped ? this.stage.trackLength : 0), this.camera.cameraDepth, this.canvasSystem.getWidth(), this.canvasSystem.getHeight(), orts.SettingGame.ROAD_WIDTH);
 
                 x = x + dx;
                 dx = dx + segment.curve;
@@ -309,7 +296,7 @@
                     (segment.p2.screen.y >= maxy))                  // clip by (already rendered) hill
                     continue;
 
-                orts.Drawing2D.segment(this.ctx, this.width, orts.SettingGame.LANES,
+                orts.Drawing2D.segment(this.canvasSystem.getCanvasContext(), this.canvasSystem.getWidth(), orts.SettingGame.LANES,
                     segment.p1.screen.x,
                     segment.p1.screen.y,
                     segment.p1.screen.w,
@@ -329,24 +316,24 @@
                     car = segment.cars[i];
                     sprite = car.sprite;
                     spriteScale = orts.MathUtil.interpolate(segment.p1.screen.scale, segment.p2.screen.scale, car.percent);
-                    spriteX = orts.MathUtil.interpolate(segment.p1.screen.x, segment.p2.screen.x, car.percent) + (spriteScale * car.offset * orts.SettingGame.ROAD_WIDTH * this.width / 2);
+                    spriteX = orts.MathUtil.interpolate(segment.p1.screen.x, segment.p2.screen.x, car.percent) + (spriteScale * car.offset * orts.SettingGame.ROAD_WIDTH * this.canvasSystem.getWidth() / 2);
                     spriteY = orts.MathUtil.interpolate(segment.p1.screen.y, segment.p2.screen.y, car.percent);
-                    orts.Drawing2D.sprite(this.ctx, this.width, this.height, this.resolution, orts.SettingGame.ROAD_WIDTH, car.sprite, spriteScale, spriteX, spriteY, -0.5, -1, segment.clip);
+                    orts.Drawing2D.sprite(this.canvasSystem.getCanvasContext(), this.canvasSystem.getWidth(), this.canvasSystem.getHeight(), this.resolution, orts.SettingGame.ROAD_WIDTH, car.sprite, spriteScale, spriteX, spriteY, -0.5, -1, segment.clip);
                 }
 
                 for (i = 0; i < segment.sprites.length; i++) {
                     sprite = segment.sprites[i];
                     spriteScale = segment.p1.screen.scale;
-                    spriteX = segment.p1.screen.x + (spriteScale * sprite.offset * orts.SettingGame.ROAD_WIDTH * this.width / 2);
+                    spriteX = segment.p1.screen.x + (spriteScale * sprite.offset * orts.SettingGame.ROAD_WIDTH * this.canvasSystem.getWidth() / 2);
                     spriteY = segment.p1.screen.y;
-                    orts.Drawing2D.sprite(this.ctx, this.width, this.height, this.resolution, orts.SettingGame.ROAD_WIDTH, sprite.source, spriteScale, spriteX, spriteY, (sprite.offset < 0 ? -1 : 0), -1, segment.clip);
+                    orts.Drawing2D.sprite(this.canvasSystem.getCanvasContext(), this.canvasSystem.getWidth(), this.canvasSystem.getHeight(), this.resolution, orts.SettingGame.ROAD_WIDTH, sprite.source, spriteScale, spriteX, spriteY, (sprite.offset < 0 ? -1 : 0), -1, segment.clip);
                 }
 
                 if (segment === playerSegment) {
-                    orts.Drawing2D.player(this.ctx, this.width, this.height, this.resolution, orts.SettingGame.ROAD_WIDTH, this.player.speed / orts.SettingGame.MAX_SPEED,
+                    orts.Drawing2D.player(this.canvasSystem.getCanvasContext(), this.canvasSystem.getWidth(), this.canvasSystem.getHeight(), this.resolution, orts.SettingGame.ROAD_WIDTH, this.player.speed / orts.SettingGame.MAX_SPEED,
                         this.camera.cameraDepth / this.player.playerZ,
-                        this.width / 2,
-                        (this.height / 2) - (this.camera.cameraDepth / this.player.playerZ * orts.MathUtil.interpolate(playerSegment.p1.camera.y, playerSegment.p2.camera.y, playerPercent) * this.height / 2),
+                        this.canvasSystem.getWidth() / 2,
+                        (this.canvasSystem.getHeight() / 2) - (this.camera.cameraDepth / this.player.playerZ * orts.MathUtil.interpolate(playerSegment.p1.camera.y, playerSegment.p2.camera.y, playerPercent) * this.canvasSystem.getHeight() / 2),
                         this.player.speed * (this.keyLeft ? -1 : this.keyRight ? 1 : 0),
                         playerSegment.p2.world.y - playerSegment.p1.world.y);
                 }

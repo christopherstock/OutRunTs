@@ -39,7 +39,7 @@
             orts.Debug.init.log( 'All images loaded successfully' );
 
             // start legacy game loop
-            const outRun:orts.OutRun = new orts.OutRun( this.canvasSystem.getCanvasContext() );
+            const outRun:orts.OutRun = new orts.OutRun( this.canvasSystem );
             outRun.reset();
             outRun.start();
         }
