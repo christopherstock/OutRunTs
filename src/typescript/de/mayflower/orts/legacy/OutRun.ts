@@ -13,28 +13,35 @@
         /** The game stage. */
         private                 stage               :orts.Stage                 = null;
 
+        /** The stage background. */
+        private                 background          :orts.Background            = null;
+
+        // ?
+
         /** logical canvas width */
         private                 width               :number                     = 1024;
         /** logical canvas height */
         private                 height              :number                     = 768;
-        /** current sky scroll offset */
-        private                 skyOffset           :number                     = 0;
-        /** current hill scroll offset */
-        private                 hillOffset          :number                     = 0;
-        /** current tree scroll offset */
-        private                 treeOffset          :number                     = 0;
+
+        // camera
+
         /** scaling factor to provide resolution independence (computed) */
         private                 resolution          :number                     = null;
         /** z distance camera is from screen (computed) */
         private                 cameraDepth         :number                     = null;
+        /** current camera Z position (add playerZ to get player's absolute Z position) */
+        private                 position            :number                     = 0;
+
+        // player
+
         /** player x offset from center of road (-1 to 1 to stay independent of roadWidth) */
         private                 playerX             :number                     = 0;
         /** player relative z distance from camera (computed) */
         private                 playerZ             :number                     = null;
-        /** current camera Z position (add playerZ to get player's absolute Z position) */
-        private                 position            :number                     = 0;
         /** current speed */
         private                 speed               :number                     = 0;
+
+        // player!
 
         /** Indicates if the 'steer left' key is pressed this game tick. */
         private                 keyLeft             :boolean                    = false;
@@ -71,6 +78,9 @@
             // rebuild the stage
             this.stage = new orts.Stage();
             this.stage.resetRoad( this.playerZ );
+
+            // create the background
+            this.background = new orts.Background();
         }
 
         /** ************************************************************************************************************
@@ -184,9 +194,9 @@
             this.playerX = orts.MathUtil.limit(this.playerX, -3, 3);     // dont ever let it go too far out of bounds
             this.speed = orts.MathUtil.limit(this.speed, 0, orts.SettingGame.MAX_SPEED); // or exceed maxSpeed
 
-            this.skyOffset = orts.MathUtil.increase(this.skyOffset, orts.SettingGame.SKY_SPEED * playerSegment.curve * (this.position - startPosition) / orts.SettingGame.SEGMENT_LENGTH, 1);
-            this.hillOffset = orts.MathUtil.increase(this.hillOffset, orts.SettingGame.HILL_SPEED * playerSegment.curve * (this.position - startPosition) / orts.SettingGame.SEGMENT_LENGTH, 1);
-            this.treeOffset = orts.MathUtil.increase(this.treeOffset, orts.SettingGame.TREE_SPEED * playerSegment.curve * (this.position - startPosition) / orts.SettingGame.SEGMENT_LENGTH, 1);
+            this.background.skyOffset = orts.MathUtil.increase(this.background.skyOffset, orts.SettingGame.SKY_SPEED * playerSegment.curve * (this.position - startPosition) / orts.SettingGame.SEGMENT_LENGTH, 1);
+            this.background.hillOffset = orts.MathUtil.increase(this.background.hillOffset, orts.SettingGame.HILL_SPEED * playerSegment.curve * (this.position - startPosition) / orts.SettingGame.SEGMENT_LENGTH, 1);
+            this.background.treeOffset = orts.MathUtil.increase(this.background.treeOffset, orts.SettingGame.TREE_SPEED * playerSegment.curve * (this.position - startPosition) / orts.SettingGame.SEGMENT_LENGTH, 1);
         }
 
         /** ************************************************************************************************************
@@ -282,9 +292,9 @@
             // fill canvas with sky color
             orts.Drawing2D.rect(this.ctx, 0, 0, this.width, this.height, orts.SettingColor.SKY);
 
-            orts.Drawing2D.background(this.ctx, this.width, this.height, orts.ImageFile.SKY, this.skyOffset, this.resolution * orts.SettingGame.SKY_SPEED * playerY);
-            orts.Drawing2D.background(this.ctx, this.width, this.height, orts.ImageFile.HILLS, this.hillOffset, this.resolution * orts.SettingGame.HILL_SPEED * playerY);
-            orts.Drawing2D.background(this.ctx, this.width, this.height, orts.ImageFile.TREES, this.treeOffset, this.resolution * orts.SettingGame.TREE_SPEED * playerY);
+            orts.Drawing2D.background(this.ctx, this.width, this.height, orts.ImageFile.SKY, this.background.skyOffset, this.resolution * orts.SettingGame.SKY_SPEED * playerY);
+            orts.Drawing2D.background(this.ctx, this.width, this.height, orts.ImageFile.HILLS, this.background.hillOffset, this.resolution * orts.SettingGame.HILL_SPEED * playerY);
+            orts.Drawing2D.background(this.ctx, this.width, this.height, orts.ImageFile.TREES, this.background.treeOffset, this.resolution * orts.SettingGame.TREE_SPEED * playerY);
 
             var n, i, segment, car, sprite, spriteScale, spriteX, spriteY;
 
