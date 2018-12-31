@@ -23,14 +23,8 @@
         private                 hillOffset          :number                     = 0;
         /** current tree scroll offset */
         private                 treeOffset          :number                     = 0;
-        /** array of road segments */
-        private                 segments            :any[]                      = [];
-        /** array of cars on the road */
-        private                 cars                :any[]                      = [];
         /** scaling factor to provide resolution independence (computed) */
         private                 resolution          :number                     = null;
-        /** z length of entire track (computed) */
-        private                 trackLength         :number                     = null;
         /** z distance camera is from screen (computed) */
         private                 cameraDepth         :number                     = null;
         /** player x offset from center of road (-1 to 1 to stay independent of roadWidth) */
@@ -76,9 +70,7 @@
 
             // rebuild the stage
             this.stage = new orts.Stage();
-
-            // rebuild the road
-            this.resetRoad();
+            this.stage.resetRoad( this.playerZ );
         }
 
         /** ************************************************************************************************************
@@ -129,7 +121,7 @@
         private update( dt )
         {
             var n, car, carW, sprite, spriteW;
-            var playerSegment = this.findSegment(this.position + this.playerZ);
+            var playerSegment = this.stage.findSegment(this.position + this.playerZ);
             var playerW = 80 * orts.SettingGame.SPRITE_SCALE;
             var speedPercent = this.speed / orts.SettingGame.MAX_SPEED;
             var dx = dt * 2 * speedPercent; // at top speed, should be able to cross from left to right (-1 to 1) in 1 second
@@ -137,7 +129,7 @@
 
             this.updateCars(dt, playerSegment, playerW);
 
-            this.position = orts.MathUtil.increase(this.position, dt * this.speed, this.trackLength);
+            this.position = orts.MathUtil.increase(this.position, dt * this.speed, this.stage.trackLength);
 
             // check pressed keys
             this.keyLeft = orts.Main.game.keySystem.isPressed(orts.KeyCodes.KEY_LEFT);
@@ -171,7 +163,7 @@
 
                     if (orts.MathUtil.overlap(this.playerX, playerW, sprite.offset + spriteW / 2 * (sprite.offset > 0 ? 1 : -1), spriteW, 0)) {
                         this.speed = orts.SettingGame.MAX_SPEED / 5;
-                        this.position = orts.MathUtil.increase(playerSegment.p1.world.z, -this.playerZ, this.trackLength); // stop in front of sprite (at front of segment)
+                        this.position = orts.MathUtil.increase(playerSegment.p1.world.z, -this.playerZ, this.stage.trackLength); // stop in front of sprite (at front of segment)
                         break;
                     }
                 }
@@ -183,7 +175,7 @@
                 if (this.speed > car.speed) {
                     if (orts.MathUtil.overlap(this.playerX, playerW, car.offset, carW, 0.8)) {
                         this.speed = car.speed * (car.speed / this.speed);
-                        this.position = orts.MathUtil.increase(car.z, -this.playerZ, this.trackLength);
+                        this.position = orts.MathUtil.increase(car.z, -this.playerZ, this.stage.trackLength);
                         break;
                     }
                 }
@@ -205,13 +197,13 @@
         private updateCars( dt, playerSegment, playerW )
         {
             var n, car, oldSegment, newSegment;
-            for (n = 0; n < this.cars.length; n++) {
-                car = this.cars[n];
-                oldSegment = this.findSegment(car.z);
+            for (n = 0; n < this.stage.cars.length; n++) {
+                car = this.stage.cars[n];
+                oldSegment = this.stage.findSegment(car.z);
                 car.offset = car.offset + this.updateCarOffset(car, oldSegment, playerSegment, playerW);
-                car.z = orts.MathUtil.increase(car.z, dt * car.speed, this.trackLength);
+                car.z = orts.MathUtil.increase(car.z, dt * car.speed, this.stage.trackLength);
                 car.percent = orts.MathUtil.percentRemaining(car.z, orts.SettingGame.SEGMENT_LENGTH); // useful for interpolation during rendering phase
-                newSegment = this.findSegment(car.z);
+                newSegment = this.stage.findSegment(car.z);
                 if (oldSegment !== newSegment) {
                     var index = oldSegment.cars.indexOf(car);
                     oldSegment.cars.splice(index, 1);
@@ -233,7 +225,7 @@
                 return 0;
 
             for (i = 1; i < lookahead; i++) {
-                segment = this.segments[(carSegment.index + i) % this.segments.length];
+                segment = this.stage.segments[(carSegment.index + i) % this.stage.segments.length];
 
                 if ((segment === playerSegment) && (car.speed > this.speed) && (orts.MathUtil.overlap(this.playerX, playerW, car.offset, carW, 1.2))) {
                     if (this.playerX > 0.5)
@@ -274,9 +266,9 @@
         ***************************************************************************************************************/
         private render()
         {
-            var baseSegment = this.findSegment(this.position);
+            var baseSegment = this.stage.findSegment(this.position);
             var basePercent = orts.MathUtil.percentRemaining(this.position, orts.SettingGame.SEGMENT_LENGTH);
-            var playerSegment = this.findSegment(this.position + this.playerZ);
+            var playerSegment = this.stage.findSegment(this.position + this.playerZ);
             var playerPercent = orts.MathUtil.percentRemaining(this.position + this.playerZ, orts.SettingGame.SEGMENT_LENGTH);
             var playerY = orts.MathUtil.interpolate(playerSegment.p1.world.y, playerSegment.p2.world.y, playerPercent);
             var maxy = this.height;
@@ -298,13 +290,13 @@
 
             for (n = 0; n < orts.SettingGame.DRAW_DISTANCE; n++) {
 
-                segment = this.segments[(baseSegment.index + n) % this.segments.length];
+                segment = this.stage.segments[(baseSegment.index + n) % this.stage.segments.length];
                 segment.looped = segment.index < baseSegment.index;
                 segment.fog = orts.MathUtil.exponentialFog(n / orts.SettingGame.DRAW_DISTANCE, orts.SettingGame.FOG_DENSITY);
                 segment.clip = maxy;
 
-                orts.MathUtil.project(segment.p1, (this.playerX * orts.SettingGame.ROAD_WIDTH) - x, playerY + orts.SettingGame.CAMERA_HEIGHT, this.position - (segment.looped ? this.trackLength : 0), this.cameraDepth, this.width, this.height, orts.SettingGame.ROAD_WIDTH);
-                orts.MathUtil.project(segment.p2, (this.playerX * orts.SettingGame.ROAD_WIDTH) - x - dx, playerY + orts.SettingGame.CAMERA_HEIGHT, this.position - (segment.looped ? this.trackLength : 0), this.cameraDepth, this.width, this.height, orts.SettingGame.ROAD_WIDTH);
+                orts.MathUtil.project(segment.p1, (this.playerX * orts.SettingGame.ROAD_WIDTH) - x, playerY + orts.SettingGame.CAMERA_HEIGHT, this.position - (segment.looped ? this.stage.trackLength : 0), this.cameraDepth, this.width, this.height, orts.SettingGame.ROAD_WIDTH);
+                orts.MathUtil.project(segment.p2, (this.playerX * orts.SettingGame.ROAD_WIDTH) - x - dx, playerY + orts.SettingGame.CAMERA_HEIGHT, this.position - (segment.looped ? this.stage.trackLength : 0), this.cameraDepth, this.width, this.height, orts.SettingGame.ROAD_WIDTH);
 
                 x = x + dx;
                 dx = dx + segment.curve;
@@ -328,7 +320,7 @@
             }
 
             for (n = (orts.SettingGame.DRAW_DISTANCE - 1); n > 0; n--) {
-                segment = this.segments[(baseSegment.index + n) % this.segments.length];
+                segment = this.stage.segments[(baseSegment.index + n) % this.stage.segments.length];
 
                 for (i = 0; i < segment.cars.length; i++) {
                     car = segment.cars[i];
@@ -355,262 +347,6 @@
                         this.speed * (this.keyLeft ? -1 : this.keyRight ? 1 : 0),
                         playerSegment.p2.world.y - playerSegment.p1.world.y);
                 }
-            }
-        }
-
-        /** ************************************************************************************************************
-        *   Finds the segment with the specified index.
-        ***************************************************************************************************************/
-        private findSegment( z )
-        {
-            return this.segments[Math.floor(z / orts.SettingGame.SEGMENT_LENGTH) % this.segments.length];
-        }
-
-        // =========================================================================
-        // BUILD ROAD GEOMETRY
-        // =========================================================================
-
-        /** ************************************************************************************************************
-        *
-        ***************************************************************************************************************/
-        private lastY()
-        {
-            return (this.segments.length === 0) ? 0 : this.segments[this.segments.length - 1].p2.world.y;
-        }
-
-        /** ************************************************************************************************************
-        *
-        ***************************************************************************************************************/
-        private addSegment( curve, y )
-        {
-            var n = this.segments.length;
-            this.segments.push({
-                index: n,
-                p1: {world: {y: this.lastY(), z: n * orts.SettingGame.SEGMENT_LENGTH}, camera: {}, screen: {}},
-                p2: {world: {y: y, z: (n + 1) * orts.SettingGame.SEGMENT_LENGTH}, camera: {}, screen: {}},
-                curve: curve,
-                sprites: [],
-                cars: [],
-                color: Math.floor(n / orts.SettingGame.RUMBLE_LENGTH) % 2 ? orts.SettingColor.DARK : orts.SettingColor.LIGHT
-            });
-        }
-
-        /** ************************************************************************************************************
-        *
-        ***************************************************************************************************************/
-        private addSprite( n, sprite, offset )
-        {
-            this.segments[n].sprites.push({source: sprite, offset: offset});
-        }
-
-        /** ************************************************************************************************************
-        *
-        ***************************************************************************************************************/
-        private addRoad( enter, hold, leave, curve, y )
-        {
-            var startY = this.lastY();
-            var endY = startY + (orts.MathUtil.toInt(y) * orts.SettingGame.SEGMENT_LENGTH);
-            var n, total = enter + hold + leave;
-            for (n = 0; n < enter; n++)
-                this.addSegment(orts.MathUtil.easeIn(0, curve, n / enter), orts.MathUtil.easeInOut(startY, endY, n / total));
-            for (n = 0; n < hold; n++)
-                this.addSegment(curve, orts.MathUtil.easeInOut(startY, endY, (enter + n) / total));
-            for (n = 0; n < leave; n++)
-                this.addSegment(orts.MathUtil.easeInOut(curve, 0, n / leave), orts.MathUtil.easeInOut(startY, endY, (enter + hold + n) / total));
-        }
-
-        /** ************************************************************************************************************
-        *
-        ***************************************************************************************************************/
-        private ROAD = {
-            LENGTH: {NONE: 0, SHORT: 25, MEDIUM: 50, LONG: 100},
-            HILL: {NONE: 0, LOW: 20, MEDIUM: 40, HIGH: 60},
-            CURVE: {NONE: 0, EASY: 2, MEDIUM: 4, HARD: 6}
-        };
-
-        /** ************************************************************************************************************
-        *
-        ***************************************************************************************************************/
-        private addStraight( num )
-        {
-            num = num || this.ROAD.LENGTH.MEDIUM;
-            this.addRoad(num, num, num, 0, 0);
-        }
-
-        /** ************************************************************************************************************
-        *
-        ***************************************************************************************************************/
-        private addHill( num, height )
-        {
-            num = num || this.ROAD.LENGTH.MEDIUM;
-            height = height || this.ROAD.HILL.MEDIUM;
-            this.addRoad(num, num, num, 0, height);
-        }
-
-        /** ************************************************************************************************************
-        *
-        ***************************************************************************************************************/
-        private addCurve( num, curve, height )
-        {
-            num = num || this.ROAD.LENGTH.MEDIUM;
-            curve = curve || this.ROAD.CURVE.MEDIUM;
-            height = height || this.ROAD.HILL.NONE;
-            this.addRoad(num, num, num, curve, height);
-        }
-
-        /** ************************************************************************************************************
-        *
-        ***************************************************************************************************************/
-        private addLowRollingHills( num, height )
-        {
-            num = num || this.ROAD.LENGTH.SHORT;
-            height = height || this.ROAD.HILL.LOW;
-            this.addRoad(num, num, num, 0, height / 2);
-            this.addRoad(num, num, num, 0, -height);
-            this.addRoad(num, num, num, this.ROAD.CURVE.EASY, height);
-            this.addRoad(num, num, num, 0, 0);
-            this.addRoad(num, num, num, -this.ROAD.CURVE.EASY, height / 2);
-            this.addRoad(num, num, num, 0, 0);
-        }
-
-        /** ************************************************************************************************************
-        *
-        ***************************************************************************************************************/
-        private addSCurves()
-        {
-            this.addRoad(this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, -this.ROAD.CURVE.EASY, this.ROAD.HILL.NONE);
-            this.addRoad(this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.CURVE.MEDIUM, this.ROAD.HILL.MEDIUM);
-            this.addRoad(this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.CURVE.EASY, -this.ROAD.HILL.LOW);
-            this.addRoad(this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, -this.ROAD.CURVE.EASY, this.ROAD.HILL.MEDIUM);
-            this.addRoad(this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, -this.ROAD.CURVE.MEDIUM, -this.ROAD.HILL.MEDIUM);
-        };
-
-        /** ************************************************************************************************************
-        *
-        ***************************************************************************************************************/
-        private addBumps()
-        {
-            this.addRoad(10, 10, 10, 0, 5);
-            this.addRoad(10, 10, 10, 0, -2);
-            this.addRoad(10, 10, 10, 0, -5);
-            this.addRoad(10, 10, 10, 0, 8);
-            this.addRoad(10, 10, 10, 0, 5);
-            this.addRoad(10, 10, 10, 0, -7);
-            this.addRoad(10, 10, 10, 0, 5);
-            this.addRoad(10, 10, 10, 0, -2);
-        }
-
-        /** ************************************************************************************************************
-        *
-        ***************************************************************************************************************/
-        private addDownhillToEnd( num )
-        {
-            num = num || 200;
-            this.addRoad(num, num, num, -this.ROAD.CURVE.EASY, -this.lastY() / orts.SettingGame.SEGMENT_LENGTH);
-        }
-
-        /** ************************************************************************************************************
-        *
-        ***************************************************************************************************************/
-        private resetRoad()
-        {
-            this.segments = [];
-
-            this.addStraight(this.ROAD.LENGTH.SHORT);
-            this.addLowRollingHills(0, 0);
-            this.addSCurves();
-            this.addCurve(this.ROAD.LENGTH.MEDIUM, this.ROAD.CURVE.MEDIUM, this.ROAD.HILL.LOW);
-            this.addBumps();
-            this.addLowRollingHills(0, 0);
-            this.addCurve(this.ROAD.LENGTH.LONG * 2, this.ROAD.CURVE.MEDIUM, this.ROAD.HILL.MEDIUM);
-            this.addStraight(0);
-            this.addHill(this.ROAD.LENGTH.MEDIUM, this.ROAD.HILL.HIGH);
-            this.addSCurves();
-            this.addCurve(this.ROAD.LENGTH.LONG, -this.ROAD.CURVE.MEDIUM, this.ROAD.HILL.NONE);
-            this.addHill(this.ROAD.LENGTH.LONG, this.ROAD.HILL.HIGH);
-            this.addCurve(this.ROAD.LENGTH.LONG, this.ROAD.CURVE.MEDIUM, -this.ROAD.HILL.LOW);
-            this.addBumps();
-            this.addHill(this.ROAD.LENGTH.LONG, -this.ROAD.HILL.MEDIUM);
-            this.addStraight(0);
-            this.addSCurves();
-            this.addDownhillToEnd(0);
-
-            this.resetSprites();
-            this.resetCars();
-
-            this.segments[this.findSegment(this.playerZ).index + 2].color = orts.SettingColor.START;
-            this.segments[this.findSegment(this.playerZ).index + 3].color = orts.SettingColor.START;
-            for (var n = 0; n < orts.SettingGame.RUMBLE_LENGTH; n++)
-                this.segments[this.segments.length - 1 - n].color = orts.SettingColor.FINISH;
-
-            this.trackLength = this.segments.length * orts.SettingGame.SEGMENT_LENGTH;
-        }
-
-        /** ************************************************************************************************************
-        *
-        ***************************************************************************************************************/
-        private resetSprites()
-        {
-            var n, i;
-
-            this.addSprite(20, orts.ImageFile.BILLBOARD07, -1);
-            this.addSprite(40, orts.ImageFile.BILLBOARD06, -1);
-            this.addSprite(60, orts.ImageFile.BILLBOARD08, -1);
-            this.addSprite(80, orts.ImageFile.BILLBOARD09, -1);
-            this.addSprite(100, orts.ImageFile.BILLBOARD01, -1);
-            this.addSprite(120, orts.ImageFile.BILLBOARD02, -1);
-            this.addSprite(140, orts.ImageFile.BILLBOARD03, -1);
-            this.addSprite(160, orts.ImageFile.BILLBOARD04, -1);
-            this.addSprite(180, orts.ImageFile.BILLBOARD05, -1);
-
-            this.addSprite(240, orts.ImageFile.BILLBOARD07, -1.2);
-            this.addSprite(240, orts.ImageFile.BILLBOARD06, 1.2);
-            this.addSprite(this.segments.length - 25, orts.ImageFile.BILLBOARD07, -1.2);
-            this.addSprite(this.segments.length - 25, orts.ImageFile.BILLBOARD06, 1.2);
-
-            for (n = 10; n < 200; n += 4 + Math.floor(n / 100)) {
-                this.addSprite(n, orts.ImageFile.PALM_TREE, 0.5 + Math.random() * 0.5);
-                this.addSprite(n, orts.ImageFile.PALM_TREE, 1 + Math.random() * 2);
-            }
-
-            for (n = 250; n < 1000; n += 5) {
-                this.addSprite(n, orts.ImageFile.COLUMN, 1.1);
-                this.addSprite(n + orts.MathUtil.randomInt(0, 5), orts.ImageFile.TREE1, -1 - (Math.random() * 2));
-                this.addSprite(n + orts.MathUtil.randomInt(0, 5), orts.ImageFile.TREE2, -1 - (Math.random() * 2));
-            }
-
-            for (n = 200; n < this.segments.length; n += 3) {
-                this.addSprite(n, orts.MathUtil.randomChoice(orts.SettingGame.PLANTS), orts.MathUtil.randomChoice([1, -1]) * (2 + Math.random() * 5));
-            }
-
-            var side, sprite, offset;
-            for (n = 1000; n < (this.segments.length - 50); n += 100) {
-                side = orts.MathUtil.randomChoice([1, -1]);
-                this.addSprite(n + orts.MathUtil.randomInt(0, 50), orts.MathUtil.randomChoice(orts.SettingGame.BILLBOARDS), -side);
-                for (i = 0; i < 20; i++) {
-                    sprite = orts.MathUtil.randomChoice(orts.SettingGame.PLANTS);
-                    offset = side * (1.5 + Math.random());
-                    this.addSprite(n + orts.MathUtil.randomInt(0, 50), sprite, offset);
-                }
-            }
-        }
-
-        /** ************************************************************************************************************
-        *
-        ***************************************************************************************************************/
-        private resetCars()
-        {
-            this.cars = [];
-            var car, segment, offset, z, sprite, speed;
-            for (var n = 0; n < orts.SettingGame.TOTAL_CARS; n++) {
-                offset = Math.random() * orts.MathUtil.randomChoice([-0.8, 0.8]);
-                z = Math.floor(Math.random() * this.segments.length) * orts.SettingGame.SEGMENT_LENGTH;
-                sprite = orts.MathUtil.randomChoice(orts.SettingGame.CARS);
-                speed = orts.SettingGame.MAX_SPEED / 4 + Math.random() * orts.SettingGame.MAX_SPEED / (sprite === orts.ImageFile.SEMI ? 4 : 2);
-                car = {offset: offset, z: z, sprite: sprite, speed: speed};
-                segment = this.findSegment(car.z);
-                segment.cars.push(car);
-                this.cars.push(car);
             }
         }
     }
