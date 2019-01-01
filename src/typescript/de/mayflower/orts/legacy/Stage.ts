@@ -16,6 +16,15 @@
         /** ************************************************************************************************************
         *
         ***************************************************************************************************************/
+        private ROAD :any = {
+            LENGTH: {NONE: 0, SHORT: 25, MEDIUM: 50, LONG: 100},
+            HILL: {NONE: 0, LOW: 20, MEDIUM: 40, HIGH: 60},
+            CURVE: {NONE: 0, EASY: 2, MEDIUM: 4, HARD: 6}
+        };
+
+        /** ************************************************************************************************************
+        *
+        ***************************************************************************************************************/
         public resetRoad( playerZ:number ) : void
         {
             this.segments = [];
@@ -53,42 +62,65 @@
         }
 
         /** ************************************************************************************************************
+        *   Finds the segment with the specified index.
         *
+        *   TODO create class 'segment' !
         ***************************************************************************************************************/
-        private addSprite( n, sprite, offset )
+        public findSegment( z:number ) : any
         {
-            this.segments[n].sprites.push({source: sprite, offset: offset});
+            return this.segments[Math.floor(z / orts.SettingGame.SEGMENT_LENGTH) % this.segments.length];
         }
 
         /** ************************************************************************************************************
         *
         ***************************************************************************************************************/
-        private addRoad( enter, hold, leave, curve, y )
+        private addSprite( n:number, source:string, offset:number ) : void
         {
-            var startY = this.lastY();
-            var endY = startY + (orts.MathUtil.toInt(y) * orts.SettingGame.SEGMENT_LENGTH);
-            var n, total = enter + hold + leave;
-            for (n = 0; n < enter; n++)
-                this.addSegment(orts.MathUtil.easeIn(0, curve, n / enter), orts.MathUtil.easeInOut(startY, endY, n / total));
-            for (n = 0; n < hold; n++)
-                this.addSegment(curve, orts.MathUtil.easeInOut(startY, endY, (enter + n) / total));
-            for (n = 0; n < leave; n++)
-                this.addSegment(orts.MathUtil.easeInOut(curve, 0, n / leave), orts.MathUtil.easeInOut(startY, endY, (enter + hold + n) / total));
+            this.segments[n].sprites.push({source: source, offset: offset});
         }
 
         /** ************************************************************************************************************
         *
         ***************************************************************************************************************/
-        private ROAD = {
-            LENGTH: {NONE: 0, SHORT: 25, MEDIUM: 50, LONG: 100},
-            HILL: {NONE: 0, LOW: 20, MEDIUM: 40, HIGH: 60},
-            CURVE: {NONE: 0, EASY: 2, MEDIUM: 4, HARD: 6}
-        };
+        private addRoad( enter:number, hold:number, leave:number, curve:number, y:number ) : void
+        {
+            const startY :number = this.lastY();
+            const endY   :number = startY + (orts.MathUtil.toInt( y ) * orts.SettingGame.SEGMENT_LENGTH);
+            const total  :number = ( enter + hold + leave );
+
+            for ( let n:number = 0; n < enter; n++ )
+            {
+                this.addSegment
+                (
+                    orts.MathUtil.easeIn(0, curve, n / enter),
+                    orts.MathUtil.easeInOut(startY, endY, n / total)
+                );
+            }
+
+            for ( let n:number = 0; n < hold; n++ )
+            {
+                this.addSegment
+                (
+                    curve,
+                    orts.MathUtil.easeInOut(startY, endY, (enter + n) / total)
+                );
+            }
+
+            for ( let n:number = 0; n < leave; n++ )
+            {
+                this.addSegment
+                (
+                    orts.MathUtil.easeInOut(curve, 0, n / leave),
+                    orts.MathUtil.easeInOut(startY, endY, (enter + hold + n) / total)
+                );
+            }
+        }
 
         /** ************************************************************************************************************
         *
+        *   @param num The road length?
         ***************************************************************************************************************/
-        private addStraight( num )
+        private addStraight( num ) : void
         {
             num = num || this.ROAD.LENGTH.MEDIUM;
             this.addRoad(num, num, num, 0, 0);
@@ -97,7 +129,7 @@
         /** ************************************************************************************************************
         *
         ***************************************************************************************************************/
-        private addHill( num, height )
+        private addHill( num, height ) : void
         {
             num = num || this.ROAD.LENGTH.MEDIUM;
             height = height || this.ROAD.HILL.MEDIUM;
@@ -107,7 +139,7 @@
         /** ************************************************************************************************************
         *
         ***************************************************************************************************************/
-        private addCurve( num, curve, height )
+        private addCurve( num, curve, height ) : void
         {
             num = num || this.ROAD.LENGTH.MEDIUM;
             curve = curve || this.ROAD.CURVE.MEDIUM;
@@ -118,7 +150,7 @@
         /** ************************************************************************************************************
         *
         ***************************************************************************************************************/
-        private addLowRollingHills( num, height )
+        private addLowRollingHills( num, height ) : void
         {
             num = num || this.ROAD.LENGTH.SHORT;
             height = height || this.ROAD.HILL.LOW;
@@ -133,7 +165,7 @@
         /** ************************************************************************************************************
         *
         ***************************************************************************************************************/
-        private addSCurves()
+        private addSCurves() : void
         {
             this.addRoad(this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, -this.ROAD.CURVE.EASY, this.ROAD.HILL.NONE);
             this.addRoad(this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.CURVE.MEDIUM, this.ROAD.HILL.MEDIUM);
@@ -145,7 +177,7 @@
         /** ************************************************************************************************************
         *
         ***************************************************************************************************************/
-        private addBumps()
+        private addBumps() : void
         {
             this.addRoad(10, 10, 10, 0, 5);
             this.addRoad(10, 10, 10, 0, -2);
@@ -160,7 +192,7 @@
         /** ************************************************************************************************************
         *
         ***************************************************************************************************************/
-        private addDownhillToEnd( num )
+        private addDownhillToEnd( num ) : void
         {
             num = num || 200;
             this.addRoad(num, num, num, -this.ROAD.CURVE.EASY, -this.lastY() / orts.SettingGame.SEGMENT_LENGTH);
@@ -169,7 +201,7 @@
         /** ************************************************************************************************************
         *
         ***************************************************************************************************************/
-        private resetSprites()
+        private resetSprites() : void
         {
             var n, i;
 
@@ -218,7 +250,7 @@
         /** ************************************************************************************************************
         *
         ***************************************************************************************************************/
-        private resetCars()
+        private resetCars() : void
         {
             this.cars = [];
             var car, segment, offset, z, sprite, speed;
@@ -235,11 +267,14 @@
         }
 
         /** ************************************************************************************************************
+        *   Adds a road segment.
         *
+        *   @param curve Specifies if this segment is a curve?
+        *   @param y     The Y location of this segment.
         ***************************************************************************************************************/
-        private addSegment( curve, y )
+        private addSegment( curve:any, y:number ) : void
         {
-            var n = this.segments.length;
+            const n:number = this.segments.length;
             this.segments.push({
                 index: n,
                 p1: {world: {y: this.lastY(), z: n * orts.SettingGame.SEGMENT_LENGTH}, camera: {}, screen: {}},
@@ -250,24 +285,19 @@
 
                 sprites: [],
                 cars: [],
-                color: Math.floor(n / orts.SettingGame.RUMBLE_LENGTH) % 2 ? orts.SettingColor.DARK : orts.SettingColor.LIGHT
-            });
-        }
-
-        /** ************************************************************************************************************
-        *   Finds the segment with the specified index.
-        *
-        *   TODO create class 'segment' !
-        ***************************************************************************************************************/
-        public findSegment( z )
-        {
-            return this.segments[Math.floor(z / orts.SettingGame.SEGMENT_LENGTH) % this.segments.length];
+                color: Math.floor
+                (
+                    n / orts.SettingGame.RUMBLE_LENGTH) % 2
+                    ? orts.SettingColor.DARK
+                    : orts.SettingColor.LIGHT
+                }
+            );
         }
 
         /** ************************************************************************************************************
         *
         ***************************************************************************************************************/
-        private lastY()
+        private lastY() : number
         {
             return (this.segments.length === 0) ? 0 : this.segments[this.segments.length - 1].p2.world.y;
         }

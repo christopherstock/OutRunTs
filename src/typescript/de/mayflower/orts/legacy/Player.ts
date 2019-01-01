@@ -14,6 +14,4 @@
         public                  speed               :number                     = 0;
 
         // TODO create members and make all fields private!
-
-
     }

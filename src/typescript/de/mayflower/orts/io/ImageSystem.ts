@@ -7,13 +7,14 @@
     export class ImageSystem
     {
         /** All filenames. */
-        private                 fileNames           :string[]                   = [];
+        private     readonly    fileNames           :string[]                   = [];
+        /** The callback function that is being invoked when all images are loaded. */
+        private     readonly    callback            :()=>void                   = null;
+
         /** Counts the number of successful loaded images. */
         private                 loadedCount         :number                     = 0;
         /** This array contains all loaded {@link HTMLImageElement} objects, indexed by filename. */
         private                 loadedImages        :HTMLImageElement[]         = [];
-        /** The callback function that is being invoked when all images are loaded. */
-        private                 callback            :()=>void                   = null;
 
         /** ************************************************************************************************************
         *   Creates a new image system.

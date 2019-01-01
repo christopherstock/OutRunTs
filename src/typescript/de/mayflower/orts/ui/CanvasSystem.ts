@@ -34,8 +34,8 @@
         public updateDimensions() : boolean
         {
             // get inner window dimensions
-            let canvasWidth:number  = orts.SettingGame.CANVAS_WIDTH;  // window.innerWidth;
-            let canvasHeight:number = orts.SettingGame.CANVAS_HEIGHT; // window.innerHeight;
+            const canvasWidth:number  = orts.SettingGame.CANVAS_WIDTH;  // window.innerWidth;
+            const canvasHeight:number = orts.SettingGame.CANVAS_HEIGHT; // window.innerHeight;
 /*
             // clip to minimum canvas dimensions
             if ( canvasWidth  < orts.SettingGame.CANVAS_MIN_WIDTH  ) canvasWidth  = orts.SettingGame.CANVAS_MIN_WIDTH;
