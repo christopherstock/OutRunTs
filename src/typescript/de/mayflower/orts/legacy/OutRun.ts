@@ -216,15 +216,19 @@
         ***************************************************************************************************************/
         private updateCarOffset( car:any, carSegment:any, playerSegment:any, playerW:number ) : number
         {
-            var i, j, dir, segment, otherCar, otherCarW, lookahead = 20,
-                carW = orts.Main.game.imageSystem.getImage(car.sprite).width * orts.SettingGame.SPRITE_SCALE;
+            const lookahead :number = 20;
+            const carW      :number = orts.Main.game.imageSystem.getImage(car.sprite).width * orts.SettingGame.SPRITE_SCALE;
+
+            let   dir       :number = 0;    // TODO create enum for direction
+            let   otherCarW :number = 0;
 
             // optimization, dont bother steering around other cars when 'out of sight' of the player
             if ((carSegment.index - playerSegment.index) > orts.SettingGame.DRAW_DISTANCE)
                 return 0;
 
-            for (i = 1; i < lookahead; i++) {
-                segment = this.stage.segments[(carSegment.index + i) % this.stage.segments.length];
+            for ( let i:number = 1; i < lookahead; i++ )
+            {
+                const segment:any = this.stage.segments[(carSegment.index + i) % this.stage.segments.length];
 
                 if ((segment === playerSegment) && (car.speed > this.player.speed) && (orts.MathUtil.overlap(this.player.playerX, playerW, car.offset, carW, 1.2))) {
                     if (this.player.playerX > 0.5)
@@ -233,11 +237,11 @@
                         dir = 1;
                     else
                         dir = (car.offset > this.player.playerX) ? 1 : -1;
-                    return dir * 1 / i * (car.speed - this.player.speed) / orts.SettingGame.MAX_SPEED; // the closer the cars (smaller i) and the greated the speed ratio, the larger the offset
+                    return dir / i * (car.speed - this.player.speed) / orts.SettingGame.MAX_SPEED; // the closer the cars (smaller i) and the greated the speed ratio, the larger the offset
                 }
 
-                for (j = 0; j < segment.cars.length; j++) {
-                    otherCar = segment.cars[j];
+                for ( const otherCar of segment.cars )
+                {
                     otherCarW = orts.Main.game.imageSystem.getImage(otherCar.sprite).width * orts.SettingGame.SPRITE_SCALE;
                     if ((car.speed > otherCar.speed) && orts.MathUtil.overlap(car.offset, carW, otherCar.offset, otherCarW, 1.2)) {
                         if (otherCar.offset > 0.5)
@@ -246,7 +250,7 @@
                             dir = 1;
                         else
                             dir = (car.offset > otherCar.offset) ? 1 : -1;
-                        return dir * 1 / i * (car.speed - otherCar.speed) / orts.SettingGame.MAX_SPEED;
+                        return dir / i * (car.speed - otherCar.speed) / orts.SettingGame.MAX_SPEED;
                     }
                 }
             }
