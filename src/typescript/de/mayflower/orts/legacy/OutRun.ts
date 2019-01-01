@@ -108,16 +108,21 @@
         *
         *   @param dt The delta time to update the game.
         ***************************************************************************************************************/
-        private update( dt )
+        private update( dt:number ) : void
         {
-            var n, car, carW, sprite, spriteW;
-            var playerSegment = this.stage.findSegment(this.camera.getZ() + this.player.playerZ);
-            var playerW = 80 * orts.SettingGame.SPRITE_SCALE;
-            var speedPercent = this.player.speed / orts.SettingGame.MAX_SPEED;
-            var dx = dt * 2 * speedPercent; // at top speed, should be able to cross from left to right (-1 to 1) in 1 second
-            var startPosition = this.camera.getZ();
+            let   n             :number  = 0;
+            let   car           :any     = 0; // TODO create class Car
+            let   carW          :number  = 0;
+            let   sprite        :any     = null;
+            let   spriteW       :number  = 0;
 
-            this.updateCars(dt, playerSegment, playerW);
+            const playerSegment :any     = this.stage.findSegment(this.camera.getZ() + this.player.playerZ);
+            const playerW       :number  = 80 * orts.SettingGame.SPRITE_SCALE;
+            const speedPercent  :number  = this.player.speed / orts.SettingGame.MAX_SPEED;
+            const dx            :number  = dt * 2 * speedPercent; // at top speed, should be able to cross from left to right (-1 to 1) in 1 second
+            const startPosition :number  = this.camera.getZ();
+
+            this.updateCars( dt, playerSegment, playerW );
 
             this.camera.setZ( orts.MathUtil.increase(this.camera.getZ(), dt * this.player.speed, this.stage.trackLength) );
 

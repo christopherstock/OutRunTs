@@ -245,6 +245,9 @@
                 p1: {world: {y: this.lastY(), z: n * orts.SettingGame.SEGMENT_LENGTH}, camera: {}, screen: {}},
                 p2: {world: {y: y, z: (n + 1) * orts.SettingGame.SEGMENT_LENGTH}, camera: {}, screen: {}},
                 curve: curve,
+
+                // TODO create class Sprite
+
                 sprites: [],
                 cars: [],
                 color: Math.floor(n / orts.SettingGame.RUMBLE_LENGTH) % 2 ? orts.SettingColor.DARK : orts.SettingColor.LIGHT
@@ -253,6 +256,8 @@
 
         /** ************************************************************************************************************
         *   Finds the segment with the specified index.
+        *
+        *   TODO create class 'segment' !
         ***************************************************************************************************************/
         public findSegment( z )
         {
