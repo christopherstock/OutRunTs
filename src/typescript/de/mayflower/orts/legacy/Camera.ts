@@ -7,11 +7,27 @@
     export class Camera
     {
         /** z distance camera is from screen (computed) */
-        public                  cameraDepth         :number                     = null;
+        private     readonly    depth               :number                     = null;
         /** current camera Z position (add playerZ to get player's absolute Z position) */
-        public                  cameraZ             :number                     = 0;
+        private                 z                   :number                     = 0;
 
-        // TODO create members and make all fields private!
+        public constructor()
+        {
+            this.depth = ( 1 / Math.tan( ( orts.SettingGame.FIELD_OF_VIEW / 2 ) * Math.PI / 180 ) );
+        }
 
+        public getDepth() : number
+        {
+            return this.depth;
+        }
 
+        public getZ() : number
+        {
+            return this.z;
+        }
+
+        public setZ( z:number ) : void
+        {
+            this.z = z;
+        }
     }
