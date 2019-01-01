@@ -285,8 +285,6 @@
             orts.Drawing2D.background(this.canvasSystem.getCanvasContext(), this.canvasSystem.getWidth(), this.canvasSystem.getHeight(), orts.ImageFile.HILLS, this.background.hillOffset, this.resolution * orts.SettingGame.HILL_SPEED * playerY);
             orts.Drawing2D.background(this.canvasSystem.getCanvasContext(), this.canvasSystem.getWidth(), this.canvasSystem.getHeight(), orts.ImageFile.TREES, this.background.treeOffset, this.resolution * orts.SettingGame.TREE_SPEED * playerY);
 
-            let   car         :any    = null;
-            let   sprite      :any    = null;
             let   spriteScale :number = 0;
             let   spriteX     :number = 0;
             let   spriteY     :number = 0;
@@ -329,19 +327,16 @@
             {
                 const segment:any = this.stage.segments[(baseSegment.index + n) % this.stage.segments.length];
 
-                for ( let i:number = 0; i < segment.cars.length; i++ )
+                for ( const car of segment.cars )
                 {
-                    car = segment.cars[i];
-                    sprite = car.sprite;
                     spriteScale = orts.MathUtil.interpolate(segment.p1.screen.scale, segment.p2.screen.scale, car.percent);
                     spriteX = orts.MathUtil.interpolate(segment.p1.screen.x, segment.p2.screen.x, car.percent) + (spriteScale * car.offset * orts.SettingGame.ROAD_WIDTH * this.canvasSystem.getWidth() / 2);
                     spriteY = orts.MathUtil.interpolate(segment.p1.screen.y, segment.p2.screen.y, car.percent);
                     orts.Drawing2D.sprite(this.canvasSystem.getCanvasContext(), this.canvasSystem.getWidth(), this.canvasSystem.getHeight(), this.resolution, orts.SettingGame.ROAD_WIDTH, car.sprite, spriteScale, spriteX, spriteY, -0.5, -1, segment.clip);
                 }
 
-                for ( let i:number = 0; i < segment.sprites.length; i++ )
+                for ( const sprite of segment.sprites )
                 {
-                    sprite = segment.sprites[i];
                     spriteScale = segment.p1.screen.scale;
                     spriteX = segment.p1.screen.x + (spriteScale * sprite.offset * orts.SettingGame.ROAD_WIDTH * this.canvasSystem.getWidth() / 2);
                     spriteY = segment.p1.screen.y;
