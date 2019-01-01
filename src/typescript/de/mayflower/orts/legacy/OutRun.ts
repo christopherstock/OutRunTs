@@ -186,22 +186,29 @@
         /** ************************************************************************************************************
         *   Updates the cars in the game world.
         *
-        *   @param dt The delta time to update the game.
+        *   @param dt            The delta time to update the game.
+        *   @param playerSegment The segment the player is currently in.
+        *   @param playerW       The current width of the player.
         ***************************************************************************************************************/
-        private updateCars( dt, playerSegment, playerW )
+        private updateCars( dt:number, playerSegment:number, playerW:number ) : void
         {
-            var n, car, oldSegment, newSegment;
-            for (n = 0; n < this.stage.cars.length; n++) {
+            let car        :any    = null;
+            let oldSegment :any    = null;
+            let newSegment :any    = null;
+
+            for ( let n:number = 0; n < this.stage.cars.length; n++ )
+            {
                 car = this.stage.cars[n];
                 oldSegment = this.stage.findSegment(car.z);
                 car.offset = car.offset + this.updateCarOffset(car, oldSegment, playerSegment, playerW);
                 car.z = orts.MathUtil.increase(car.z, dt * car.speed, this.stage.trackLength);
                 car.percent = orts.MathUtil.percentRemaining(car.z, orts.SettingGame.SEGMENT_LENGTH); // useful for interpolation during rendering phase
                 newSegment = this.stage.findSegment(car.z);
-                if (oldSegment !== newSegment) {
-                    var index = oldSegment.cars.indexOf(car);
-                    oldSegment.cars.splice(index, 1);
-                    newSegment.cars.push(car);
+                if ( oldSegment !== newSegment )
+                {
+                    const index:number = oldSegment.cars.indexOf( car );
+                    oldSegment.cars.splice( index, 1 );
+                    newSegment.cars.push( car );
                 }
             }
         }
@@ -209,7 +216,7 @@
         /** ************************************************************************************************************
         *   Updates the offset for the player car.
         ***************************************************************************************************************/
-        private updateCarOffset( car, carSegment, playerSegment, playerW )
+        private updateCarOffset( car:any, carSegment:any, playerSegment:any, playerW:number ) : number
         {
             var i, j, dir, segment, otherCar, otherCarW, lookahead = 20,
                 carW = orts.Main.game.imageSystem.getImage(car.sprite).width * orts.SettingGame.SPRITE_SCALE;
@@ -258,7 +265,7 @@
         /** ************************************************************************************************************
         *   Renders the current tick of the legacy game.
         ***************************************************************************************************************/
-        private render()
+        private render() : void
         {
             var baseSegment = this.stage.findSegment(this.camera.getZ());
             var basePercent = orts.MathUtil.percentRemaining(this.camera.getZ(), orts.SettingGame.SEGMENT_LENGTH);
@@ -316,7 +323,8 @@
                 maxy = segment.p1.screen.y;
             }
 
-            for (n = (orts.SettingGame.DRAW_DISTANCE - 1); n > 0; n--) {
+            for ( n = ( orts.SettingGame.DRAW_DISTANCE - 1 ); n > 0; n-- )
+            {
                 segment = this.stage.segments[(baseSegment.index + n) % this.stage.segments.length];
 
                 for (i = 0; i < segment.cars.length; i++) {
