@@ -265,15 +265,15 @@
         ***************************************************************************************************************/
         private render() : void
         {
-            var baseSegment = this.stage.findSegment(this.camera.getZ());
-            var basePercent = orts.MathUtil.percentRemaining(this.camera.getZ(), orts.SettingGame.SEGMENT_LENGTH);
-            var playerSegment = this.stage.findSegment(this.camera.getZ() + this.player.playerZ);
-            var playerPercent = orts.MathUtil.percentRemaining(this.camera.getZ() + this.player.playerZ, orts.SettingGame.SEGMENT_LENGTH);
-            var playerY = orts.MathUtil.interpolate(playerSegment.p1.world.y, playerSegment.p2.world.y, playerPercent);
-            var maxy = this.canvasSystem.getHeight();
+            const baseSegment   :any    = this.stage.findSegment(this.camera.getZ());
+            const basePercent   :number = orts.MathUtil.percentRemaining(this.camera.getZ(), orts.SettingGame.SEGMENT_LENGTH);
+            const playerSegment :any    = this.stage.findSegment(this.camera.getZ() + this.player.playerZ);
+            const playerPercent :number = orts.MathUtil.percentRemaining(this.camera.getZ() + this.player.playerZ, orts.SettingGame.SEGMENT_LENGTH);
+            const playerY       :number = orts.MathUtil.interpolate(playerSegment.p1.world.y, playerSegment.p2.world.y, playerPercent);
 
-            var x = 0;
-            var dx = -(baseSegment.curve * basePercent);
+            let   maxy          :number = this.canvasSystem.getHeight();
+            let   x             :number = 0;
+            let   dx            :number = -(baseSegment.curve * basePercent);
 
             // clear canvas
             this.canvasSystem.getCanvasContext().clearRect(0, 0, this.canvasSystem.getWidth(), this.canvasSystem.getHeight());
@@ -285,11 +285,15 @@
             orts.Drawing2D.background(this.canvasSystem.getCanvasContext(), this.canvasSystem.getWidth(), this.canvasSystem.getHeight(), orts.ImageFile.HILLS, this.background.hillOffset, this.resolution * orts.SettingGame.HILL_SPEED * playerY);
             orts.Drawing2D.background(this.canvasSystem.getCanvasContext(), this.canvasSystem.getWidth(), this.canvasSystem.getHeight(), orts.ImageFile.TREES, this.background.treeOffset, this.resolution * orts.SettingGame.TREE_SPEED * playerY);
 
-            var n, i, segment, car, sprite, spriteScale, spriteX, spriteY;
+            let   car         :any    = null;
+            let   sprite      :any    = null;
+            let   spriteScale :number = 0;
+            let   spriteX     :number = 0;
+            let   spriteY     :number = 0;
 
-            for (n = 0; n < orts.SettingGame.DRAW_DISTANCE; n++) {
-
-                segment = this.stage.segments[(baseSegment.index + n) % this.stage.segments.length];
+            for ( let n:number = 0; n < orts.SettingGame.DRAW_DISTANCE; n++ )
+            {
+                const segment:any = this.stage.segments[(baseSegment.index + n) % this.stage.segments.length];
                 segment.looped = segment.index < baseSegment.index;
                 segment.fog = orts.MathUtil.exponentialFog(n / orts.SettingGame.DRAW_DISTANCE, orts.SettingGame.FOG_DENSITY);
                 segment.clip = maxy;
@@ -321,11 +325,12 @@
                 maxy = segment.p1.screen.y;
             }
 
-            for ( n = ( orts.SettingGame.DRAW_DISTANCE - 1 ); n > 0; n-- )
+            for ( let n:number = ( orts.SettingGame.DRAW_DISTANCE - 1 ); n > 0; n-- )
             {
-                segment = this.stage.segments[(baseSegment.index + n) % this.stage.segments.length];
+                const segment:any = this.stage.segments[(baseSegment.index + n) % this.stage.segments.length];
 
-                for (i = 0; i < segment.cars.length; i++) {
+                for ( let i:number = 0; i < segment.cars.length; i++ )
+                {
                     car = segment.cars[i];
                     sprite = car.sprite;
                     spriteScale = orts.MathUtil.interpolate(segment.p1.screen.scale, segment.p2.screen.scale, car.percent);
@@ -334,7 +339,8 @@
                     orts.Drawing2D.sprite(this.canvasSystem.getCanvasContext(), this.canvasSystem.getWidth(), this.canvasSystem.getHeight(), this.resolution, orts.SettingGame.ROAD_WIDTH, car.sprite, spriteScale, spriteX, spriteY, -0.5, -1, segment.clip);
                 }
 
-                for (i = 0; i < segment.sprites.length; i++) {
+                for ( let i:number = 0; i < segment.sprites.length; i++ )
+                {
                     sprite = segment.sprites[i];
                     spriteScale = segment.p1.screen.scale;
                     spriteX = segment.p1.screen.x + (spriteScale * sprite.offset * orts.SettingGame.ROAD_WIDTH * this.canvasSystem.getWidth() / 2);
