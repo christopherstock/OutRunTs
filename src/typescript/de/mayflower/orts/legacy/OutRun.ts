@@ -192,18 +192,16 @@
         ***************************************************************************************************************/
         private updateCars( dt:number, playerSegment:number, playerW:number ) : void
         {
-            let car        :any    = null;
-            let oldSegment :any    = null;
-            let newSegment :any    = null;
-
-            for ( let n:number = 0; n < this.stage.cars.length; n++ )
+            for ( const car of this.stage.cars )
             {
-                car = this.stage.cars[n];
-                oldSegment = this.stage.findSegment(car.z);
+                const oldSegment:any = this.stage.findSegment(car.z);
+
                 car.offset = car.offset + this.updateCarOffset(car, oldSegment, playerSegment, playerW);
                 car.z = orts.MathUtil.increase(car.z, dt * car.speed, this.stage.trackLength);
                 car.percent = orts.MathUtil.percentRemaining(car.z, orts.SettingGame.SEGMENT_LENGTH); // useful for interpolation during rendering phase
-                newSegment = this.stage.findSegment(car.z);
+
+                const newSegment:any = this.stage.findSegment(car.z);
+
                 if ( oldSegment !== newSegment )
                 {
                     const index:number = oldSegment.cars.indexOf( car );
