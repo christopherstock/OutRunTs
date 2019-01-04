@@ -9,12 +9,14 @@
     *   =====================
     *   TODO Primal
     *   =====================
+    *   TODO Clear all TODOs.
+    *   TODO Add FPS counter via Lib.
     *   TODO Scale canvas to screen size .. update all dimensions on size rechange.
     *******************************************************************************************************************/
     export class Main
     {
         /** The singleton instance of the game. */
-        public      static          game                    :orts.Game                = null;
+        public      static          game                    :orts.Game                  = null;
 
         /** ************************************************************************************************************
         *   This method is invoked when the application starts.

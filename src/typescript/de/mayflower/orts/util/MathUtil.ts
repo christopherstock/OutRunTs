@@ -5,6 +5,24 @@
     export class MathUtil
     {
         /** ************************************************************************************************************
+        *   Converts the given number into an integer value.
+        *   All decimal places are cut off.
+        *
+        *   @param num The number to convert to an integer.
+        *
+        *   @return The converted value as an integer.
+        ***************************************************************************************************************/
+        public static toInt( num:number ) : number
+        {
+            return parseInt( String( num ), 10 );
+        }
+
+        public static limit( value:number, min:number, max:number ) : number
+        {
+            return Math.max( min, Math.min( value, max ) );
+        }
+
+        /** ************************************************************************************************************
         *   Returns a random integer between the given mininum and maximum.
         *
         *   @param min The minimum value to return by random.
@@ -15,24 +33,6 @@
         public static getRandomInt( min:number, max:number ) : number
         {
             return Math.floor( ( Math.random() * ( max + 1 - min ) ) + min );
-        }
-
-        /** ************************************************************************************************************
-        *   Converts the given number into an integer value.
-        *   All decimal places are cut off.
-        *
-        *   @param x The number to convert to an integer.
-        *
-        *   @return The converted value as an integer.
-        ***************************************************************************************************************/
-        public static toInt( x:number ) : number
-        {
-            return parseInt( String( x ), 10 );
-        }
-
-        public static limit( value:number, min:number, max:number ) : number
-        {
-            return Math.max( min, Math.min( value, max ) );
         }
 
         public static randomInt( min:number, max:number ) : number

@@ -17,9 +17,11 @@ Refactoring Methods:
 - Extract/Separate grouped members to new class
 - Add const for non-changing values!
 - Increase visibility ( private where possible! Then protected any finally public ) => create getters/setters for access control.
+- Add tests
+- clear suspicious name combinations ( setX( y ) ), MathUtil.toInt( x ) => MathUtil.toInt( num )
 
 Tools that support:
 ===================
 - Lint
 - TS-Compiler
-- IntelliJ
+- IntelliJ ( "Code Inspection" )
