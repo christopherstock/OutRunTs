@@ -252,14 +252,21 @@
         }
 
         /** ************************************************************************************************************
-        *
+        *   Resets all cars on the road to their initial state.
         ***************************************************************************************************************/
         private resetCars() : void
         {
             this.cars = [];
 
-            var car, segment, offset, z, sprite, speed;
-            for (var n = 0; n < orts.SettingGame.TOTAL_CARS; n++) {
+            let offset  :number = 0;
+            let z       :number = 0;
+            let speed   :number = 0;
+
+            let segment :any    = null;
+            let sprite  :any    = null;
+            let car     :any    = null;
+
+            for ( let n:number = 0; n < orts.SettingGame.TOTAL_CARS; n++ ) {
                 offset = Math.random() * orts.MathUtil.randomChoice([-0.8, 0.8]);
                 z = Math.floor(Math.random() * this.segments.length) * orts.SettingGame.SEGMENT_LENGTH;
                 sprite = orts.MathUtil.randomChoice(orts.SettingGame.CARS);
