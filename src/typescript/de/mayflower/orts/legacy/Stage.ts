@@ -14,7 +14,7 @@
         public                  trackLength         :number                     = null;
 
         /** ************************************************************************************************************
-        *
+        *   TODO to road factory.
         ***************************************************************************************************************/
         private ROAD :any = {
             LENGTH: {NONE: 0, SHORT: 25, MEDIUM: 50, LONG: 100},
@@ -119,8 +119,10 @@
         /** ************************************************************************************************************
         *
         *   @param num The road length?
+        *
+        *   TODO to stage factory.
         ***************************************************************************************************************/
-        private addStraight( num ) : void
+        private addStraight( num:number ) : void
         {
             num = num || this.ROAD.LENGTH.MEDIUM;
             this.addRoad(num, num, num, 0, 0);
@@ -129,7 +131,7 @@
         /** ************************************************************************************************************
         *
         ***************************************************************************************************************/
-        private addHill( num, height ) : void
+        private addHill( num:number, height:number ) : void
         {
             num = num || this.ROAD.LENGTH.MEDIUM;
             height = height || this.ROAD.HILL.MEDIUM;
@@ -139,7 +141,7 @@
         /** ************************************************************************************************************
         *
         ***************************************************************************************************************/
-        private addCurve( num, curve, height ) : void
+        private addCurve( num:number, curve:number, height:number ) : void
         {
             num = num || this.ROAD.LENGTH.MEDIUM;
             curve = curve || this.ROAD.CURVE.MEDIUM;
@@ -150,7 +152,7 @@
         /** ************************************************************************************************************
         *
         ***************************************************************************************************************/
-        private addLowRollingHills( num, height ) : void
+        private addLowRollingHills( num:number, height:number ) : void
         {
             num = num || this.ROAD.LENGTH.SHORT;
             height = height || this.ROAD.HILL.LOW;
@@ -165,14 +167,15 @@
         /** ************************************************************************************************************
         *
         ***************************************************************************************************************/
+        // tslint:disable:max-line-length
         private addSCurves() : void
         {
-            this.addRoad(this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, -this.ROAD.CURVE.EASY, this.ROAD.HILL.NONE);
-            this.addRoad(this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.CURVE.MEDIUM, this.ROAD.HILL.MEDIUM);
-            this.addRoad(this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.CURVE.EASY, -this.ROAD.HILL.LOW);
-            this.addRoad(this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, -this.ROAD.CURVE.EASY, this.ROAD.HILL.MEDIUM);
-            this.addRoad(this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, -this.ROAD.CURVE.MEDIUM, -this.ROAD.HILL.MEDIUM);
-        };
+            this.addRoad( this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, -this.ROAD.CURVE.EASY,   this.ROAD.HILL.NONE    );
+            this.addRoad( this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.CURVE.MEDIUM,  this.ROAD.HILL.MEDIUM  );
+            this.addRoad( this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.CURVE.EASY,    -this.ROAD.HILL.LOW    );
+            this.addRoad( this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, -this.ROAD.CURVE.EASY,   this.ROAD.HILL.MEDIUM  );
+            this.addRoad( this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, this.ROAD.LENGTH.MEDIUM, -this.ROAD.CURVE.MEDIUM, -this.ROAD.HILL.MEDIUM );
+        }
 
         /** ************************************************************************************************************
         *
@@ -192,7 +195,7 @@
         /** ************************************************************************************************************
         *
         ***************************************************************************************************************/
-        private addDownhillToEnd( num ) : void
+        private addDownhillToEnd( num:number ) : void
         {
             num = num || 200;
             this.addRoad(num, num, num, -this.ROAD.CURVE.EASY, -this.lastY() / orts.SettingGame.SEGMENT_LENGTH);
@@ -203,8 +206,6 @@
         ***************************************************************************************************************/
         private resetSprites() : void
         {
-            var n, i;
-
             this.addSprite(20, orts.ImageFile.BILLBOARD07, -1);
             this.addSprite(40, orts.ImageFile.BILLBOARD06, -1);
             this.addSprite(60, orts.ImageFile.BILLBOARD08, -1);
@@ -220,26 +221,29 @@
             this.addSprite(this.segments.length - 25, orts.ImageFile.BILLBOARD07, -1.2);
             this.addSprite(this.segments.length - 25, orts.ImageFile.BILLBOARD06, 1.2);
 
-            for (n = 10; n < 200; n += 4 + Math.floor(n / 100)) {
+            for ( let n:number = 10; n < 200; n += 4 + Math.floor(n / 100) ) {
                 this.addSprite(n, orts.ImageFile.PALM_TREE, 0.5 + Math.random() * 0.5);
                 this.addSprite(n, orts.ImageFile.PALM_TREE, 1 + Math.random() * 2);
             }
 
-            for (n = 250; n < 1000; n += 5) {
+            for ( let n:number = 250; n < 1000; n += 5 ) {
                 this.addSprite(n, orts.ImageFile.COLUMN, 1.1);
                 this.addSprite(n + orts.MathUtil.randomInt(0, 5), orts.ImageFile.TREE1, -1 - (Math.random() * 2));
                 this.addSprite(n + orts.MathUtil.randomInt(0, 5), orts.ImageFile.TREE2, -1 - (Math.random() * 2));
             }
 
-            for (n = 200; n < this.segments.length; n += 3) {
+            for ( let n:number = 200; n < this.segments.length; n += 3 ) {
                 this.addSprite(n, orts.MathUtil.randomChoice(orts.SettingGame.PLANTS), orts.MathUtil.randomChoice([1, -1]) * (2 + Math.random() * 5));
             }
 
-            var side, sprite, offset;
-            for (n = 1000; n < (this.segments.length - 50); n += 100) {
+            let side   :number = 0;
+            let sprite :any    = null;
+            let offset :number = 0;
+
+            for ( let n:number = 1000; n < (this.segments.length - 50); n += 100 ) {
                 side = orts.MathUtil.randomChoice([1, -1]);
                 this.addSprite(n + orts.MathUtil.randomInt(0, 50), orts.MathUtil.randomChoice(orts.SettingGame.BILLBOARDS), -side);
-                for (i = 0; i < 20; i++) {
+                for ( let i:number = 0; i < 20; i++ ) {
                     sprite = orts.MathUtil.randomChoice(orts.SettingGame.PLANTS);
                     offset = side * (1.5 + Math.random());
                     this.addSprite(n + orts.MathUtil.randomInt(0, 50), sprite, offset);
@@ -253,6 +257,7 @@
         private resetCars() : void
         {
             this.cars = [];
+
             var car, segment, offset, z, sprite, speed;
             for (var n = 0; n < orts.SettingGame.TOTAL_CARS; n++) {
                 offset = Math.random() * orts.MathUtil.randomChoice([-0.8, 0.8]);

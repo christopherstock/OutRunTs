@@ -1,0 +1,6 @@
+- Descoping? ( Limit scope by intending into for-loop )
+- From var to let ( from global to local )
+- Separate multiple vars in one line var x, y = 10, z;
+- Renaming ( clear speaking names )
+- Introduce classes ( From {} to Sprite, Car etc. )
+- Extract methods ( separate logical units )
