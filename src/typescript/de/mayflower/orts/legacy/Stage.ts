@@ -258,19 +258,15 @@
         {
             this.cars = [];
 
-            let offset  :number = 0;
-            let z       :number = 0;
-            let speed   :number = 0;
-
-            let segment :any    = null;
-            let sprite  :any    = null;
-            let car     :any    = null;
+            let segment :any = null;
+            let sprite  :any = null;
+            let car     :any = null;
 
             for ( let n:number = 0; n < orts.SettingGame.TOTAL_CARS; n++ ) {
-                offset = Math.random() * orts.MathUtil.randomChoice([-0.8, 0.8]);
-                z = Math.floor(Math.random() * this.segments.length) * orts.SettingGame.SEGMENT_LENGTH;
+                const offset :number = Math.random() * orts.MathUtil.randomChoice([-0.8, 0.8]);
+                const z      :number = Math.floor(Math.random() * this.segments.length) * orts.SettingGame.SEGMENT_LENGTH;
                 sprite = orts.MathUtil.randomChoice(orts.SettingGame.CARS);
-                speed = orts.SettingGame.MAX_SPEED / 4 + Math.random() * orts.SettingGame.MAX_SPEED / (sprite === orts.ImageFile.SEMI ? 4 : 2);
+                const speed  :number = orts.SettingGame.MAX_SPEED / 4 + Math.random() * orts.SettingGame.MAX_SPEED / (sprite === orts.ImageFile.SEMI ? 4 : 2);
                 car = {offset: offset, z: z, sprite: sprite, speed: speed};
                 segment = this.findSegment(car.z);
                 segment.cars.push(car);

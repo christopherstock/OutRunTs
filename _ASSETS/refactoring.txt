@@ -1,6 +1,10 @@
+Introduction:
+=============
 s. "Martin Fowler" - Refactoring has never been more important!
 
-- Descoping? ( Limit scope by intending into for-loop )
+Refactoring Methods:
+====================
+- Descoping (enscoping?) ( Limit scope by intending into for-loop )
 - From var to let ( from global to local )
 - Separate multiple vars in one line var x, y = 10, z;
 - Renaming ( clear speaking names )
@@ -11,3 +15,11 @@ s. "Martin Fowler" - Refactoring has never been more important!
 - Order variables, fields and methods by visibility, type (number, boolean, string, object, collections ) and static state.
 - Group members by their logical corresponding
 - Extract/Separate grouped members to new class
+- Add const for non-changing values!
+- Increase visibility ( private where possible! Then protected any finally public ) => create getters/setters for access control.
+
+Tools that support:
+===================
+- Lint
+- TS-Compiler
+- IntelliJ
